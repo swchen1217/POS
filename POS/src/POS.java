@@ -1,15 +1,24 @@
 import java.awt.EventQueue;
+
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
+
 import java.awt.Font;
+
 import javax.swing.UIManager;
 import javax.swing.JPanel;
+
 import java.awt.Color;
+
 import javax.swing.border.TitledBorder;
 import javax.swing.JLabel;
+
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.ImageIcon;
@@ -17,14 +26,14 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.JCheckBox;
 import javax.swing.JButton;
 
-public class POS {
+public class POS implements ActionListener {
 	
-	/* pos main */
+	/* main */
 	JFrame fm_poa_main;
 	Thread th_nowtime;
 	JTabbedPane tab_menu,tab_order_list;
 	JPanel pn_menu_1,pn_menu_2,pn_menu_3,pn_menu_4,pn_menu_5,pn_list_1,pn_list_2,pn_list_3,pn_list_4,pn_list_5;
-	/*pos main end*/
+	/* main end*/
 	
 	/* info */
 	JPanel pn_info;
@@ -47,104 +56,26 @@ public class POS {
 	/* meals end */
 	/* menu */
 	
-	JLabel lb_menu_name[]=new JLabel[54],lb_menu_x[]=new JLabel[54];
-	JTextField tf_menu_qty[]=new JTextField[23];
+	JLabel lb_menu_name[]=new JLabel[22],lb_menu_x[]=new JLabel[22];
+	JTextField tf_menu_qty[]=new JTextField[22];
 	JCheckBox cb[]=new JCheckBox[19];
-	JButton btn_add[]=new JButton[23];
+	JButton btn_add[]=new JButton[22];
 	JPanel pn_menu_1_1,pn_menu_1_2,pn_menu_1_3,pn_menu_2_1,pn_menu_2_2,pn_menu_2_3,pn_menu_2_4,pn_menu_3_1,pn_menu_3_2,pn_menu_3_3,pn_menu_3_4,pn_menu_3_5,pn_menu_4_1,pn_menu_4_2,pn_menu_4_3,pn_menu_4_4,pn_menu_4_5,pn_menu_5_1,pn_menu_5_2,pn_menu_5_3,pn_menu_5_4,pn_menu_5_5;
 	
-	//private JPanel pn_menu_2_1;
-	private JLabel qq455;
-	private JLabel lblNewLabel;
-	private JTextField textField;
-	private JButton btnNewButton;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
-	//private JPanel pn_menu_3_2;
-	private JLabel label_6;
-	private JLabel label_7;
-	private JTextField textField_5;
-	private JCheckBox checkBox;
-	private JButton button_3;
-	//private JPanel pn_menu_3_3;
-	private JLabel label_8;
-	private JLabel label_9;
-	private JTextField textField_6;
-	private JCheckBox checkBox_1;
-	private JButton button_4;
-	//private JPanel pn_menu_3_4;
-	private JLabel label_10;
-	private JLabel label_11;
-	private JTextField textField_7;
-	private JCheckBox checkBox_2;
-	private JButton button_5;
-	//private JPanel pn_menu_3_5;
-	private JLabel label_12;
-	private JLabel label_13;
-	private JTextField textField_8;
-	private JCheckBox checkBox_3;
-	private JButton button_6;
-	//private JPanel pn_menu_4_1;
-	private JLabel lblNewLabel_3;
-	private JLabel lblNewLabel_4;
-	private JTextField textField_9;
-	private JCheckBox chckbxNewCheckBox_1;
-	private JButton btnNewButton_2;
-	//private JPanel pn_menu_4_2;
-	private JLabel label_14;
-	private JLabel label_15;
-	private JTextField textField_10;
-	private JCheckBox checkBox_4;
-	private JButton button_7;
-	//private JPanel pn_menu_4_3;
-	private JLabel label_16;
-	private JLabel label_17;
-	private JTextField textField_11;
-	private JCheckBox checkBox_5;
-	private JButton button_8;
-	//private JPanel pn_menu_4_4;
-	private JLabel label_18;
-	private JLabel label_19;
-	private JTextField textField_12;
-	private JCheckBox checkBox_6;
-	private JButton button_9;
-	//private JPanel pn_menu_4_5;
-	private JLabel label_20;
-	private JLabel label_21;
-	private JTextField textField_13;
-	private JCheckBox checkBox_7;
-	private JButton button_10;
-	//private JLabel lb_info_order_sum;
-	//private JTextField tf_info_order_sum;
-	//private JPanel pn_menu_5_1;
-	private JLabel lblNewLabel_5;
-	private JLabel lblNewLabel_6;
-	private JTextField textField_14;
-	private JButton btnNewButton_3;
-	//private JPanel pn_menu_5_2;
-	private JLabel label_22;
-	private JLabel label_23;
-	private JTextField textField_15;
-	private JButton button_11;
-	//private JPanel pn_menu_5_3;
-	private JLabel label_24;
-	private JLabel label_25;
-	private JTextField textField_16;
-	private JButton button_12;
-	//private JPanel pn_menu_5_4;
-	private JLabel label_26;
-	private JLabel label_27;
-	private JTextField textField_17;
-	private JButton button_13;
-	//private JPanel pn_menu_5_5;
-	private JLabel label_28;
-	private JLabel label_29;
-	private JTextField textField_18;
-	private JButton button_14;
-	
 	/* menu end */
+	/* checkout */
+	
+	JPanel pn_checkout;
+	JTextField tf_ch_small_total,tf_ch_all_total,tf_ch_discount,tf_ch_off,tf_ch_total,tf_ch_pay,tf_ch_change;
+	JLabel lb_ch_total,lb_ch_pay,lb_ch_change,lb_ch_small_total,lb_ch_discount,lb_ch_off,lb_ch_all_total;
+	private JButton btn_man_clear;
+	private JButton btn_man_menu_5_set;
+	private JButton btn_man_re_print;
+	private JButton btn_man_printer_set;
+	private JLabel lb_note;
+	private JTextField tf_note;
+	
+	/* checkout end */
 	
 	/**
 	 * Launch the application.
@@ -179,7 +110,7 @@ public class POS {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {}
 		
-		/* pos main */
+		/* main */
 		
 		fm_poa_main = new JFrame();
 		fm_poa_main.setIconImage(Toolkit.getDefaultToolkit().getImage(POS.class.getResource("/pic/icon.png")));
@@ -221,7 +152,7 @@ public class POS {
 		tab_order_list.addTab("5", null, pn_list_5, null);
 		pn_list_5.setLayout(null);
 		
-		/* pos main end */
+		/* main end */
 		/* menu_1 */
 		
 		pn_menu_1 = new JPanel();
@@ -253,6 +184,7 @@ public class POS {
 		tf_menu_qty[0].setBounds(300, 10, 70, 50);
 		pn_menu_1_1.add(tf_menu_qty[0]);
 		tf_menu_qty[0].setColumns(10);
+		tf_menu_qty[0].setFont(new Font("新細明體", Font.PLAIN, 26));
 		
 		cb[0] = new JCheckBox("\u6F22\u5821\u8089");
 		cb[0].setFont(new Font("新細明體", Font.PLAIN, 20));
@@ -301,6 +233,7 @@ public class POS {
 		tf_menu_qty[1].setColumns(10);
 		tf_menu_qty[1].setBounds(300, 10, 70, 50);
 		pn_menu_1_2.add(tf_menu_qty[1]);
+		tf_menu_qty[1].setFont(new Font("新細明體", Font.PLAIN, 26));
 		
 		cb[3] = new JCheckBox("\u6F22\u5821\u8089");
 		cb[3].setFont(new Font("新細明體", Font.PLAIN, 20));
@@ -349,6 +282,7 @@ public class POS {
 		tf_menu_qty[2].setColumns(10);
 		tf_menu_qty[2].setBounds(300, 10, 70, 50);
 		pn_menu_1_3.add(tf_menu_qty[2]);
+		tf_menu_qty[2].setFont(new Font("新細明體", Font.PLAIN, 26));
 		
 		cb[6] = new JCheckBox("\u6F22\u5821\u8089");
 		cb[6].setFont(new Font("新細明體", Font.PLAIN, 20));
@@ -388,26 +322,28 @@ public class POS {
 		pn_menu_2.add(pn_menu_2_1);
 		pn_menu_2_1.setLayout(null);
 		
-		qq455 = new JLabel("\u5BE6\u9A57\u5496\u54E9\u98EF");
-		qq455.setFont(new Font("新細明體", Font.PLAIN, 26));
-		qq455.setBounds(20, 0, 160, 70);
-		pn_menu_2_1.add(qq455);
+		lb_menu_name[3] = new JLabel("\u5BE6\u9A57\u5496\u54E9\u98EF");
+		lb_menu_name[3].setFont(new Font("新細明體", Font.PLAIN, 26));
+		lb_menu_name[3].setBounds(20, 0, 160, 70);
+		pn_menu_2_1.add(lb_menu_name[3]);
 		
-		lblNewLabel = new JLabel("x");
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setFont(new Font("新細明體", Font.PLAIN, 26));
-		lblNewLabel.setBounds(190, 20, 30, 30);
-		pn_menu_2_1.add(lblNewLabel);
+		lb_menu_x[3] = new JLabel("x");
+		lb_menu_x[3].setHorizontalAlignment(SwingConstants.CENTER);
+		lb_menu_x[3].setFont(new Font("新細明體", Font.PLAIN, 26));
+		lb_menu_x[3].setBounds(190, 20, 30, 30);
+		pn_menu_2_1.add(lb_menu_x[3]);
 		
-		textField = new JTextField();
-		textField.setBounds(220, 10, 70, 50);
-		pn_menu_2_1.add(textField);
-		textField.setColumns(10);
+		tf_menu_qty[3] = new JTextField();
+		tf_menu_qty[3].setFont(new Font("新細明體", Font.PLAIN, 26));
+		tf_menu_qty[3].setBounds(220, 10, 70, 50);
+		pn_menu_2_1.add(tf_menu_qty[3]);
+		tf_menu_qty[3].setColumns(10);
+		tf_menu_qty[3].setFont(new Font("新細明體", Font.PLAIN, 26));
 		
-		btnNewButton = new JButton("+");
-		btnNewButton.setFont(new Font("新細明體", Font.PLAIN, 26));
-		btnNewButton.setBounds(310, 20, 50, 30);
-		pn_menu_2_1.add(btnNewButton);
+		btn_add[3] = new JButton("+");
+		btn_add[3].setFont(new Font("新細明體", Font.PLAIN, 26));
+		btn_add[3].setBounds(310, 20, 50, 30);
+		pn_menu_2_1.add(btn_add[3]);
 		
 		pn_menu_2_2 = new JPanel();
 		pn_menu_2_2.setLayout(null);
@@ -416,26 +352,27 @@ public class POS {
 		pn_menu_2_2.setBounds(0, 70, 390, 70);
 		pn_menu_2.add(pn_menu_2_2);
 		
-		JLabel label = new JLabel("\u5BE6\u9A57\u725B\u5496\u54E9\u98EF");
-		label.setFont(new Font("新細明體", Font.PLAIN, 26));
-		label.setBounds(20, 0, 160, 70);
-		pn_menu_2_2.add(label);
+		lb_menu_name[4] = new JLabel("\u5BE6\u9A57\u725B\u5496\u54E9\u98EF");
+		lb_menu_name[4].setFont(new Font("新細明體", Font.PLAIN, 26));
+		lb_menu_name[4].setBounds(20, 0, 160, 70);
+		pn_menu_2_2.add(lb_menu_name[4]);
 		
-		JLabel label_1 = new JLabel("x");
-		label_1.setHorizontalAlignment(SwingConstants.CENTER);
-		label_1.setFont(new Font("新細明體", Font.PLAIN, 26));
-		label_1.setBounds(190, 20, 30, 30);
-		pn_menu_2_2.add(label_1);
+		lb_menu_x[4] = new JLabel("x");
+		lb_menu_x[4].setHorizontalAlignment(SwingConstants.CENTER);
+		lb_menu_x[4].setFont(new Font("新細明體", Font.PLAIN, 26));
+		lb_menu_x[4].setBounds(190, 20, 30, 30);
+		pn_menu_2_2.add(lb_menu_x[4]);
 		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(220, 10, 70, 50);
-		pn_menu_2_2.add(textField_1);
+		tf_menu_qty[4] = new JTextField();
+		tf_menu_qty[4].setColumns(10);
+		tf_menu_qty[4].setBounds(220, 10, 70, 50);
+		pn_menu_2_2.add(tf_menu_qty[4]);
+		tf_menu_qty[4].setFont(new Font("新細明體", Font.PLAIN, 26));
 		
-		JButton button = new JButton("+");
-		button.setFont(new Font("新細明體", Font.PLAIN, 26));
-		button.setBounds(310, 20, 50, 30);
-		pn_menu_2_2.add(button);
+		btn_add[4] = new JButton("+");
+		btn_add[4].setFont(new Font("新細明體", Font.PLAIN, 26));
+		btn_add[4].setBounds(310, 20, 50, 30);
+		pn_menu_2_2.add(btn_add[4]);
 		
 		pn_menu_2_3 = new JPanel();
 		pn_menu_2_3.setLayout(null);
@@ -444,26 +381,27 @@ public class POS {
 		pn_menu_2_3.setBounds(0, 140, 390, 70);
 		pn_menu_2.add(pn_menu_2_3);
 		
-		JLabel label_2 = new JLabel("\u5BE6\u9A57\u8C6C\u5496\u54E9\u98EF");
-		label_2.setFont(new Font("新細明體", Font.PLAIN, 26));
-		label_2.setBounds(20, 0, 160, 70);
-		pn_menu_2_3.add(label_2);
+		lb_menu_name[5] = new JLabel("\u5BE6\u9A57\u8C6C\u5496\u54E9\u98EF");
+		lb_menu_name[5].setFont(new Font("新細明體", Font.PLAIN, 26));
+		lb_menu_name[5].setBounds(20, 0, 160, 70);
+		pn_menu_2_3.add(lb_menu_name[5]);
 		
-		JLabel label_3 = new JLabel("x");
-		label_3.setHorizontalAlignment(SwingConstants.CENTER);
-		label_3.setFont(new Font("新細明體", Font.PLAIN, 26));
-		label_3.setBounds(190, 20, 30, 30);
-		pn_menu_2_3.add(label_3);
+		lb_menu_x[5] = new JLabel("x");
+		lb_menu_x[5].setHorizontalAlignment(SwingConstants.CENTER);
+		lb_menu_x[5].setFont(new Font("新細明體", Font.PLAIN, 26));
+		lb_menu_x[5].setBounds(190, 20, 30, 30);
+		pn_menu_2_3.add(lb_menu_x[5]);
 		
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
-		textField_2.setBounds(220, 10, 70, 50);
-		pn_menu_2_3.add(textField_2);
+		tf_menu_qty[5] = new JTextField();
+		tf_menu_qty[5].setColumns(10);
+		tf_menu_qty[5].setBounds(220, 10, 70, 50);
+		pn_menu_2_3.add(tf_menu_qty[5]);
+		tf_menu_qty[5].setFont(new Font("新細明體", Font.PLAIN, 26));
 		
-		JButton button_1 = new JButton("+");
-		button_1.setFont(new Font("新細明體", Font.PLAIN, 26));
-		button_1.setBounds(310, 20, 50, 30);
-		pn_menu_2_3.add(button_1);
+		btn_add[5] = new JButton("+");
+		btn_add[5].setFont(new Font("新細明體", Font.PLAIN, 26));
+		btn_add[5].setBounds(310, 20, 50, 30);
+		pn_menu_2_3.add(btn_add[5]);
 		
 		pn_menu_2_4 = new JPanel();
 		pn_menu_2_4.setLayout(null);
@@ -472,26 +410,27 @@ public class POS {
 		pn_menu_2_4.setBounds(0, 210, 390, 70);
 		pn_menu_2.add(pn_menu_2_4);
 		
-		JLabel label_4 = new JLabel("\u5BE6\u9A57\u96DE\u5496\u54E9\u98EF");
-		label_4.setFont(new Font("新細明體", Font.PLAIN, 26));
-		label_4.setBounds(20, 0, 160, 70);
-		pn_menu_2_4.add(label_4);
+		lb_menu_name[6] = new JLabel("\u5BE6\u9A57\u96DE\u5496\u54E9\u98EF");
+		lb_menu_name[6].setFont(new Font("新細明體", Font.PLAIN, 26));
+		lb_menu_name[6].setBounds(20, 0, 160, 70);
+		pn_menu_2_4.add(lb_menu_name[6]);
 		
-		JLabel label_5 = new JLabel("x");
-		label_5.setHorizontalAlignment(SwingConstants.CENTER);
-		label_5.setFont(new Font("新細明體", Font.PLAIN, 26));
-		label_5.setBounds(190, 20, 30, 30);
-		pn_menu_2_4.add(label_5);
+		lb_menu_x[6] = new JLabel("x");
+		lb_menu_x[6].setHorizontalAlignment(SwingConstants.CENTER);
+		lb_menu_x[6].setFont(new Font("新細明體", Font.PLAIN, 26));
+		lb_menu_x[6].setBounds(190, 20, 30, 30);
+		pn_menu_2_4.add(lb_menu_x[6]);
 		
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
-		textField_3.setBounds(220, 10, 70, 50);
-		pn_menu_2_4.add(textField_3);
+		tf_menu_qty[6] = new JTextField();
+		tf_menu_qty[6].setColumns(10);
+		tf_menu_qty[6].setBounds(220, 10, 70, 50);
+		pn_menu_2_4.add(tf_menu_qty[6]);
+		tf_menu_qty[6].setFont(new Font("新細明體", Font.PLAIN, 26));
 		
-		JButton button_2 = new JButton("+");
-		button_2.setFont(new Font("新細明體", Font.PLAIN, 26));
-		button_2.setBounds(310, 20, 50, 30);
-		pn_menu_2_4.add(button_2);
+		btn_add[6] = new JButton("+");
+		btn_add[6].setFont(new Font("新細明體", Font.PLAIN, 26));
+		btn_add[6].setBounds(310, 20, 50, 30);
+		pn_menu_2_4.add(btn_add[6]);
 		
 		/* menu_2 end */
 		/* menu_3 */
@@ -508,32 +447,33 @@ public class POS {
 		pn_menu_3.add(pn_menu_3_1);
 		pn_menu_3_1.setLayout(null);
 		
-		JLabel lblNewLabel_1 = new JLabel("\u6210\u9577\u7684\u56DE\u61B6");
-		lblNewLabel_1.setFont(new Font("新細明體", Font.PLAIN, 26));
-		lblNewLabel_1.setBounds(15, 0, 210, 70);
-		pn_menu_3_1.add(lblNewLabel_1);
+		lb_menu_name[7] = new JLabel("\u6210\u9577\u7684\u56DE\u61B6");
+		lb_menu_name[7].setFont(new Font("新細明體", Font.PLAIN, 26));
+		lb_menu_name[7].setBounds(15, 0, 210, 70);
+		pn_menu_3_1.add(lb_menu_name[7]);
 		
-		JLabel lblNewLabel_2 = new JLabel("x");
-		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_2.setFont(new Font("新細明體", Font.PLAIN, 26));
-		lblNewLabel_2.setBounds(270, 15, 30, 30);
-		pn_menu_3_1.add(lblNewLabel_2);
+		lb_menu_x[7] = new JLabel("x");
+		lb_menu_x[7].setHorizontalAlignment(SwingConstants.CENTER);
+		lb_menu_x[7].setFont(new Font("新細明體", Font.PLAIN, 26));
+		lb_menu_x[7].setBounds(270, 15, 30, 30);
+		pn_menu_3_1.add(lb_menu_x[7]);
 		
-		textField_4 = new JTextField();
-		textField_4.setBounds(300, 5, 70, 50);
-		pn_menu_3_1.add(textField_4);
-		textField_4.setColumns(10);
+		tf_menu_qty[7] = new JTextField();
+		tf_menu_qty[7].setBounds(300, 5, 70, 50);
+		pn_menu_3_1.add(tf_menu_qty[7]);
+		tf_menu_qty[7].setColumns(10);
+		tf_menu_qty[7].setFont(new Font("新細明體", Font.PLAIN, 26));
 		
-		JCheckBox chckbxNewCheckBox = new JCheckBox("\u5957\u9910");
-		chckbxNewCheckBox.setFont(new Font("新細明體", Font.PLAIN, 20));
-		chckbxNewCheckBox.setBackground(new Color(154, 205, 50));
-		chckbxNewCheckBox.setBounds(20, 70, 90, 30);
-		pn_menu_3_1.add(chckbxNewCheckBox);
+		cb[9] = new JCheckBox("\u5957\u9910");
+		cb[9].setFont(new Font("新細明體", Font.PLAIN, 20));
+		cb[9].setBackground(new Color(154, 205, 50));
+		cb[9].setBounds(20, 70, 90, 30);
+		pn_menu_3_1.add(cb[9]);
 		
-		JButton btnNewButton_1 = new JButton("+");
-		btnNewButton_1.setFont(new Font("新細明體", Font.PLAIN, 26));
-		btnNewButton_1.setBounds(300, 70, 50, 30);
-		pn_menu_3_1.add(btnNewButton_1);
+		btn_add[7] = new JButton("+");
+		btn_add[7].setFont(new Font("新細明體", Font.PLAIN, 26));
+		btn_add[7].setBounds(300, 70, 50, 30);
+		pn_menu_3_1.add(btn_add[7]);
 		
 		pn_menu_3_2 = new JPanel();
 		pn_menu_3_2.setLayout(null);
@@ -542,32 +482,33 @@ public class POS {
 		pn_menu_3_2.setBounds(0, 120, 390, 120);
 		pn_menu_3.add(pn_menu_3_2);
 		
-		label_6 = new JLabel("\u8349\u539F\u4E0A\u7684\u9752\u96DE");
-		label_6.setFont(new Font("新細明體", Font.PLAIN, 26));
-		label_6.setBounds(15, 0, 210, 70);
-		pn_menu_3_2.add(label_6);
+		lb_menu_name[8] = new JLabel("\u8349\u539F\u4E0A\u7684\u9752\u96DE");
+		lb_menu_name[8].setFont(new Font("新細明體", Font.PLAIN, 26));
+		lb_menu_name[8].setBounds(15, 0, 210, 70);
+		pn_menu_3_2.add(lb_menu_name[8]);
 		
-		label_7 = new JLabel("x");
-		label_7.setHorizontalAlignment(SwingConstants.CENTER);
-		label_7.setFont(new Font("新細明體", Font.PLAIN, 26));
-		label_7.setBounds(270, 15, 30, 30);
-		pn_menu_3_2.add(label_7);
+		lb_menu_x[8] = new JLabel("x");
+		lb_menu_x[8].setHorizontalAlignment(SwingConstants.CENTER);
+		lb_menu_x[8].setFont(new Font("新細明體", Font.PLAIN, 26));
+		lb_menu_x[8].setBounds(270, 15, 30, 30);
+		pn_menu_3_2.add(lb_menu_x[8]);
 		
-		textField_5 = new JTextField();
-		textField_5.setColumns(10);
-		textField_5.setBounds(300, 5, 70, 50);
-		pn_menu_3_2.add(textField_5);
+		tf_menu_qty[8] = new JTextField();
+		tf_menu_qty[8].setColumns(10);
+		tf_menu_qty[8].setBounds(300, 5, 70, 50);
+		pn_menu_3_2.add(tf_menu_qty[8]);
+		tf_menu_qty[8].setFont(new Font("新細明體", Font.PLAIN, 26));
 		
-		checkBox = new JCheckBox("\u5957\u9910");
-		checkBox.setFont(new Font("新細明體", Font.PLAIN, 20));
-		checkBox.setBackground(new Color(154, 205, 50));
-		checkBox.setBounds(20, 70, 90, 30);
-		pn_menu_3_2.add(checkBox);
+		cb[10] = new JCheckBox("\u5957\u9910");
+		cb[10].setFont(new Font("新細明體", Font.PLAIN, 20));
+		cb[10].setBackground(new Color(154, 205, 50));
+		cb[10].setBounds(20, 70, 90, 30);
+		pn_menu_3_2.add(cb[10]);
 		
-		button_3 = new JButton("+");
-		button_3.setFont(new Font("新細明體", Font.PLAIN, 26));
-		button_3.setBounds(300, 70, 50, 30);
-		pn_menu_3_2.add(button_3);
+		btn_add[8] = new JButton("+");
+		btn_add[8].setFont(new Font("新細明體", Font.PLAIN, 26));
+		btn_add[8].setBounds(300, 70, 50, 30);
+		pn_menu_3_2.add(btn_add[8]);
 		
 		pn_menu_3_3 = new JPanel();
 		pn_menu_3_3.setLayout(null);
@@ -576,32 +517,33 @@ public class POS {
 		pn_menu_3_3.setBounds(0, 240, 390, 120);
 		pn_menu_3.add(pn_menu_3_3);
 		
-		label_8 = new JLabel("\u4F4E\u8ABF\u4E2D\u7684\u9AD8\u8CB4");
-		label_8.setFont(new Font("新細明體", Font.PLAIN, 26));
-		label_8.setBounds(15, 0, 210, 70);
-		pn_menu_3_3.add(label_8);
+		lb_menu_name[9] = new JLabel("\u4F4E\u8ABF\u4E2D\u7684\u9AD8\u8CB4");
+		lb_menu_name[9].setFont(new Font("新細明體", Font.PLAIN, 26));
+		lb_menu_name[9].setBounds(15, 0, 210, 70);
+		pn_menu_3_3.add(lb_menu_name[9]);
 		
-		label_9 = new JLabel("x");
-		label_9.setHorizontalAlignment(SwingConstants.CENTER);
-		label_9.setFont(new Font("新細明體", Font.PLAIN, 26));
-		label_9.setBounds(270, 15, 30, 30);
-		pn_menu_3_3.add(label_9);
+		lb_menu_x[9] = new JLabel("x");
+		lb_menu_x[9].setHorizontalAlignment(SwingConstants.CENTER);
+		lb_menu_x[9].setFont(new Font("新細明體", Font.PLAIN, 26));
+		lb_menu_x[9].setBounds(270, 15, 30, 30);
+		pn_menu_3_3.add(lb_menu_x[9]);
 		
-		textField_6 = new JTextField();
-		textField_6.setColumns(10);
-		textField_6.setBounds(300, 5, 70, 50);
-		pn_menu_3_3.add(textField_6);
+		tf_menu_qty[9] = new JTextField();
+		tf_menu_qty[9].setColumns(10);
+		tf_menu_qty[9].setBounds(300, 5, 70, 50);
+		pn_menu_3_3.add(tf_menu_qty[9]);
+		tf_menu_qty[9].setFont(new Font("新細明體", Font.PLAIN, 26));
 		
-		checkBox_1 = new JCheckBox("\u5957\u9910");
-		checkBox_1.setFont(new Font("新細明體", Font.PLAIN, 20));
-		checkBox_1.setBackground(new Color(154, 205, 50));
-		checkBox_1.setBounds(20, 70, 90, 30);
-		pn_menu_3_3.add(checkBox_1);
+		cb[11] = new JCheckBox("\u5957\u9910");
+		cb[11].setFont(new Font("新細明體", Font.PLAIN, 20));
+		cb[11].setBackground(new Color(154, 205, 50));
+		cb[11].setBounds(20, 70, 90, 30);
+		pn_menu_3_3.add(cb[11]);
 		
-		button_4 = new JButton("+");
-		button_4.setFont(new Font("新細明體", Font.PLAIN, 26));
-		button_4.setBounds(300, 70, 50, 30);
-		pn_menu_3_3.add(button_4);
+		btn_add[9] = new JButton("+");
+		btn_add[9].setFont(new Font("新細明體", Font.PLAIN, 26));
+		btn_add[9].setBounds(300, 70, 50, 30);
+		pn_menu_3_3.add(btn_add[9]);
 		
 		pn_menu_3_4 = new JPanel();
 		pn_menu_3_4.setLayout(null);
@@ -610,32 +552,33 @@ public class POS {
 		pn_menu_3_4.setBounds(0, 360, 390, 120);
 		pn_menu_3.add(pn_menu_3_4);
 		
-		label_10 = new JLabel("\u89AA\u5B50\u9593\u7684\u5357\u74DC");
-		label_10.setFont(new Font("新細明體", Font.PLAIN, 26));
-		label_10.setBounds(15, 0, 210, 70);
-		pn_menu_3_4.add(label_10);
+		lb_menu_name[10] = new JLabel("\u89AA\u5B50\u9593\u7684\u5357\u74DC");
+		lb_menu_name[10].setFont(new Font("新細明體", Font.PLAIN, 26));
+		lb_menu_name[10].setBounds(15, 0, 210, 70);
+		pn_menu_3_4.add(lb_menu_name[10]);
 		
-		label_11 = new JLabel("x");
-		label_11.setHorizontalAlignment(SwingConstants.CENTER);
-		label_11.setFont(new Font("新細明體", Font.PLAIN, 26));
-		label_11.setBounds(270, 15, 30, 30);
-		pn_menu_3_4.add(label_11);
+		lb_menu_x[10] = new JLabel("x");
+		lb_menu_x[10].setHorizontalAlignment(SwingConstants.CENTER);
+		lb_menu_x[10].setFont(new Font("新細明體", Font.PLAIN, 26));
+		lb_menu_x[10].setBounds(270, 15, 30, 30);
+		pn_menu_3_4.add(lb_menu_x[10]);
 		
-		textField_7 = new JTextField();
-		textField_7.setColumns(10);
-		textField_7.setBounds(300, 5, 70, 50);
-		pn_menu_3_4.add(textField_7);
+		tf_menu_qty[10] = new JTextField();
+		tf_menu_qty[10].setColumns(10);
+		tf_menu_qty[10].setBounds(300, 5, 70, 50);
+		pn_menu_3_4.add(tf_menu_qty[10]);
+		tf_menu_qty[10].setFont(new Font("新細明體", Font.PLAIN, 26));
 		
-		checkBox_2 = new JCheckBox("\u5957\u9910");
-		checkBox_2.setFont(new Font("新細明體", Font.PLAIN, 20));
-		checkBox_2.setBackground(new Color(154, 205, 50));
-		checkBox_2.setBounds(20, 70, 90, 30);
-		pn_menu_3_4.add(checkBox_2);
+		cb[12] = new JCheckBox("\u5957\u9910");
+		cb[12].setFont(new Font("新細明體", Font.PLAIN, 20));
+		cb[12].setBackground(new Color(154, 205, 50));
+		cb[12].setBounds(20, 70, 90, 30);
+		pn_menu_3_4.add(cb[12]);
 		
-		button_5 = new JButton("+");
-		button_5.setFont(new Font("新細明體", Font.PLAIN, 26));
-		button_5.setBounds(300, 70, 50, 30);
-		pn_menu_3_4.add(button_5);
+		btn_add[10] = new JButton("+");
+		btn_add[10].setFont(new Font("新細明體", Font.PLAIN, 26));
+		btn_add[10].setBounds(300, 70, 50, 30);
+		pn_menu_3_4.add(btn_add[10]);
 		
 		pn_menu_3_5 = new JPanel();
 		pn_menu_3_5.setLayout(null);
@@ -644,32 +587,33 @@ public class POS {
 		pn_menu_3_5.setBounds(0, 480, 390, 120);
 		pn_menu_3.add(pn_menu_3_5);
 		
-		label_12 = new JLabel("\u725B\u5976\u6D77\u6D0B\u88E1\u7684\u9BAD\u9B5A");
-		label_12.setFont(new Font("新細明體", Font.PLAIN, 26));
-		label_12.setBounds(15, 0, 210, 70);
-		pn_menu_3_5.add(label_12);
+		lb_menu_name[11] = new JLabel("\u725B\u5976\u6D77\u6D0B\u88E1\u7684\u9BAD\u9B5A");
+		lb_menu_name[11].setFont(new Font("新細明體", Font.PLAIN, 26));
+		lb_menu_name[11].setBounds(15, 0, 210, 70);
+		pn_menu_3_5.add(lb_menu_name[11]);
 		
-		label_13 = new JLabel("x");
-		label_13.setHorizontalAlignment(SwingConstants.CENTER);
-		label_13.setFont(new Font("新細明體", Font.PLAIN, 26));
-		label_13.setBounds(270, 15, 30, 30);
-		pn_menu_3_5.add(label_13);
+		lb_menu_x[11] = new JLabel("x");
+		lb_menu_x[11].setHorizontalAlignment(SwingConstants.CENTER);
+		lb_menu_x[11].setFont(new Font("新細明體", Font.PLAIN, 26));
+		lb_menu_x[11].setBounds(270, 15, 30, 30);
+		pn_menu_3_5.add(lb_menu_x[11]);
 		
-		textField_8 = new JTextField();
-		textField_8.setColumns(10);
-		textField_8.setBounds(300, 5, 70, 50);
-		pn_menu_3_5.add(textField_8);
+		tf_menu_qty[11] = new JTextField();
+		tf_menu_qty[11].setColumns(10);
+		tf_menu_qty[11].setBounds(300, 5, 70, 50);
+		pn_menu_3_5.add(tf_menu_qty[11]);
+		tf_menu_qty[11].setFont(new Font("新細明體", Font.PLAIN, 26));
 		
-		checkBox_3 = new JCheckBox("\u5957\u9910");
-		checkBox_3.setFont(new Font("新細明體", Font.PLAIN, 20));
-		checkBox_3.setBackground(new Color(154, 205, 50));
-		checkBox_3.setBounds(20, 70, 90, 30);
-		pn_menu_3_5.add(checkBox_3);
+		cb[13] = new JCheckBox("\u5957\u9910");
+		cb[13].setFont(new Font("新細明體", Font.PLAIN, 20));
+		cb[13].setBackground(new Color(154, 205, 50));
+		cb[13].setBounds(20, 70, 90, 30);
+		pn_menu_3_5.add(cb[13]);
 		
-		button_6 = new JButton("+");
-		button_6.setFont(new Font("新細明體", Font.PLAIN, 26));
-		button_6.setBounds(300, 70, 50, 30);
-		pn_menu_3_5.add(button_6);
+		btn_add[11] = new JButton("+");
+		btn_add[11].setFont(new Font("新細明體", Font.PLAIN, 26));
+		btn_add[11].setBounds(300, 70, 50, 30);
+		pn_menu_3_5.add(btn_add[11]);
 		
 		/* menu_3 end */
 		/* menu_4 */
@@ -686,32 +630,33 @@ public class POS {
 		pn_menu_4.add(pn_menu_4_1);
 		pn_menu_4_1.setLayout(null);
 		
-		lblNewLabel_3 = new JLabel("\u6182\u6101\u7684\u85E5\u6C34");
-		lblNewLabel_3.setFont(new Font("新細明體", Font.PLAIN, 26));
-		lblNewLabel_3.setBounds(15, 0, 210, 70);
-		pn_menu_4_1.add(lblNewLabel_3);
+		lb_menu_name[12] = new JLabel("\u6182\u6101\u7684\u85E5\u6C34");
+		lb_menu_name[12].setFont(new Font("新細明體", Font.PLAIN, 26));
+		lb_menu_name[12].setBounds(15, 0, 210, 70);
+		pn_menu_4_1.add(lb_menu_name[12]);
 		
-		lblNewLabel_4 = new JLabel("x");
-		lblNewLabel_4.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_4.setFont(new Font("新細明體", Font.PLAIN, 26));
-		lblNewLabel_4.setBounds(270, 15, 30, 30);
-		pn_menu_4_1.add(lblNewLabel_4);
+		lb_menu_x[12] = new JLabel("x");
+		lb_menu_x[12].setHorizontalAlignment(SwingConstants.CENTER);
+		lb_menu_x[12].setFont(new Font("新細明體", Font.PLAIN, 26));
+		lb_menu_x[12].setBounds(270, 15, 30, 30);
+		pn_menu_4_1.add(lb_menu_x[12]);
 		
-		textField_9 = new JTextField();
-		textField_9.setBounds(300, 5, 70, 50);
-		pn_menu_4_1.add(textField_9);
-		textField_9.setColumns(10);
+		tf_menu_qty[12] = new JTextField();
+		tf_menu_qty[12].setBounds(300, 5, 70, 50);
+		pn_menu_4_1.add(tf_menu_qty[12]);
+		tf_menu_qty[12].setColumns(10);
+		tf_menu_qty[12].setFont(new Font("新細明體", Font.PLAIN, 26));
 		
-		chckbxNewCheckBox_1 = new JCheckBox("\u8D08\u9001");
-		chckbxNewCheckBox_1.setFont(new Font("新細明體", Font.PLAIN, 20));
-		chckbxNewCheckBox_1.setBounds(20, 70, 90, 30);
-		chckbxNewCheckBox_1.setBackground(new Color(0, 191, 255));
-		pn_menu_4_1.add(chckbxNewCheckBox_1);
+		cb[14] = new JCheckBox("\u8D08\u9001");
+		cb[14].setFont(new Font("新細明體", Font.PLAIN, 20));
+		cb[14].setBounds(20, 70, 90, 30);
+		cb[14].setBackground(new Color(0, 191, 255));
+		pn_menu_4_1.add(cb[14]);
 		
-		btnNewButton_2 = new JButton("+");
-		btnNewButton_2.setFont(new Font("新細明體", Font.PLAIN, 26));
-		btnNewButton_2.setBounds(300, 70, 50, 30);
-		pn_menu_4_1.add(btnNewButton_2);
+		btn_add[12] = new JButton("+");
+		btn_add[12].setFont(new Font("新細明體", Font.PLAIN, 26));
+		btn_add[12].setBounds(300, 70, 50, 30);
+		pn_menu_4_1.add(btn_add[12]);
 		
 		pn_menu_4_2 = new JPanel();
 		pn_menu_4_2.setLayout(null);
@@ -720,32 +665,33 @@ public class POS {
 		pn_menu_4_2.setBounds(0, 120, 390, 120);
 		pn_menu_4.add(pn_menu_4_2);
 		
-		label_14 = new JLabel("\u7099\u70C8\u7684\u85E5\u6C34");
-		label_14.setFont(new Font("新細明體", Font.PLAIN, 26));
-		label_14.setBounds(15, 0, 210, 70);
-		pn_menu_4_2.add(label_14);
+		lb_menu_name[13] = new JLabel("\u7099\u70C8\u7684\u85E5\u6C34");
+		lb_menu_name[13].setFont(new Font("新細明體", Font.PLAIN, 26));
+		lb_menu_name[13].setBounds(15, 0, 210, 70);
+		pn_menu_4_2.add(lb_menu_name[13]);
 		
-		label_15 = new JLabel("x");
-		label_15.setHorizontalAlignment(SwingConstants.CENTER);
-		label_15.setFont(new Font("新細明體", Font.PLAIN, 26));
-		label_15.setBounds(270, 15, 30, 30);
-		pn_menu_4_2.add(label_15);
+		lb_menu_x[13] = new JLabel("x");
+		lb_menu_x[13].setHorizontalAlignment(SwingConstants.CENTER);
+		lb_menu_x[13].setFont(new Font("新細明體", Font.PLAIN, 26));
+		lb_menu_x[13].setBounds(270, 15, 30, 30);
+		pn_menu_4_2.add(lb_menu_x[13]);
 		
-		textField_10 = new JTextField();
-		textField_10.setColumns(10);
-		textField_10.setBounds(300, 5, 70, 50);
-		pn_menu_4_2.add(textField_10);
+		tf_menu_qty[13] = new JTextField();
+		tf_menu_qty[13].setColumns(10);
+		tf_menu_qty[13].setBounds(300, 5, 70, 50);
+		pn_menu_4_2.add(tf_menu_qty[13]);
+		tf_menu_qty[13].setFont(new Font("新細明體", Font.PLAIN, 26));
 		
-		checkBox_4 = new JCheckBox("\u8D08\u9001");
-		checkBox_4.setFont(new Font("新細明體", Font.PLAIN, 20));
-		checkBox_4.setBackground(new Color(0, 191, 255));
-		checkBox_4.setBounds(20, 70, 90, 30);
-		pn_menu_4_2.add(checkBox_4);
+		cb[15] = new JCheckBox("\u8D08\u9001");
+		cb[15].setFont(new Font("新細明體", Font.PLAIN, 20));
+		cb[15].setBackground(new Color(0, 191, 255));
+		cb[15].setBounds(20, 70, 90, 30);
+		pn_menu_4_2.add(cb[15]);
 		
-		button_7 = new JButton("+");
-		button_7.setFont(new Font("新細明體", Font.PLAIN, 26));
-		button_7.setBounds(300, 70, 50, 30);
-		pn_menu_4_2.add(button_7);
+		btn_add[13] = new JButton("+");
+		btn_add[13].setFont(new Font("新細明體", Font.PLAIN, 26));
+		btn_add[13].setBounds(300, 70, 50, 30);
+		pn_menu_4_2.add(btn_add[13]);
 		
 		pn_menu_4_3 = new JPanel();
 		pn_menu_4_3.setLayout(null);
@@ -754,32 +700,33 @@ public class POS {
 		pn_menu_4_3.setBounds(0, 240, 390, 120);
 		pn_menu_4.add(pn_menu_4_3);
 		
-		label_16 = new JLabel("\u9AD8\u8CB4\u7684\u85E5\u6C34");
-		label_16.setFont(new Font("新細明體", Font.PLAIN, 26));
-		label_16.setBounds(15, 0, 210, 70);
-		pn_menu_4_3.add(label_16);
+		lb_menu_name[14] = new JLabel("\u9AD8\u8CB4\u7684\u85E5\u6C34");
+		lb_menu_name[14].setFont(new Font("新細明體", Font.PLAIN, 26));
+		lb_menu_name[14].setBounds(15, 0, 210, 70);
+		pn_menu_4_3.add(lb_menu_name[14]);
 		
-		label_17 = new JLabel("x");
-		label_17.setHorizontalAlignment(SwingConstants.CENTER);
-		label_17.setFont(new Font("新細明體", Font.PLAIN, 26));
-		label_17.setBounds(270, 15, 30, 30);
-		pn_menu_4_3.add(label_17);
+		lb_menu_x[14] = new JLabel("x");
+		lb_menu_x[14].setHorizontalAlignment(SwingConstants.CENTER);
+		lb_menu_x[14].setFont(new Font("新細明體", Font.PLAIN, 26));
+		lb_menu_x[14].setBounds(270, 15, 30, 30);
+		pn_menu_4_3.add(lb_menu_x[14]);
 		
-		textField_11 = new JTextField();
-		textField_11.setColumns(10);
-		textField_11.setBounds(300, 5, 70, 50);
-		pn_menu_4_3.add(textField_11);
+		tf_menu_qty[14] = new JTextField();
+		tf_menu_qty[14].setColumns(10);
+		tf_menu_qty[14].setBounds(300, 5, 70, 50);
+		pn_menu_4_3.add(tf_menu_qty[14]);
+		tf_menu_qty[14].setFont(new Font("新細明體", Font.PLAIN, 26));
 		
-		checkBox_5 = new JCheckBox("\u8D08\u9001");
-		checkBox_5.setFont(new Font("新細明體", Font.PLAIN, 20));
-		checkBox_5.setBackground(new Color(0, 191, 255));
-		checkBox_5.setBounds(20, 70, 90, 30);
-		pn_menu_4_3.add(checkBox_5);
+		cb[16] = new JCheckBox("\u8D08\u9001");
+		cb[16].setFont(new Font("新細明體", Font.PLAIN, 20));
+		cb[16].setBackground(new Color(0, 191, 255));
+		cb[16].setBounds(20, 70, 90, 30);
+		pn_menu_4_3.add(cb[16]);
 		
-		button_8 = new JButton("+");
-		button_8.setFont(new Font("新細明體", Font.PLAIN, 26));
-		button_8.setBounds(300, 70, 50, 30);
-		pn_menu_4_3.add(button_8);
+		btn_add[14] = new JButton("+");
+		btn_add[14].setFont(new Font("新細明體", Font.PLAIN, 26));
+		btn_add[14].setBounds(300, 70, 50, 30);
+		pn_menu_4_3.add(btn_add[14]);
 		
 		pn_menu_4_4 = new JPanel();
 		pn_menu_4_4.setLayout(null);
@@ -788,32 +735,33 @@ public class POS {
 		pn_menu_4_4.setBounds(0, 360, 390, 120);
 		pn_menu_4.add(pn_menu_4_4);
 		
-		label_18 = new JLabel("\u5178\u96C5\u7684\u85E5\u6C34");
-		label_18.setFont(new Font("新細明體", Font.PLAIN, 26));
-		label_18.setBounds(15, 0, 210, 70);
-		pn_menu_4_4.add(label_18);
+		lb_menu_name[15] = new JLabel("\u5178\u96C5\u7684\u85E5\u6C34");
+		lb_menu_name[15].setFont(new Font("新細明體", Font.PLAIN, 26));
+		lb_menu_name[15].setBounds(15, 0, 210, 70);
+		pn_menu_4_4.add(lb_menu_name[15]);
 		
-		label_19 = new JLabel("x");
-		label_19.setHorizontalAlignment(SwingConstants.CENTER);
-		label_19.setFont(new Font("新細明體", Font.PLAIN, 26));
-		label_19.setBounds(270, 15, 30, 30);
-		pn_menu_4_4.add(label_19);
+		lb_menu_x[15] = new JLabel("x");
+		lb_menu_x[15].setHorizontalAlignment(SwingConstants.CENTER);
+		lb_menu_x[15].setFont(new Font("新細明體", Font.PLAIN, 26));
+		lb_menu_x[15].setBounds(270, 15, 30, 30);
+		pn_menu_4_4.add(lb_menu_x[15]);
 		
-		textField_12 = new JTextField();
-		textField_12.setColumns(10);
-		textField_12.setBounds(300, 5, 70, 50);
-		pn_menu_4_4.add(textField_12);
+		tf_menu_qty[15] = new JTextField();
+		tf_menu_qty[15].setColumns(10);
+		tf_menu_qty[15].setBounds(300, 5, 70, 50);
+		pn_menu_4_4.add(tf_menu_qty[15]);
+		tf_menu_qty[15].setFont(new Font("新細明體", Font.PLAIN, 26));
 		
-		checkBox_6 = new JCheckBox("\u8D08\u9001");
-		checkBox_6.setFont(new Font("新細明體", Font.PLAIN, 20));
-		checkBox_6.setBackground(new Color(0, 191, 255));
-		checkBox_6.setBounds(20, 70, 90, 30);
-		pn_menu_4_4.add(checkBox_6);
+		cb[17] = new JCheckBox("\u8D08\u9001");
+		cb[17].setFont(new Font("新細明體", Font.PLAIN, 20));
+		cb[17].setBackground(new Color(0, 191, 255));
+		cb[17].setBounds(20, 70, 90, 30);
+		pn_menu_4_4.add(cb[17]);
 		
-		button_9 = new JButton("+");
-		button_9.setFont(new Font("新細明體", Font.PLAIN, 26));
-		button_9.setBounds(300, 70, 50, 30);
-		pn_menu_4_4.add(button_9);
+		btn_add[15] = new JButton("+");
+		btn_add[15].setFont(new Font("新細明體", Font.PLAIN, 26));
+		btn_add[15].setBounds(300, 70, 50, 30);
+		pn_menu_4_4.add(btn_add[15]);
 		
 		pn_menu_4_5 = new JPanel();
 		pn_menu_4_5.setLayout(null);
@@ -822,32 +770,33 @@ public class POS {
 		pn_menu_4_5.setBounds(0, 480, 390, 120);
 		pn_menu_4.add(pn_menu_4_5);
 		
-		label_20 = new JLabel("\u9B54\u6027\u7684\u85E5\u6C34");
-		label_20.setFont(new Font("新細明體", Font.PLAIN, 26));
-		label_20.setBounds(15, 0, 210, 70);
-		pn_menu_4_5.add(label_20);
+		lb_menu_name[16] = new JLabel("\u9B54\u6027\u7684\u85E5\u6C34");
+		lb_menu_name[16].setFont(new Font("新細明體", Font.PLAIN, 26));
+		lb_menu_name[16].setBounds(15, 0, 210, 70);
+		pn_menu_4_5.add(lb_menu_name[16]);
 		
-		label_21 = new JLabel("x");
-		label_21.setHorizontalAlignment(SwingConstants.CENTER);
-		label_21.setFont(new Font("新細明體", Font.PLAIN, 26));
-		label_21.setBounds(270, 15, 30, 30);
-		pn_menu_4_5.add(label_21);
+		lb_menu_x[16] = new JLabel("x");
+		lb_menu_x[16].setHorizontalAlignment(SwingConstants.CENTER);
+		lb_menu_x[16].setFont(new Font("新細明體", Font.PLAIN, 26));
+		lb_menu_x[16].setBounds(270, 15, 30, 30);
+		pn_menu_4_5.add(lb_menu_x[16]);
 		
-		textField_13 = new JTextField();
-		textField_13.setColumns(10);
-		textField_13.setBounds(300, 5, 70, 50);
-		pn_menu_4_5.add(textField_13);
+		tf_menu_qty[16] = new JTextField();
+		tf_menu_qty[16].setColumns(10);
+		tf_menu_qty[16].setBounds(300, 5, 70, 50);
+		pn_menu_4_5.add(tf_menu_qty[16]);
+		tf_menu_qty[16].setFont(new Font("新細明體", Font.PLAIN, 26));
 		
-		checkBox_7 = new JCheckBox("\u8D08\u9001");
-		checkBox_7.setFont(new Font("新細明體", Font.PLAIN, 20));
-		checkBox_7.setBackground(new Color(0, 191, 255));
-		checkBox_7.setBounds(20, 70, 90, 30);
-		pn_menu_4_5.add(checkBox_7);
+		cb[18] = new JCheckBox("\u8D08\u9001");
+		cb[18].setFont(new Font("新細明體", Font.PLAIN, 20));
+		cb[18].setBackground(new Color(0, 191, 255));
+		cb[18].setBounds(20, 70, 90, 30);
+		pn_menu_4_5.add(cb[18]);
 		
-		button_10 = new JButton("+");
-		button_10.setFont(new Font("新細明體", Font.PLAIN, 26));
-		button_10.setBounds(300, 70, 50, 30);
-		pn_menu_4_5.add(button_10);
+		btn_add[16] = new JButton("+");
+		btn_add[16].setFont(new Font("新細明體", Font.PLAIN, 26));
+		btn_add[16].setBounds(300, 70, 50, 30);
+		pn_menu_4_5.add(btn_add[16]);
 		
 		/* menu_4 end */
 		/* menu_5 */
@@ -864,26 +813,27 @@ public class POS {
 		pn_menu_5.add(pn_menu_5_1);
 		pn_menu_5_1.setLayout(null);
 		
-		lblNewLabel_5 = new JLabel("\u6BCF\u65E5\u7279\u9910");
-		lblNewLabel_5.setFont(new Font("新細明體", Font.PLAIN, 26));
-		lblNewLabel_5.setBounds(10, 0, 160, 70);
-		pn_menu_5_1.add(lblNewLabel_5);
+		lb_menu_name[17] = new JLabel("\u6BCF\u65E5\u7279\u9910");
+		lb_menu_name[17].setFont(new Font("新細明體", Font.PLAIN, 26));
+		lb_menu_name[17].setBounds(10, 0, 160, 70);
+		pn_menu_5_1.add(lb_menu_name[17]);
 		
-		lblNewLabel_6 = new JLabel("x");
-		lblNewLabel_6.setFont(new Font("新細明體", Font.PLAIN, 26));
-		lblNewLabel_6.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_6.setBounds(190, 20, 30, 30);
-		pn_menu_5_1.add(lblNewLabel_6);
+		lb_menu_x[17] = new JLabel("x");
+		lb_menu_x[17].setFont(new Font("新細明體", Font.PLAIN, 26));
+		lb_menu_x[17].setHorizontalAlignment(SwingConstants.CENTER);
+		lb_menu_x[17].setBounds(190, 20, 30, 30);
+		pn_menu_5_1.add(lb_menu_x[17]);
 		
-		textField_14 = new JTextField();
-		textField_14.setBounds(220, 10, 70, 50);
-		pn_menu_5_1.add(textField_14);
-		textField_14.setColumns(10);
+		tf_menu_qty[17] = new JTextField();
+		tf_menu_qty[17].setBounds(220, 10, 70, 50);
+		pn_menu_5_1.add(tf_menu_qty[17]);
+		tf_menu_qty[17].setColumns(10);
+		tf_menu_qty[17].setFont(new Font("新細明體", Font.PLAIN, 26));
 		
-		btnNewButton_3 = new JButton("+");
-		btnNewButton_3.setFont(new Font("新細明體", Font.PLAIN, 26));
-		btnNewButton_3.setBounds(310, 20, 50, 30);
-		pn_menu_5_1.add(btnNewButton_3);
+		btn_add[17] = new JButton("+");
+		btn_add[17].setFont(new Font("新細明體", Font.PLAIN, 26));
+		btn_add[17].setBounds(310, 20, 50, 30);
+		pn_menu_5_1.add(btn_add[17]);
 		
 		pn_menu_5_2 = new JPanel();
 		pn_menu_5_2.setLayout(null);
@@ -892,26 +842,27 @@ public class POS {
 		pn_menu_5_2.setBounds(0, 70, 390, 70);
 		pn_menu_5.add(pn_menu_5_2);
 		
-		label_22 = new JLabel("\u5176\u4ED6-");
-		label_22.setFont(new Font("新細明體", Font.PLAIN, 19));
-		label_22.setBounds(10, 0, 180, 70);
-		pn_menu_5_2.add(label_22);
+		lb_menu_name[18] = new JLabel("\u5176\u4ED6-");
+		lb_menu_name[18].setFont(new Font("新細明體", Font.PLAIN, 19));
+		lb_menu_name[18].setBounds(10, 0, 180, 70);
+		pn_menu_5_2.add(lb_menu_name[18]);
 		
-		label_23 = new JLabel("x");
-		label_23.setHorizontalAlignment(SwingConstants.CENTER);
-		label_23.setFont(new Font("新細明體", Font.PLAIN, 26));
-		label_23.setBounds(190, 20, 30, 30);
-		pn_menu_5_2.add(label_23);
+		lb_menu_x[18] = new JLabel("x");
+		lb_menu_x[18].setHorizontalAlignment(SwingConstants.CENTER);
+		lb_menu_x[18].setFont(new Font("新細明體", Font.PLAIN, 26));
+		lb_menu_x[18].setBounds(190, 20, 30, 30);
+		pn_menu_5_2.add(lb_menu_x[18]);
 		
-		textField_15 = new JTextField();
-		textField_15.setColumns(10);
-		textField_15.setBounds(220, 10, 70, 50);
-		pn_menu_5_2.add(textField_15);
+		tf_menu_qty[18] = new JTextField();
+		tf_menu_qty[18].setColumns(10);
+		tf_menu_qty[18].setBounds(220, 10, 70, 50);
+		pn_menu_5_2.add(tf_menu_qty[18]);
+		tf_menu_qty[18].setFont(new Font("新細明體", Font.PLAIN, 26));
 		
-		button_11 = new JButton("+");
-		button_11.setFont(new Font("新細明體", Font.PLAIN, 26));
-		button_11.setBounds(310, 20, 50, 30);
-		pn_menu_5_2.add(button_11);
+		btn_add[18] = new JButton("+");
+		btn_add[18].setFont(new Font("新細明體", Font.PLAIN, 26));
+		btn_add[18].setBounds(310, 20, 50, 30);
+		pn_menu_5_2.add(btn_add[18]);
 		
 		pn_menu_5_3 = new JPanel();
 		pn_menu_5_3.setLayout(null);
@@ -920,26 +871,27 @@ public class POS {
 		pn_menu_5_3.setBounds(0, 140, 390, 70);
 		pn_menu_5.add(pn_menu_5_3);
 		
-		label_24 = new JLabel("\u5176\u4ED6-");
-		label_24.setFont(new Font("新細明體", Font.PLAIN, 19));
-		label_24.setBounds(10, 0, 180, 70);
-		pn_menu_5_3.add(label_24);
+		lb_menu_name[19] = new JLabel("\u5176\u4ED6-");
+		lb_menu_name[19].setFont(new Font("新細明體", Font.PLAIN, 19));
+		lb_menu_name[19].setBounds(10, 0, 180, 70);
+		pn_menu_5_3.add(lb_menu_name[19]);
 		
-		label_25 = new JLabel("x");
-		label_25.setHorizontalAlignment(SwingConstants.CENTER);
-		label_25.setFont(new Font("新細明體", Font.PLAIN, 26));
-		label_25.setBounds(190, 20, 30, 30);
-		pn_menu_5_3.add(label_25);
+		lb_menu_x[19] = new JLabel("x");
+		lb_menu_x[19].setHorizontalAlignment(SwingConstants.CENTER);
+		lb_menu_x[19].setFont(new Font("新細明體", Font.PLAIN, 26));
+		lb_menu_x[19].setBounds(190, 20, 30, 30);
+		pn_menu_5_3.add(lb_menu_x[19]);
 		
-		textField_16 = new JTextField();
-		textField_16.setColumns(10);
-		textField_16.setBounds(220, 10, 70, 50);
-		pn_menu_5_3.add(textField_16);
+		tf_menu_qty[19] = new JTextField();
+		tf_menu_qty[19].setColumns(10);
+		tf_menu_qty[19].setBounds(220, 10, 70, 50);
+		pn_menu_5_3.add(tf_menu_qty[19]);
+		tf_menu_qty[19].setFont(new Font("新細明體", Font.PLAIN, 26));
 		
-		button_12 = new JButton("+");
-		button_12.setFont(new Font("新細明體", Font.PLAIN, 26));
-		button_12.setBounds(310, 20, 50, 30);
-		pn_menu_5_3.add(button_12);
+		btn_add[19] = new JButton("+");
+		btn_add[19].setFont(new Font("新細明體", Font.PLAIN, 26));
+		btn_add[19].setBounds(310, 20, 50, 30);
+		pn_menu_5_3.add(btn_add[19]);
 		
 		pn_menu_5_4 = new JPanel();
 		pn_menu_5_4.setLayout(null);
@@ -948,26 +900,27 @@ public class POS {
 		pn_menu_5_4.setBounds(0, 210, 390, 70);
 		pn_menu_5.add(pn_menu_5_4);
 		
-		label_26 = new JLabel("\u5176\u4ED6-");
-		label_26.setFont(new Font("新細明體", Font.PLAIN, 19));
-		label_26.setBounds(10, 0, 180, 70);
-		pn_menu_5_4.add(label_26);
+		lb_menu_name[20] = new JLabel("\u5176\u4ED6-");
+		lb_menu_name[20].setFont(new Font("新細明體", Font.PLAIN, 19));
+		lb_menu_name[20].setBounds(10, 0, 180, 70);
+		pn_menu_5_4.add(lb_menu_name[20]);
 		
-		label_27 = new JLabel("x");
-		label_27.setHorizontalAlignment(SwingConstants.CENTER);
-		label_27.setFont(new Font("新細明體", Font.PLAIN, 26));
-		label_27.setBounds(190, 20, 30, 30);
-		pn_menu_5_4.add(label_27);
+		lb_menu_x[20] = new JLabel("x");
+		lb_menu_x[20].setHorizontalAlignment(SwingConstants.CENTER);
+		lb_menu_x[20].setFont(new Font("新細明體", Font.PLAIN, 26));
+		lb_menu_x[20].setBounds(190, 20, 30, 30);
+		pn_menu_5_4.add(lb_menu_x[20]);
 		
-		textField_17 = new JTextField();
-		textField_17.setColumns(10);
-		textField_17.setBounds(220, 10, 70, 50);
-		pn_menu_5_4.add(textField_17);
+		tf_menu_qty[20] = new JTextField();
+		tf_menu_qty[20].setColumns(10);
+		tf_menu_qty[20].setBounds(220, 10, 70, 50);
+		pn_menu_5_4.add(tf_menu_qty[20]);
+		tf_menu_qty[20].setFont(new Font("新細明體", Font.PLAIN, 26));
 		
-		button_13 = new JButton("+");
-		button_13.setFont(new Font("新細明體", Font.PLAIN, 26));
-		button_13.setBounds(310, 20, 50, 30);
-		pn_menu_5_4.add(button_13);
+		btn_add[20] = new JButton("+");
+		btn_add[20].setFont(new Font("新細明體", Font.PLAIN, 26));
+		btn_add[20].setBounds(310, 20, 50, 30);
+		pn_menu_5_4.add(btn_add[20]);
 		
 		pn_menu_5_5 = new JPanel();
 		pn_menu_5_5.setLayout(null);
@@ -976,26 +929,27 @@ public class POS {
 		pn_menu_5_5.setBounds(0, 280, 390, 70);
 		pn_menu_5.add(pn_menu_5_5);
 		
-		label_28 = new JLabel("\u5176\u4ED6-");
-		label_28.setFont(new Font("新細明體", Font.PLAIN, 19));
-		label_28.setBounds(10, 0, 180, 70);
-		pn_menu_5_5.add(label_28);
+		lb_menu_name[21] = new JLabel("\u5176\u4ED6-");
+		lb_menu_name[21].setFont(new Font("新細明體", Font.PLAIN, 19));
+		lb_menu_name[21].setBounds(10, 0, 180, 70);
+		pn_menu_5_5.add(lb_menu_name[21]);
 		
-		label_29 = new JLabel("x");
-		label_29.setHorizontalAlignment(SwingConstants.CENTER);
-		label_29.setFont(new Font("新細明體", Font.PLAIN, 26));
-		label_29.setBounds(190, 20, 30, 30);
-		pn_menu_5_5.add(label_29);
+		lb_menu_x[21] = new JLabel("x");
+		lb_menu_x[21].setHorizontalAlignment(SwingConstants.CENTER);
+		lb_menu_x[21].setFont(new Font("新細明體", Font.PLAIN, 26));
+		lb_menu_x[21].setBounds(190, 20, 30, 30);
+		pn_menu_5_5.add(lb_menu_x[21]);
 		
-		textField_18 = new JTextField();
-		textField_18.setColumns(10);
-		textField_18.setBounds(220, 10, 70, 50);
-		pn_menu_5_5.add(textField_18);
+		tf_menu_qty[21] = new JTextField();
+		tf_menu_qty[21].setColumns(10);
+		tf_menu_qty[21].setBounds(220, 10, 70, 50);
+		pn_menu_5_5.add(tf_menu_qty[21]);
+		tf_menu_qty[21].setFont(new Font("新細明體", Font.PLAIN, 26));
 		
-		button_14 = new JButton("+");
-		button_14.setFont(new Font("新細明體", Font.PLAIN, 26));
-		button_14.setBounds(310, 20, 50, 30);
-		pn_menu_5_5.add(button_14);
+		btn_add[21] = new JButton("+");
+		btn_add[21].setFont(new Font("新細明體", Font.PLAIN, 26));
+		btn_add[21].setBounds(310, 20, 50, 30);
+		pn_menu_5_5.add(btn_add[21]);
 		
 		/* menu_5 end */
 		/* info */
@@ -1094,6 +1048,189 @@ public class POS {
 		tf_info_order_sum.setColumns(10);
 		
 		/* info end */
+		/* checkout */
+		
+		pn_checkout = new JPanel();
+		pn_checkout.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "\u7D50\u5E33", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		pn_checkout.setBounds(10, 580, 880, 130);
+		fm_poa_main.getContentPane().add(pn_checkout);
+		pn_checkout.setLayout(null);
+		
+		lb_ch_small_total = new JLabel("\u5C0F\u8A08");
+		lb_ch_small_total.setFont(new Font("新細明體", Font.PLAIN, 22));
+		lb_ch_small_total.setBounds(70, 25, 50, 20);
+		pn_checkout.add(lb_ch_small_total);
+		
+		lb_ch_discount = new JLabel("\u6298\u6263");
+		lb_ch_discount.setFont(new Font("新細明體", Font.PLAIN, 22));
+		lb_ch_discount.setBounds(30, 55, 50, 20);
+		pn_checkout.add(lb_ch_discount);
+		
+		lb_ch_off = new JLabel("\u6E1B\u514D -");
+		lb_ch_off.setFont(new Font("新細明體", Font.PLAIN, 22));
+		lb_ch_off.setBounds(120, 55, 64, 20);
+		pn_checkout.add(lb_ch_off);
+		
+		lb_ch_all_total = new JLabel("\u7E3D\u512A\u5F85 -");
+		lb_ch_all_total.setFont(new Font("新細明體", Font.PLAIN, 22));
+		lb_ch_all_total.setBounds(50, 85, 80, 20);
+		pn_checkout.add(lb_ch_all_total);
+		
+		lb_ch_total = new JLabel("\u7E3D\u91D1\u984D");
+		lb_ch_total.setFont(new Font("新細明體", Font.PLAIN, 22));
+		lb_ch_total.setBounds(255, 25, 70, 20);
+		pn_checkout.add(lb_ch_total);
+		
+		lb_ch_pay = new JLabel("\u4ED8");
+		lb_ch_pay.setFont(new Font("新細明體", Font.PLAIN, 22));
+		lb_ch_pay.setBounds(300, 55, 25, 20);
+		pn_checkout.add(lb_ch_pay);
+		
+		lb_ch_change = new JLabel("\u627E");
+		lb_ch_change.setFont(new Font("新細明體", Font.PLAIN, 22));
+		lb_ch_change.setBounds(300, 85, 25, 20);
+		pn_checkout.add(lb_ch_change);
+		
+		tf_ch_small_total = new JTextField();
+		tf_ch_small_total.setEditable(false);
+		tf_ch_small_total.setHorizontalAlignment(SwingConstants.RIGHT);
+		tf_ch_small_total.setFont(new Font("新細明體", Font.PLAIN, 22));
+		tf_ch_small_total.setText("00000");
+		tf_ch_small_total.setBounds(130, 25, 60, 25);
+		pn_checkout.add(tf_ch_small_total);
+		tf_ch_small_total.setColumns(10);
+		
+		tf_ch_discount = new JTextField();
+		tf_ch_discount.setEditable(false);
+		tf_ch_discount.setHorizontalAlignment(SwingConstants.RIGHT);
+		tf_ch_discount.setFont(new Font("新細明體", Font.PLAIN, 22));
+		tf_ch_discount.setText("100");
+		tf_ch_discount.setBounds(80, 55, 35, 25);
+		pn_checkout.add(tf_ch_discount);
+		tf_ch_discount.setColumns(10);
+		
+		tf_ch_off = new JTextField();
+		tf_ch_off.setEditable(false);
+		tf_ch_off.setHorizontalAlignment(SwingConstants.RIGHT);
+		tf_ch_off.setText("0000");
+		tf_ch_off.setFont(new Font("新細明體", Font.PLAIN, 22));
+		tf_ch_off.setBounds(180, 55, 50, 25);
+		pn_checkout.add(tf_ch_off);
+		tf_ch_off.setColumns(10);
+		
+		tf_ch_all_total = new JTextField();
+		tf_ch_all_total.setEditable(false);
+		tf_ch_all_total.setFont(new Font("新細明體", Font.PLAIN, 22));
+		tf_ch_all_total.setText("00000");
+		tf_ch_all_total.setHorizontalAlignment(SwingConstants.RIGHT);
+		tf_ch_all_total.setBounds(130, 85, 60, 25);
+		pn_checkout.add(tf_ch_all_total);
+		tf_ch_all_total.setColumns(10);
+		
+		tf_ch_total = new JTextField();
+		tf_ch_total.setText("00000");
+		tf_ch_total.setEditable(false);
+		tf_ch_total.setFont(new Font("新細明體", Font.PLAIN, 22));
+		tf_ch_total.setBounds(330, 25, 60, 25);
+		pn_checkout.add(tf_ch_total);
+		tf_ch_total.setColumns(10);
+		
+		tf_ch_pay = new JTextField();
+		tf_ch_pay.setFont(new Font("新細明體", Font.PLAIN, 22));
+		tf_ch_pay.setBounds(330, 55, 60, 25);
+		pn_checkout.add(tf_ch_pay);
+		tf_ch_pay.setColumns(10);
+		
+		tf_ch_change = new JTextField();
+		tf_ch_change.setText("00000");
+		tf_ch_change.setEditable(false);
+		tf_ch_change.setFont(new Font("新細明體", Font.PLAIN, 22));
+		tf_ch_change.setBounds(330, 85, 60, 25);
+		pn_checkout.add(tf_ch_change);
+		tf_ch_change.setColumns(10);
+		
+		JButton btn_ch_chechout = new JButton("\u7D50\u5E33");
+		btn_ch_chechout.setFont(new Font("新細明體", Font.PLAIN, 26));
+		btn_ch_chechout.setBounds(430, 25, 90, 90);
+		pn_checkout.add(btn_ch_chechout);
+		
+		JButton btn_ch_off_set = new JButton("\u512A\u60E0");
+		btn_ch_off_set.setFont(new Font("新細明體", Font.PLAIN, 26));
+		btn_ch_off_set.setBounds(580, 25, 90, 90);
+		pn_checkout.add(btn_ch_off_set);
+		
+		JButton btn_ch_next = new JButton("\u4E0B\u4E00\u7B46");
+		btn_ch_next.setFont(new Font("新細明體", Font.PLAIN, 26));
+		btn_ch_next.setBounds(730, 25, 110, 90);
+		pn_checkout.add(btn_ch_next);
+		
+		JPanel pn_manage = new JPanel();
+		pn_manage.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "\u7BA1\u7406", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		pn_manage.setBounds(510, 140, 390, 345);
+		fm_poa_main.getContentPane().add(pn_manage);
+		pn_manage.setLayout(null);
+		
+		JButton btn_man_table = new JButton("\u684C\u4F4D\u7BA1\u7406");
+		btn_man_table.setFont(new Font("新細明體", Font.PLAIN, 15));
+		btn_man_table.setBounds(10, 20, 100, 80);
+		pn_manage.add(btn_man_table);
+		
+		JButton btn_man_stock = new JButton("\u5EAB\u5B58\u7BA1\u7406");
+		btn_man_stock.setFont(new Font("新細明體", Font.PLAIN, 15));
+		btn_man_stock.setBounds(10, 100, 100, 80);
+		pn_manage.add(btn_man_stock);
+		
+		JButton btn_man_user_change = new JButton("\u5207\u63DB\u4F7F\u7528\u8005");
+		btn_man_user_change.setFont(new Font("新細明體", Font.PLAIN, 13));
+		btn_man_user_change.setBounds(150, 101, 100, 80);
+		pn_manage.add(btn_man_user_change);
+		
+		JButton btn_man_look = new JButton("\u9396\u5B9A");
+		btn_man_look.setFont(new Font("新細明體", Font.PLAIN, 15));
+		btn_man_look.setBounds(150, 19, 100, 82);
+		pn_manage.add(btn_man_look);
+		
+		JButton btn_man_exit = new JButton("\u96E2\u958B");
+		btn_man_exit.setFont(new Font("新細明體", Font.PLAIN, 15));
+		btn_man_exit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		btn_man_exit.setBounds(280, 20, 100, 160);
+		pn_manage.add(btn_man_exit);
+		
+		btn_man_clear = new JButton("\u5168\u90E8\u6E05\u9664");
+		btn_man_clear.setFont(new Font("新細明體", Font.PLAIN, 15));
+		btn_man_clear.setBounds(10, 180, 100, 80);
+		pn_manage.add(btn_man_clear);
+		
+		btn_man_menu_5_set = new JButton("\u5176\u4ED6\u985E \u8A2D\u5B9A");
+		btn_man_menu_5_set.setFont(new Font("新細明體", Font.PLAIN, 13));
+		btn_man_menu_5_set.setBounds(150, 180, 100, 80);
+		pn_manage.add(btn_man_menu_5_set);
+		
+		btn_man_re_print = new JButton("\u518D\u5217\u5370");
+		btn_man_re_print.setFont(new Font("新細明體", Font.PLAIN, 15));
+		btn_man_re_print.setBounds(10, 260, 100, 80);
+		pn_manage.add(btn_man_re_print);
+		
+		btn_man_printer_set = new JButton("\u5370\u8868\u6A5F\u8A2D\u5B9A");
+		btn_man_printer_set.setFont(new Font("新細明體", Font.PLAIN, 13));
+		btn_man_printer_set.setBounds(280, 180, 100, 80);
+		pn_manage.add(btn_man_printer_set);
+		
+		lb_note = new JLabel("\u5099\u8A3B");
+		lb_note.setFont(new Font("新細明體", Font.PLAIN, 22));
+		lb_note.setBounds(520, 550, 50, 33);
+		fm_poa_main.getContentPane().add(lb_note);
+		
+		tf_note = new JTextField();
+		tf_note.setFont(new Font("新細明體", Font.PLAIN, 25));
+		tf_note.setBounds(573, 550, 315, 30);
+		fm_poa_main.getContentPane().add(tf_note);
+		tf_note.setColumns(10);
+		
+		/* checkout end */
 		
 	}
 	
@@ -1116,4 +1253,9 @@ public class POS {
             };
             th_nowtime.start();
     }
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		
+	}
 }
