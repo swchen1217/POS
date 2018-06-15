@@ -28,10 +28,8 @@ public class POS implements ActionListener {
 	JPanel pn_menu_1,pn_menu_2,pn_menu_3,pn_menu_4,pn_menu_5,pn_list_1,pn_list_2,pn_list_3,pn_list_4,pn_list_5;
 	JLabel lb_note;
 	JTextField tf_note;
-	int total=0, pay, change, order_sum=0, smalltotal=0, discount=100, off=0, all_off=0, item_sum=0;
+	int total=0, pay, change, order_sum=0, smalltotal=0, discount=100, off=0, all_off=0, item_sum=0, item_sum2=0, order_list_sum=0, m=0 ,n=0;
 	int list[]={-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
-	int order_list_sum=0;
-	int m=0;
 	int tmp=-1;
 	boolean isOrder[]=new boolean[53];
 	
@@ -1587,49 +1585,11 @@ public class POS implements ActionListener {
 		tf_ch_small_total.setText(smalltotal+"");
 		order_sum+=Integer.parseInt(tf_menu_qty[change(i)].getText());
 		tf_info_order_sum.setText(order_sum+"");
-		/*item_sum=0;
-		for(int k=0;k<53;k++)
-		{
-			if(qty[k]!=0)
-				item_sum++;
-		}*/
 		if(isOrder[i]==true)
 		{
 			order_list_sum++;
 			list[order_list_sum-1]=i;
-			item_sum++;
-			if(item_sum<=8)
-			{
-				pn_item[i].setLocation(0, (item_sum-1)*70);
-				pn_list_1.add(pn_item[i]);
-				tab_order_list.setSelectedIndex(0);
-			}else if(item_sum<=16)
-			{
-				pn_item[i].setLocation(0, (item_sum-9)*70);
-				pn_list_2.add(pn_item[i]);
-				tab_order_list.setSelectedIndex(1);
-			}else if(item_sum<=24)
-			{
-				pn_item[i].setLocation(0, (item_sum-17)*70);
-				pn_list_3.add(pn_item[i]);
-				tab_order_list.setSelectedIndex(2);
-			}else if(item_sum<=32)
-			{
-				pn_item[i].setLocation(0, (item_sum-25)*70);
-				pn_list_4.add(pn_item[i]);
-				tab_order_list.setSelectedIndex(3);
-			}else if(item_sum<40)
-			{
-				pn_item[i].setLocation(0, (item_sum-33)*70);
-				pn_list_5.add(pn_item[i]);
-				tab_order_list.setSelectedIndex(4);
-			}else if(item_sum>=40)
-			{
-				pn_item[i].setLocation(0, (item_sum-33)*70);
-				pn_list_5.add(pn_item[i]);
-				tab_order_list.setSelectedIndex(4);
-				check();
-			}
+			sort();
 		}
 		isOrder[i]=false;
 		tf_note.setText("");
@@ -1672,21 +1632,66 @@ public class POS implements ActionListener {
 		}
 		order_list_sum--;
 		tf_note.setText(m+"");
-		//sort();
-		if(qty[i]==0){
-			//item_sum--;
-			pn_list_1.remove(pn_item[i]);
-			pn_list_2.remove(pn_item[i]);
-			pn_list_3.remove(pn_item[i]);
-			pn_list_4.remove(pn_item[i]);
-			pn_list_5.remove(pn_item[i]);
-		}
+		sort();
 		tab_order_list.updateUI();
 		
 	}
 	void sort()  {
 		
-		
+		for(int k=0;k<53;k++)
+		{
+			pn_list_1.remove(pn_item[k]);
+			pn_list_2.remove(pn_item[k]);
+			pn_list_3.remove(pn_item[k]);
+			pn_list_4.remove(pn_item[k]);
+			pn_list_5.remove(pn_item[k]);
+		}
+		n=0;
+		for(int i=0;i<order_list_sum;i++)
+		{
+			if(list[i]!=-1)
+				n++;
+			else
+				break;
+		}
+		item_sum2=0;
+		for(int j=0;j<n;j++)
+		{
+			item_sum2++;
+			if(item_sum2<=8)
+			{
+				pn_item[list[j]].setLocation(0, (item_sum2-1)*70);
+				pn_list_1.add(pn_item[list[j]]);
+				tab_order_list.setSelectedIndex(0);
+			}else if(item_sum2<=16)
+			{
+				pn_item[list[j]].setLocation(0, (item_sum2-9)*70);
+				pn_list_2.add(pn_item[list[j]]);
+				tab_order_list.setSelectedIndex(1);
+			}else if(item_sum2<=24)
+			{
+				pn_item[list[j]].setLocation(0, (item_sum2-17)*70);
+				pn_list_3.add(pn_item[list[j]]);
+				tab_order_list.setSelectedIndex(2);
+			}else if(item_sum2<=32)
+			{
+				pn_item[list[j]].setLocation(0, (item_sum2-25)*70);
+				pn_list_4.add(pn_item[list[j]]);
+				tab_order_list.setSelectedIndex(3);
+			}else if(item_sum2<40)
+			{
+				pn_item[list[j]].setLocation(0, (item_sum2-33)*70);
+				pn_list_5.add(pn_item[list[j]]);
+				tab_order_list.setSelectedIndex(4);
+			}else if(item_sum2>=40)
+			{
+				pn_item[list[j]].setLocation(0, (item_sum2-33)*70);
+				pn_list_5.add(pn_item[list[j]]);
+				tab_order_list.setSelectedIndex(4);
+				check();
+			}
+		}
+		tab_order_list.updateUI();
 	}
 	void check() {
 		
