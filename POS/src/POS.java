@@ -29,8 +29,11 @@ public class POS implements ActionListener {
 	JLabel lb_note;
 	JTextField tf_note;
 	int total=0, pay, change, order_sum=0, smalltotal=0, discount=100, off=0, all_off=0, item_sum=0;
-	int list[]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-	int y=0;
+	int list[]={-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
+	int order_list_sum=0;
+	int m=0;
+	int tmp=-1;
+	boolean isOrder[]=new boolean[53];
 	
 	/* main end*/
 	
@@ -168,6 +171,9 @@ public class POS implements ActionListener {
 		tf_note.setBounds(573, 550, 315, 30);
 		fm_poa_main.getContentPane().add(tf_note);
 		tf_note.setColumns(10);
+		
+		for(int i=0;i<53;i++)
+			isOrder[i]=false;
 		
 		/* main end */
 		/* menu_1 */
@@ -1571,6 +1577,8 @@ public class POS implements ActionListener {
 	}
 	void add(int i) {
 		
+		if(isOrder[i]==false && qty[i]==0)
+			isOrder[i]=true;
 		qty[i]+=Integer.parseInt(tf_menu_qty[change(i)].getText());
 		small_total[i]=qty[i]*price[i];
 		lb_qty[i].setText(qty[i]+"");
@@ -1579,43 +1587,55 @@ public class POS implements ActionListener {
 		tf_ch_small_total.setText(smalltotal+"");
 		order_sum+=Integer.parseInt(tf_menu_qty[change(i)].getText());
 		tf_info_order_sum.setText(order_sum+"");
-		item_sum=0;
+		/*item_sum=0;
 		for(int k=0;k<53;k++)
 		{
 			if(qty[k]!=0)
 				item_sum++;
+		}*/
+		if(isOrder[i]==true)
+		{
+			order_list_sum++;
+			list[order_list_sum-1]=i;
+			item_sum++;
+			if(item_sum<=8)
+			{
+				pn_item[i].setLocation(0, (item_sum-1)*70);
+				pn_list_1.add(pn_item[i]);
+				tab_order_list.setSelectedIndex(0);
+			}else if(item_sum<=16)
+			{
+				pn_item[i].setLocation(0, (item_sum-9)*70);
+				pn_list_2.add(pn_item[i]);
+				tab_order_list.setSelectedIndex(1);
+			}else if(item_sum<=24)
+			{
+				pn_item[i].setLocation(0, (item_sum-17)*70);
+				pn_list_3.add(pn_item[i]);
+				tab_order_list.setSelectedIndex(2);
+			}else if(item_sum<=32)
+			{
+				pn_item[i].setLocation(0, (item_sum-25)*70);
+				pn_list_4.add(pn_item[i]);
+				tab_order_list.setSelectedIndex(3);
+			}else if(item_sum<40)
+			{
+				pn_item[i].setLocation(0, (item_sum-33)*70);
+				pn_list_5.add(pn_item[i]);
+				tab_order_list.setSelectedIndex(4);
+			}else if(item_sum>=40)
+			{
+				pn_item[i].setLocation(0, (item_sum-33)*70);
+				pn_list_5.add(pn_item[i]);
+				tab_order_list.setSelectedIndex(4);
+				check();
+			}
 		}
-		if(item_sum<=8)
+		isOrder[i]=false;
+		tf_note.setText("");
+		for(int y=0;y<10;y++)
 		{
-			pn_item[i].setLocation(0, (item_sum-1)*70);
-			pn_list_1.add(pn_item[i]);
-			tab_order_list.setSelectedIndex(0);
-		}else if(item_sum<=16)
-		{
-			pn_item[i].setLocation(0, (item_sum-9)*70);
-			pn_list_2.add(pn_item[i]);
-			tab_order_list.setSelectedIndex(1);
-		}else if(item_sum<=24)
-		{
-			pn_item[i].setLocation(0, (item_sum-17)*70);
-			pn_list_3.add(pn_item[i]);
-			tab_order_list.setSelectedIndex(2);
-		}else if(item_sum<=32)
-		{
-			pn_item[i].setLocation(0, (item_sum-25)*70);
-			pn_list_4.add(pn_item[i]);
-			tab_order_list.setSelectedIndex(3);
-		}else if(item_sum<40)
-		{
-			pn_item[i].setLocation(0, (item_sum-33)*70);
-			pn_list_5.add(pn_item[i]);
-			tab_order_list.setSelectedIndex(4);
-		}else if(item_sum>=40)
-		{
-			pn_item[i].setLocation(0, (item_sum-33)*70);
-			pn_list_5.add(pn_item[i]);
-			tab_order_list.setSelectedIndex(4);
-			check();
+			tf_note.setText(tf_note.getText()+list[y]+",");
 		}
 		tab_order_list.updateUI();
 	}
@@ -1629,8 +1649,32 @@ public class POS implements ActionListener {
 		tf_ch_small_total.setText(smalltotal+"");
 		order_sum--;
 		tf_info_order_sum.setText(order_sum+"");
-		if(qty[i]<=0){
-			item_sum--;
+		for(int w=0;w<40;w++)
+		{
+			if(list[w]==i && qty[i]==0){
+				list[w]=-1;
+				break;
+			}
+		}
+		m=0;
+		for(int q=0;q<order_list_sum;q++)
+		{
+			if(list[q]!=-1)
+				m++;
+			else
+				break;
+		}
+		for(int e=m;e<order_list_sum;e++)
+		{
+			tmp=list[e+1];
+			list[e]=tmp;
+			
+		}
+		order_list_sum--;
+		tf_note.setText(m+"");
+		//sort();
+		if(qty[i]==0){
+			//item_sum--;
 			pn_list_1.remove(pn_item[i]);
 			pn_list_2.remove(pn_item[i]);
 			pn_list_3.remove(pn_item[i]);
@@ -1638,6 +1682,10 @@ public class POS implements ActionListener {
 			pn_list_5.remove(pn_item[i]);
 		}
 		tab_order_list.updateUI();
+		
+	}
+	void sort()  {
+		
 		
 	}
 	void check() {
