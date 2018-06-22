@@ -28,10 +28,10 @@ public class POS implements ActionListener {
 	JPanel pn_menu_1,pn_menu_2,pn_menu_3,pn_menu_4,pn_menu_5,pn_list_1,pn_list_2,pn_list_3,pn_list_4,pn_list_5;
 	JLabel lb_note;
 	JTextField tf_note;
-	int total=0, pay, change, order_sum=0, smalltotal=0, discount=100, off=0, all_off=0, item_sum=0, item_sum2=0, order_list_sum=0, m=0 ,n=0;
+	int pay, change, order_sum=0, smalltotal=0, off=0, all_off=0, item_sum2=0, order_list_sum=0, m=0 ,n=0 ,tmp=-1;
 	int list[]={-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
-	int tmp=-1;
 	boolean isOrder[]=new boolean[53];
+	double total=0 ,discount=100;
 	
 	/* main end*/
 	
@@ -1357,7 +1357,7 @@ public class POS implements ActionListener {
 		
 		lb_ch_discount = new JLabel("\u6298\u6578");
 		lb_ch_discount.setFont(new Font("新細明體", Font.PLAIN, 22));
-		lb_ch_discount.setBounds(30, 55, 50, 20);
+		lb_ch_discount.setBounds(15, 55, 50, 20);
 		pn_checkout.add(lb_ch_discount);
 		
 		lb_ch_off = new JLabel("% \u6E1B\u514D -");
@@ -1395,11 +1395,11 @@ public class POS implements ActionListener {
 		tf_ch_small_total.setColumns(10);
 		
 		tf_ch_discount = new JTextField();
-		tf_ch_discount.setText(discount+"");
+		tf_ch_discount.setText("100.0");
 		tf_ch_discount.setEditable(false);
 		tf_ch_discount.setHorizontalAlignment(SwingConstants.RIGHT);
 		tf_ch_discount.setFont(new Font("新細明體", Font.PLAIN, 22));
-		tf_ch_discount.setBounds(80, 55, 35, 25);
+		tf_ch_discount.setBounds(65, 55, 50, 25);
 		pn_checkout.add(tf_ch_discount);
 		tf_ch_discount.setColumns(10);
 		
@@ -1493,11 +1493,13 @@ public class POS implements ActionListener {
 		btn_man_exit.setFont(new Font("新細明體", Font.PLAIN, 15));
 		btn_man_exit.setBounds(280, 20, 100, 160);
 		pn_manage.add(btn_man_exit);
+		btn_man_exit.addActionListener(this);
 		
 		btn_man_clear = new JButton("\u5168\u90E8\u6E05\u9664");
 		btn_man_clear.setFont(new Font("新細明體", Font.PLAIN, 15));
 		btn_man_clear.setBounds(10, 180, 100, 80);
 		pn_manage.add(btn_man_clear);
+		btn_man_clear.addActionListener(this);
 		
 		btn_man_menu_5_set = new JButton("\u5176\u4ED6\u985E \u8A2D\u5B9A");
 		btn_man_menu_5_set.setFont(new Font("新細明體", Font.PLAIN, 13));
@@ -1585,6 +1587,7 @@ public class POS implements ActionListener {
 		tf_ch_small_total.setText(smalltotal+"");
 		order_sum+=Integer.parseInt(tf_menu_qty[change(i)].getText());
 		tf_info_order_sum.setText(order_sum+"");
+		total();
 		if(isOrder[i]==true)
 		{
 			order_list_sum++;
@@ -1592,11 +1595,6 @@ public class POS implements ActionListener {
 			sort();
 		}
 		isOrder[i]=false;
-		tf_note.setText("");
-		for(int y=0;y<10;y++)
-		{
-			tf_note.setText(tf_note.getText()+list[y]+",");
-		}
 		tab_order_list.updateUI();
 	}
 	private void del(int i) {
@@ -1609,6 +1607,7 @@ public class POS implements ActionListener {
 		tf_ch_small_total.setText(smalltotal+"");
 		order_sum--;
 		tf_info_order_sum.setText(order_sum+"");
+		total();
 		for(int w=0;w<40;w++)
 		{
 			if(list[w]==i && qty[i]==0){
@@ -1631,21 +1630,18 @@ public class POS implements ActionListener {
 			
 		}
 		order_list_sum--;
-		tf_note.setText(m+"");
 		sort();
 		tab_order_list.updateUI();
 		
 	}
 	void sort()  {
 		
-		for(int k=0;k<53;k++)
-		{
-			pn_list_1.remove(pn_item[k]);
-			pn_list_2.remove(pn_item[k]);
-			pn_list_3.remove(pn_item[k]);
-			pn_list_4.remove(pn_item[k]);
-			pn_list_5.remove(pn_item[k]);
-		}
+		pn_list_1.removeAll();
+		pn_list_2.removeAll();
+		pn_list_3.removeAll();
+		pn_list_4.removeAll();
+		pn_list_5.removeAll();
+		tab_order_list.updateUI();
 		n=0;
 		for(int i=0;i<order_list_sum;i++)
 		{
@@ -1695,7 +1691,7 @@ public class POS implements ActionListener {
 	}
 	void check() {
 		
-		if(item_sum>=40)
+		if(item_sum2>=40)
 		{
 			for(int i=0;i<22;i++)
 			{
@@ -1770,6 +1766,49 @@ public class POS implements ActionListener {
             };
             th_nowtime.start();
     }
+	void total()
+	{
+		total=smalltotal*(discount/100)-off;
+		tf_ch_total.setText(total+"");
+	}
+	void reset()
+	{
+		pay=0;
+		change=0;
+		order_sum=0;
+		smalltotal=0;
+		off=0;
+		all_off=0;
+		total=0;
+		discount=100;
+		item_sum2=0;
+		order_list_sum=0;
+		m=0;
+		n=0;
+		tmp=-1;
+		tf_ch_pay.setText(pay+"");
+		tf_ch_change.setText(change+"");
+		tf_info_order_sum.setText(order_sum+"");
+		tf_ch_small_total.setText(smalltotal+"");
+		tf_ch_off.setText(off+"");
+		tf_ch_all_off.setText(all_off+"");
+		tf_ch_total.setText(total+"");
+		tf_ch_discount.setText(discount+"");
+		tab_order_list.setSelectedIndex(0);
+		tab_menu.setSelectedIndex(0);
+		for(int i=0;i<40;i++)
+			list[i]=-1;
+		for(int j=0;j<53;j++)
+		{
+			isOrder[j]=false;
+			qty[j]=0;
+			small_total[j]=0;
+		}
+		for(int k=0;k<19;k++)
+			cb[k].setSelected(false);
+		check();
+		sort();
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -1778,6 +1817,12 @@ public class POS implements ActionListener {
 		{
 			if(e.getSource()==btn_del[i] && qty[i]>0)
 				del(i);	
+		}
+		if(e.getSource()==btn_man_exit)
+			fm_poa_main.dispose();
+		if(e.getSource()==btn_man_clear)
+		{
+			reset();
 		}
 	}
 }
