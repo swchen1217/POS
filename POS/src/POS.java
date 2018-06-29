@@ -17,6 +17,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
+
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.ImageIcon;
@@ -37,9 +39,9 @@ public class POS implements ActionListener {
 	BufferedWriter bw;
 	BufferedReader br;
 	String oldordernum="";
-	int pay, change, order_sum=0, smalltotal=0, off=0, all_off=0, item_sum2=0, order_list_sum=0, m=0 ,n=0 ,tmp=-1;
+	int pay, change, order_sum=0, smalltotal=0, off=0, all_off=0, item_sum2=0, order_list_sum=0, m=0 ,n=0 ,tmp=-1 ,order_num;
 	int list[]={-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
-	boolean isOrder[]=new boolean[53];
+	boolean isOrder[]=new boolean[53], isChecked=false;
 	double total=0 ,discount=100;
 	
 	/* main end*/
@@ -113,9 +115,9 @@ public class POS implements ActionListener {
 	 * Create the application.
 	 */
 	public POS() {
+		startRecord();
 		initialize();
 		clock();
-		startRecord();
 	}
 
 	/**
@@ -1314,6 +1316,7 @@ public class POS implements ActionListener {
 		tf_info_user_num.setColumns(10);
 		
 		tf_info_order_num = new JTextField();
+		tf_info_order_num.setText(order_num+"");
 		tf_info_order_num.setHorizontalAlignment(SwingConstants.CENTER);
 		tf_info_order_num.setEditable(false);
 		tf_info_order_num.setFont(new Font("新細明體", Font.PLAIN, 19));
@@ -1455,13 +1458,11 @@ public class POS implements ActionListener {
 		pn_checkout.add(tf_ch_change);
 		tf_ch_change.setColumns(10);
 		
-		/* checkout end */
-		/* manage */
-		
 		btn_ch_chechout = new JButton("\u7D50\u5E33");
 		btn_ch_chechout.setFont(new Font("新細明體", Font.PLAIN, 26));
 		btn_ch_chechout.setBounds(430, 25, 90, 90);
 		pn_checkout.add(btn_ch_chechout);
+		btn_ch_chechout.addActionListener(this);
 		
 		btn_ch_off_set = new JButton("\u512A\u60E0");
 		btn_ch_off_set.setFont(new Font("新細明體", Font.PLAIN, 26));
@@ -1472,6 +1473,10 @@ public class POS implements ActionListener {
 		btn_ch_next.setFont(new Font("新細明體", Font.PLAIN, 26));
 		btn_ch_next.setBounds(730, 25, 110, 90);
 		pn_checkout.add(btn_ch_next);
+		btn_ch_next.addActionListener(this);
+		
+		/* checkout end */
+		/* manage */
 		
 		pn_manage = new JPanel();
 		pn_manage.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "\u7BA1\u7406", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
@@ -1847,17 +1852,16 @@ public class POS implements ActionListener {
 			try{
 	            br=new BufferedReader(new FileReader(f.getAbsolutePath()));
 	            int linenumber = 0;
-	    		String txt = "";
 	    		int lines = 0;
-	    		while (txt != null) {
-	    			txt = br.readLine();
+	    		while (oldordernum != null) {
+	    			oldordernum = br.readLine();
 	    			if (lines == linenumber) {
-	    				oldordernum=txt;
+	    				order_num=Integer.parseInt(oldordernum);
 	    			}
 	    			lines++;
 	    		}
 	    		br.close();
-	    		System.out.println(oldordernum);
+	    		System.out.println(order_num+"");
 			}catch(Exception e){}	
 		}
 	}
@@ -1875,6 +1879,45 @@ public class POS implements ActionListener {
 		if(e.getSource()==btn_man_clear)
 		{
 			reset();
+		}
+		if(e.getSource()==btn_ch_chechout)
+		{
+			
+			pay=Integer.parseInt(tf_ch_pay.getText());
+			change=pay-(int)total;
+			tf_ch_change.setText(change+"");
+			if(total!=0 && pay!=0 && change>=0)
+			{
+				isChecked=true;
+				tf_ch_change.setForeground(Color.BLACK);
+			}else
+			    tf_ch_change.setForeground(Color.RED);
+		}
+		if(e.getSource()==btn_ch_next)
+		{
+			
+			if(isChecked==true)
+			{
+				tf_ch_change.setForeground(Color.BLACK);
+				isChecked=false;
+				reset();
+				order_num++;
+				tf_info_order_num.setText(order_num+"");
+				try{
+					f.getParentFile().mkdirs();
+					bw=new BufferedWriter(new FileWriter(f.getAbsolutePath()));
+					bw.write(order_num+"");
+					bw.flush();
+				}catch(Exception e1){}
+				/*if(current_num<10)
+				    lb_current_num.setText("單號：00"+current_num);
+				else if(current_num<100)
+					lb_current_num.setText("單號：0"+current_num);
+				else
+					lb_current_num.setText("單號："+current_num);*/
+		
+			}
+			
 		}
 	}
 }
