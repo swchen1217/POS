@@ -12,6 +12,11 @@ import java.text.SimpleDateFormat;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.ImageIcon;
@@ -28,6 +33,10 @@ public class POS implements ActionListener {
 	JPanel pn_menu_1,pn_menu_2,pn_menu_3,pn_menu_4,pn_menu_5,pn_list_1,pn_list_2,pn_list_3,pn_list_4,pn_list_5;
 	JLabel lb_note;
 	JTextField tf_note;
+	File f;
+	BufferedWriter bw;
+	BufferedReader br;
+	String oldordernum="";
 	int pay, change, order_sum=0, smalltotal=0, off=0, all_off=0, item_sum2=0, order_list_sum=0, m=0 ,n=0 ,tmp=-1;
 	int list[]={-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
 	boolean isOrder[]=new boolean[53];
@@ -80,7 +89,7 @@ public class POS implements ActionListener {
 	/* manege */
 	
 	JPanel pn_manage;
-	JButton btn_man_clear,btn_man_re_print,btn_man_printer_set,btn_man_menu_5_set,btn_ch_chechout,btn_ch_off_set,btn_ch_next,btn_man_table,btn_man_stock,btn_man_user_change,btn_man_look,btn_man_exit;
+	JButton btn_man_clear,btn_man_re_print,btn_man_printer_set,btn_man_menu_5_set,btn_ch_chechout,btn_ch_off_set,btn_ch_next,btn_man_table,btn_man_stock,btn_man_user_change,btn_man_look,btn_man_exit,btn_man_order_num_reset;
 	
 	/* manage end */
 	
@@ -106,6 +115,7 @@ public class POS implements ActionListener {
 	public POS() {
 		initialize();
 		clock();
+		startRecord();
 	}
 
 	/**
@@ -1502,8 +1512,12 @@ public class POS implements ActionListener {
 		btn_man_clear.addActionListener(this);
 		
 		btn_man_menu_5_set = new JButton("\u5176\u4ED6\u985E \u8A2D\u5B9A");
+		btn_man_menu_5_set.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		btn_man_menu_5_set.setFont(new Font("新細明體", Font.PLAIN, 13));
-		btn_man_menu_5_set.setBounds(150, 180, 100, 80);
+		btn_man_menu_5_set.setBounds(280, 180, 100, 80);
 		pn_manage.add(btn_man_menu_5_set);
 		
 		btn_man_re_print = new JButton("\u518D\u5217\u5370");
@@ -1513,8 +1527,13 @@ public class POS implements ActionListener {
 		
 		btn_man_printer_set = new JButton("\u5370\u8868\u6A5F\u8A2D\u5B9A");
 		btn_man_printer_set.setFont(new Font("新細明體", Font.PLAIN, 13));
-		btn_man_printer_set.setBounds(280, 180, 100, 80);
+		btn_man_printer_set.setBounds(150, 260, 100, 80);
 		pn_manage.add(btn_man_printer_set);
+		
+		btn_man_order_num_reset = new JButton("\u55AE\u865F\u91CD\u8A2D");
+		btn_man_order_num_reset.setFont(new Font("新細明體", Font.PLAIN, 15));
+		btn_man_order_num_reset.setBounds(150, 180, 100, 80);
+		pn_manage.add(btn_man_order_num_reset);
 		
 		/* manage end */
 		/* menu */
@@ -1794,6 +1813,7 @@ public class POS implements ActionListener {
 		tf_ch_all_off.setText(all_off+"");
 		tf_ch_total.setText(total+"");
 		tf_ch_discount.setText(discount+"");
+		tf_note.setText("");
 		tab_order_list.setSelectedIndex(0);
 		tab_menu.setSelectedIndex(0);
 		for(int i=0;i<40;i++)
@@ -1808,6 +1828,31 @@ public class POS implements ActionListener {
 			cb[k].setSelected(false);
 		check();
 		sort();
+	}
+	void startRecord()
+	{
+		
+		f=new File("C:/Madhouse POS/system/system.txt");
+		if(!f.exists())
+		{
+			try{
+				f.getParentFile().mkdirs();
+				bw=new BufferedWriter(new FileWriter(f.getAbsolutePath()));
+				bw.write("0");
+				bw.newLine();
+				bw.flush();
+			}catch(Exception e){}
+		}else
+		{
+			try{
+				br=new BufferedReader(new FileReader("C:/Madhouse POS/system/system.txt"));
+				oldordernum=br.readLine();
+	            br.close();
+				bw=new BufferedWriter(new FileWriter(f.getAbsolutePath()));
+				bw.write(oldordernum);
+				bw.flush();
+			}catch(Exception e){}	
+		}
 	}
 
 	@Override
