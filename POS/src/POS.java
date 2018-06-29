@@ -1845,12 +1845,19 @@ public class POS implements ActionListener {
 		}else
 		{
 			try{
-				br=new BufferedReader(new FileReader("C:/Madhouse POS/system/system.txt"));
-				oldordernum=br.readLine();
-	            br.close();
-				bw=new BufferedWriter(new FileWriter(f.getAbsolutePath()));
-				bw.write(oldordernum);
-				bw.flush();
+	            br=new BufferedReader(new FileReader(f.getAbsolutePath()));
+	            int linenumber = 0;
+	    		String txt = "";
+	    		int lines = 0;
+	    		while (txt != null) {
+	    			txt = br.readLine();
+	    			if (lines == linenumber) {
+	    				oldordernum=txt;
+	    			}
+	    			lines++;
+	    		}
+	    		br.close();
+	    		System.out.println(oldordernum);
 			}catch(Exception e){}	
 		}
 	}
