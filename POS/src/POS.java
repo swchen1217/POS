@@ -33,15 +33,19 @@ public class POS implements ActionListener {
 	JPanel pn_menu_1,pn_menu_2,pn_menu_3,pn_menu_4,pn_menu_5,pn_list_1,pn_list_2,pn_list_3,pn_list_4,pn_list_5;
 	JLabel lb_note;
 	JTextField tf_note;
-	File f_system,f_log_order,f_log_sale;
-	BufferedWriter bw_system,bw_log_order,bw_log_sale;
-	BufferedReader br_system,br_log_order,br_log_sale;
+	File f_system,f_log_order,f_log_sale,f_system_table;
+	BufferedWriter bw_system,bw_log_order,bw_log_sale,bw_system_table;
+	BufferedReader br_system,br_log_order,br_log_sale,br_system_table;
 	String oldordernum="";
 	int pay, change, order_sum=0, smalltotal=0, off=0, all_off=0, item_sum2=0, order_list_sum=0, m=0 ,n=0 ,tmp=-1 ,order_num ,table_num;
 	int list[]={-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
 	boolean isOrder[]=new boolean[53], isChecked=false, notfirst=false;
 	double total=0 ,discount=100;
 	String oldRecord_log_order="",oldRecord_log_sale="",filename="";
+	String status[]={"空桌","已結帳","清潔中"};
+	int table_record_status[]=new int[16];
+	int table_record_ordernum[]=new int[16];
+	String oldrecord_table="";
 	
 	/* main end*/
 	
@@ -96,6 +100,10 @@ public class POS implements ActionListener {
 	/* table */
 	
 	JFrame fm_man_table;
+	JPanel pn_table_inside[]=new JPanel[16] ,pn_table_outside;
+	JLabel lb_table_inside_tablenum[]=new JLabel[16] ,lb_table_inside_ordernum[]=new JLabel[16] ,lb_table_inside_status[]=new JLabel[16] ,lb_table_outside_tablenum;
+	JTextField tf_table_inside_ordernum[]=new JTextField[16] ,tf_table_inside_status[]=new JTextField[16];
+	JButton btn_table_inside_new[]=new JButton[16] ,btn_table_inside_out[]=new JButton[16] ,btn_table_inside_end[]=new JButton[16] ,btn_table_outside_new ,btn_table_exit;
 	
 	/* table end */
 	
@@ -119,8 +127,8 @@ public class POS implements ActionListener {
 	 * Create the application.
 	 */
 	public POS() {
-		startRecord();
 		initialize();
+		startRecord();
 		clock();
 	}
 
@@ -1320,7 +1328,6 @@ public class POS implements ActionListener {
 		tf_info_user_num.setColumns(10);
 		
 		tf_info_order_num = new JTextField();
-		tf_info_order_num.setText(order_num+"");
 		tf_info_order_num.setHorizontalAlignment(SwingConstants.CENTER);
 		tf_info_order_num.setEditable(false);
 		tf_info_order_num.setFont(new Font("新細明體", Font.PLAIN, 19));
@@ -1603,6 +1610,113 @@ public class POS implements ActionListener {
 					
 		}
 		
+		/* fm_man_table */
+		
+		fm_man_table = new JFrame();
+		fm_man_table.setIconImage(Toolkit.getDefaultToolkit().getImage(POS.class.getResource("/pic/icon.png")));
+		fm_man_table.getContentPane().setFont(new Font("新細明體", Font.PLAIN, 22));
+		fm_man_table.setTitle("POS\u7CFB\u7D71-桌位管理");
+		fm_man_table.setResizable(false);
+		fm_man_table.setBounds(100, 100, 1005, 790);
+		fm_man_table.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		fm_man_table.getContentPane().setLayout(null);
+		fm_man_table.setVisible(false);
+		
+		for(int i=0;i<16;i++)
+		{
+			pn_table_inside[i] = new JPanel();
+			fm_man_table.add(pn_table_inside[i]);
+			pn_table_inside[i].setLayout(null);
+			pn_table_inside[i].setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+			
+			lb_table_inside_tablenum[i] = new JLabel(i+1+"");
+			lb_table_inside_tablenum[i].setBounds(10, 10, 40, 40);
+			lb_table_inside_tablenum[i].setFont(new Font("新細明體", Font.PLAIN, 40));
+			pn_table_inside[i].add(lb_table_inside_tablenum[i]);
+			
+			lb_table_inside_ordernum[i] = new JLabel("\u55AE\u865F : ");
+			lb_table_inside_ordernum[i].setBounds(65, 40, 60, 20);
+			lb_table_inside_ordernum[i].setFont(new Font("新細明體", Font.PLAIN, 20));
+			pn_table_inside[i].add(lb_table_inside_ordernum[i]);
+			
+			lb_table_inside_status[i] = new JLabel("\u72C0\u614B : ");
+			lb_table_inside_status[i].setBounds(55, 65, 60, 20);
+			lb_table_inside_status[i].setFont(new Font("新細明體", Font.PLAIN, 20));
+			pn_table_inside[i].add(lb_table_inside_status[i]);
+			
+			tf_table_inside_ordernum[i] = new JTextField();
+			tf_table_inside_ordernum[i].setEditable(false);
+			tf_table_inside_ordernum[i].setFont(new Font("新細明體", Font.PLAIN, 20));
+			tf_table_inside_ordernum[i].setBounds(120, 40, 35, 25);
+			pn_table_inside[i].add(tf_table_inside_ordernum[i]);
+			tf_table_inside_ordernum[i].setColumns(10);
+			
+			tf_table_inside_status[i] = new JTextField();
+			tf_table_inside_status[i].setEditable(false);
+			tf_table_inside_status[i].setFont(new Font("新細明體", Font.PLAIN, 20));
+			tf_table_inside_status[i].setBounds(115, 65, 65, 30);
+			pn_table_inside[i].add(tf_table_inside_status[i]);
+			tf_table_inside_status[i].setColumns(10);
+			
+			btn_table_inside_new[i] = new JButton("\u65B0\u55AE");
+			btn_table_inside_new[i].setHorizontalAlignment(SwingConstants.LEFT);
+			btn_table_inside_new[i].setFont(new Font("新細明體", Font.PLAIN, 19));
+			btn_table_inside_new[i].setBounds(10, 100, 70, 40);
+			pn_table_inside[i].add(btn_table_inside_new[i]);
+			
+			btn_table_inside_out[i] = new JButton("\u9910\u7562");
+			btn_table_inside_out[i].setHorizontalAlignment(SwingConstants.LEFT);
+			btn_table_inside_out[i].setFont(new Font("新細明體", Font.PLAIN, 19));
+			btn_table_inside_out[i].setBounds(80, 100, 70, 40);
+			pn_table_inside[i].add(btn_table_inside_out[i]);
+			
+			btn_table_inside_end[i] = new JButton("\u5B8C\u6210");
+			btn_table_inside_end[i].setHorizontalAlignment(SwingConstants.LEFT);
+			btn_table_inside_end[i].setFont(new Font("新細明體", Font.PLAIN, 19));
+			btn_table_inside_end[i].setBounds(150, 100, 70, 40);
+			pn_table_inside[i].add(btn_table_inside_end[i]);
+			
+		}
+		
+		pn_table_inside[0].setBounds(0, 0, 250, 150);
+		pn_table_inside[1].setBounds(250, 0, 250, 150);
+		pn_table_inside[2].setBounds(500, 0, 250, 150);
+		pn_table_inside[3].setBounds(750, 0, 250, 150);
+		pn_table_inside[4].setBounds(0, 150, 250, 150);
+		pn_table_inside[5].setBounds(250, 150, 250, 150);
+		pn_table_inside[6].setBounds(500, 150, 250, 150);
+		pn_table_inside[7].setBounds(750, 150, 250, 150);
+		pn_table_inside[8].setBounds(0, 300, 250, 150);
+		pn_table_inside[9].setBounds(250, 300, 250, 150);
+		pn_table_inside[10].setBounds(500, 300, 250, 150);
+		pn_table_inside[11].setBounds(750, 300, 250, 150);
+		pn_table_inside[12].setBounds(0, 450, 250, 150);
+		pn_table_inside[13].setBounds(250, 450, 250, 150);
+		pn_table_inside[14].setBounds(500, 450, 250, 150);
+		pn_table_inside[15].setBounds(750, 450, 250, 150);
+		
+		pn_table_outside = new JPanel();
+		pn_table_outside.setBounds(0, 600, 250, 150);
+		fm_man_table.add(pn_table_outside);
+		pn_table_outside.setLayout(null);
+		pn_table_outside.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		
+		lb_table_outside_tablenum = new JLabel("\u5916\u5E36");
+		lb_table_outside_tablenum.setFont(new Font("新細明體", Font.PLAIN, 40));
+		lb_table_outside_tablenum.setBounds(10, 10, 85, 40);
+		pn_table_outside.add(lb_table_outside_tablenum);
+		
+		btn_table_outside_new = new JButton("\u65B0\u55AE");
+		btn_table_outside_new.setHorizontalAlignment(SwingConstants.LEFT);
+		btn_table_outside_new.setFont(new Font("新細明體", Font.PLAIN, 19));
+		btn_table_outside_new.setBounds(80, 100, 70, 40);
+		pn_table_outside.add(btn_table_outside_new);
+		
+		btn_table_exit = new JButton("\u96E2\u958B");
+		btn_table_exit.setFont(new Font("新細明體", Font.PLAIN, 50));
+		btn_table_exit.setBounds(250, 600, 250, 150);
+		fm_man_table.getContentPane().add(btn_table_exit);
+		btn_table_exit.addActionListener(this);
 	}
 	void add(int i) {
 		
@@ -1851,6 +1965,8 @@ public class POS implements ActionListener {
 				bw_system.write("1");
 				bw_system.newLine();
 				bw_system.flush();
+				order_num=1;
+				tf_info_order_num.setText(order_num+"");
 			}catch(Exception e){}
 		}else
 		{
@@ -1866,6 +1982,7 @@ public class POS implements ActionListener {
 	    			lines++;
 	    		}
 	    		br_system.close();
+	    		tf_info_order_num.setText(order_num+"");
 			}catch(Exception e){}	
 		}
 		
@@ -1917,40 +2034,75 @@ public class POS implements ActionListener {
 		}
 		if(notfirst==false)
 		{
-		f_log_sale=new File("C:/Madhouse POS/紀錄/銷售紀錄/"+r_time1+"/"+r_time2+"銷售紀錄.csv");
-		if(!f_log_sale.exists())
+			f_log_sale=new File("C:/Madhouse POS/紀錄/銷售紀錄/"+r_time1+"/"+r_time2+"銷售紀錄.csv");
+			if(!f_log_sale.exists())
+			{
+				try{
+					f_log_sale.getParentFile().mkdirs();
+					bw_log_sale=new BufferedWriter(new FileWriter(f_log_sale.getAbsolutePath()));
+					bw_log_sale.write("點餐時間,");
+					for(int i=0; i<item_name.length; i++)
+						bw_log_sale.write(item_name[i]+",");
+					bw_log_sale.write("小計,總優待,總金額");
+					bw_log_sale.newLine();
+					bw_log_sale.flush();
+				}catch(Exception e){}
+			}else
+			{
+				try{
+					br_log_sale=new BufferedReader(new FileReader(f_log_sale.getAbsolutePath()));
+					oldRecord_log_sale+=br_log_sale.readLine()+"\r\n";
+					do{
+						String str=br_log_sale.readLine();
+						if(str==null)
+							break;
+						oldRecord_log_sale+=str+"\r\n";
+					}while(true);
+					br_log_sale.close();
+					bw_log_sale=new BufferedWriter(new FileWriter(f_log_sale.getAbsolutePath()));
+					bw_log_sale.write(oldRecord_log_sale);
+					bw_log_sale.flush();
+				}catch(Exception e){}
+			}
+			notfirst=true;
+		}
+		f_system_table=new File("C:/Madhouse POS/system/system_table.csv");
+		if(!f_system_table.exists())
 		{
 			try{
-				f_log_sale.getParentFile().mkdirs();
-				bw_log_sale=new BufferedWriter(new FileWriter(f_log_sale.getAbsolutePath()));
-				bw_log_sale.write("點餐時間,");
-				for(int i=0; i<item_name.length; i++)
-					bw_log_sale.write(item_name[i]+",");
-				bw_log_sale.write("小計,總優待,總金額");
-				bw_log_sale.newLine();
-				bw_log_sale.flush();
+				f_system_table.getParentFile().mkdirs();
+				bw_system_table=new BufferedWriter(new FileWriter(f_system_table.getAbsolutePath()));
+				for(int i=0; i<16; i++)
+				{
+					bw_system_table.write(i+1+",0,0");
+					bw_system_table.newLine();
+				}
+				bw_system_table.flush();
 			}catch(Exception e){}
 		}else
 		{
 			try{
-				br_log_sale=new BufferedReader(new FileReader(f_log_sale.getAbsolutePath()));
-				oldRecord_log_sale+=br_log_sale.readLine()+"\r\n";
-				do{
-                    String str=br_log_sale.readLine();
-                    if(str==null)
-                        break;
-                    oldRecord_log_sale+=str+"\r\n";
-	            }while(true);
-				br_log_sale.close();
-				bw_log_sale=new BufferedWriter(new FileWriter(f_log_sale.getAbsolutePath()));
-				bw_log_sale.write(oldRecord_log_sale);
-				bw_log_sale.flush();
-			}catch(Exception e){}
+	            for(int i=0;i<16;i++)
+	            {
+	            	br_system_table=new BufferedReader(new FileReader(f_system_table.getAbsolutePath()));
+	            	String [] table_record;
+	            	int lines = 0;
+		    		while (oldrecord_table != null) {
+		    			oldrecord_table = br_system_table.readLine();
+		    			if (lines == i) {
+		    				table_record=oldrecord_table.split(",");
+		    				table_record_status[i]=Integer.parseInt(table_record[1]);
+		    				table_record_ordernum[i]=Integer.parseInt(table_record[2]);
+		    			}
+		    			lines++;
+		    		}
+		    		oldrecord_table="";
+		    		br_system_table.close();
+	            }
+			}catch(Exception e){}	
 		}
-		notfirst=true;
 	}
-	}
-	void keepRecord_log()
+	void keepRecord_order_log()
 	{
 		try{
 			Date d=new Date();
@@ -2000,17 +2152,13 @@ public class POS implements ActionListener {
 			startRecord();
 		}
 	}
-	void man_table()
+	void renew_table()
 	{
-		fm_man_table = new JFrame();
-		fm_man_table.setIconImage(Toolkit.getDefaultToolkit().getImage(POS.class.getResource("/pic/icon.png")));
-		fm_man_table.getContentPane().setFont(new Font("新細明體", Font.PLAIN, 22));
-		fm_man_table.setTitle("POS\u7CFB\u7D71-桌位管理");
-		fm_man_table.setResizable(false);
-		fm_man_table.setBounds(100, 100, 1000, 750);
-		fm_man_table.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		fm_man_table.getContentPane().setLayout(null);
-		fm_man_table.setVisible(true);
+		for(int i=0;i<16;i++)
+		{
+			tf_table_inside_status[i].setText(status[table_record_status[i]]);
+			tf_table_inside_ordernum[i].setText(table_record_ordernum[i]+"");
+		}
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -2025,18 +2173,20 @@ public class POS implements ActionListener {
 		if(e.getSource()==btn_man_clear)
 			reset();
 		if(e.getSource()==btn_man_table)
-			man_table();
+		{
+			fm_man_table.setVisible(true);
+			renew_table();
+		}
 		if(e.getSource()==btn_ch_chechout)
 		{
-			
 			pay=Integer.parseInt(tf_ch_pay.getText());
-			change=pay-(int)total;
-			tf_ch_change.setText(change+"");
 			if(total!=0 && pay>=total && change>=0)
 			{
+				change=pay-(int)total;
+				tf_ch_change.setText(change+"");
 				isChecked=true;
 				tf_ch_change.setForeground(Color.BLACK);
-				keepRecord_log();
+				keepRecord_order_log();
 			}else
 			    tf_ch_change.setForeground(Color.RED);
 		}
@@ -2060,5 +2210,7 @@ public class POS implements ActionListener {
 			}
 			
 		}
+		if(e.getSource()==btn_table_exit)
+			fm_man_table.dispose();
 	}
 }
