@@ -33,19 +33,17 @@ public class POS implements ActionListener {
 	JPanel pn_menu_1,pn_menu_2,pn_menu_3,pn_menu_4,pn_menu_5,pn_list_1,pn_list_2,pn_list_3,pn_list_4,pn_list_5;
 	JLabel lb_note;
 	JTextField tf_note;
-	File f_system,f_log_order,f_log_sale,f_system_table;
-	BufferedWriter bw_system,bw_log_order,bw_log_sale,bw_system_table;
-	BufferedReader br_system,br_log_order,br_log_sale,br_system_table;
-	String oldordernum="";
-	int pay, change, order_sum=0, smalltotal=0, off=0, all_off=0, item_sum2=0, order_list_sum=0, m=0 ,n=0 ,tmp=-1 ,order_num ,table_num;
+	File f_system,f_log_order,f_log_sale,f_system_table,f_log_table;
+	BufferedWriter bw_system,bw_log_order,bw_log_sale,bw_system_table,bw_log_table;
+	BufferedReader br_system,br_log_order,br_log_sale,br_system_table,br_log_table;
+	int pay, change, order_sum=0, smalltotal=0, off=0, all_off=0, item_sum2=0, order_list_sum=0, m=0 ,n=0 ,tmp=-1 ,order_num ,now_tablenum ,now_status;
 	int list[]={-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
-	boolean isOrder[]=new boolean[53], isChecked=false, notfirst=false;
+	int table_status[]=new int[16],table_ordernum[]=new int[16];
 	double total=0 ,discount=100;
-	String oldRecord_log_order="",oldRecord_log_sale="",filename="";
+	String oldordernum="",oldRecord_log_order="",oldRecord_log_sale="",oldrecord_table="" ,oldRecord_log_table;
 	String status[]={"空桌","已結帳","清潔中"};
-	int table_record_status[]=new int[16];
-	int table_record_ordernum[]=new int[16];
-	String oldrecord_table="";
+	String status2[]={"空桌","新單","已結帳","清潔中"};
+	boolean isOrder[]=new boolean[53], isChecked=false, notfirst=false;
 	
 	/* main end*/
 	
@@ -103,7 +101,7 @@ public class POS implements ActionListener {
 	JPanel pn_table_inside[]=new JPanel[16] ,pn_table_outside;
 	JLabel lb_table_inside_tablenum[]=new JLabel[16] ,lb_table_inside_ordernum[]=new JLabel[16] ,lb_table_inside_status[]=new JLabel[16] ,lb_table_outside_tablenum;
 	JTextField tf_table_inside_ordernum[]=new JTextField[16] ,tf_table_inside_status[]=new JTextField[16];
-	JButton btn_table_inside_new[]=new JButton[16] ,btn_table_inside_out[]=new JButton[16] ,btn_table_inside_end[]=new JButton[16] ,btn_table_outside_new ,btn_table_exit;
+	JButton btn_table_inside_new[]=new JButton[16] ,btn_table_inside_out[]=new JButton[16] ,btn_table_inside_end[]=new JButton[16] ,btn_table_outside_new ,btn_table_exit ,btn_table_all_reset;
 	
 	/* table end */
 	
@@ -1529,10 +1527,7 @@ public class POS implements ActionListener {
 		btn_man_clear.addActionListener(this);
 		
 		btn_man_menu_5_set = new JButton("\u5176\u4ED6\u985E \u8A2D\u5B9A");
-		btn_man_menu_5_set.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
+		btn_man_menu_5_set.addActionListener(this);
 		btn_man_menu_5_set.setFont(new Font("新細明體", Font.PLAIN, 13));
 		btn_man_menu_5_set.setBounds(280, 180, 100, 80);
 		pn_manage.add(btn_man_menu_5_set);
@@ -1551,6 +1546,7 @@ public class POS implements ActionListener {
 		btn_man_order_num_reset.setFont(new Font("新細明體", Font.PLAIN, 15));
 		btn_man_order_num_reset.setBounds(150, 180, 100, 80);
 		pn_manage.add(btn_man_order_num_reset);
+		btn_man_order_num_reset.addActionListener(this);
 		
 		/* manage end */
 		/* menu */
@@ -1617,7 +1613,7 @@ public class POS implements ActionListener {
 		fm_man_table.getContentPane().setFont(new Font("新細明體", Font.PLAIN, 22));
 		fm_man_table.setTitle("POS\u7CFB\u7D71-桌位管理");
 		fm_man_table.setResizable(false);
-		fm_man_table.setBounds(100, 100, 1005, 790);
+		fm_man_table.setBounds(247, 80, 1005, 790);
 		fm_man_table.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		fm_man_table.getContentPane().setLayout(null);
 		fm_man_table.setVisible(false);
@@ -1625,7 +1621,7 @@ public class POS implements ActionListener {
 		for(int i=0;i<16;i++)
 		{
 			pn_table_inside[i] = new JPanel();
-			fm_man_table.add(pn_table_inside[i]);
+			fm_man_table.getContentPane().add(pn_table_inside[i]);
 			pn_table_inside[i].setLayout(null);
 			pn_table_inside[i].setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 			
@@ -1663,18 +1659,21 @@ public class POS implements ActionListener {
 			btn_table_inside_new[i].setFont(new Font("新細明體", Font.PLAIN, 19));
 			btn_table_inside_new[i].setBounds(10, 100, 70, 40);
 			pn_table_inside[i].add(btn_table_inside_new[i]);
+			btn_table_inside_new[i].addActionListener(this);
 			
 			btn_table_inside_out[i] = new JButton("\u9910\u7562");
 			btn_table_inside_out[i].setHorizontalAlignment(SwingConstants.LEFT);
 			btn_table_inside_out[i].setFont(new Font("新細明體", Font.PLAIN, 19));
 			btn_table_inside_out[i].setBounds(80, 100, 70, 40);
 			pn_table_inside[i].add(btn_table_inside_out[i]);
+			btn_table_inside_out[i].addActionListener(this);
 			
 			btn_table_inside_end[i] = new JButton("\u5B8C\u6210");
 			btn_table_inside_end[i].setHorizontalAlignment(SwingConstants.LEFT);
 			btn_table_inside_end[i].setFont(new Font("新細明體", Font.PLAIN, 19));
 			btn_table_inside_end[i].setBounds(150, 100, 70, 40);
 			pn_table_inside[i].add(btn_table_inside_end[i]);
+			btn_table_inside_end[i].addActionListener(this);
 			
 		}
 		
@@ -1697,7 +1696,7 @@ public class POS implements ActionListener {
 		
 		pn_table_outside = new JPanel();
 		pn_table_outside.setBounds(0, 600, 250, 150);
-		fm_man_table.add(pn_table_outside);
+		fm_man_table.getContentPane().add(pn_table_outside);
 		pn_table_outside.setLayout(null);
 		pn_table_outside.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		
@@ -1711,12 +1710,27 @@ public class POS implements ActionListener {
 		btn_table_outside_new.setFont(new Font("新細明體", Font.PLAIN, 19));
 		btn_table_outside_new.setBounds(80, 100, 70, 40);
 		pn_table_outside.add(btn_table_outside_new);
+		btn_table_outside_new.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				now_status=0;
+				tf_info_status.setText("新單");
+				now_tablenum=17;
+				tf_info_table.setText("外帶");
+				fm_man_table.dispose();
+			}
+		});
 		
 		btn_table_exit = new JButton("\u96E2\u958B");
 		btn_table_exit.setFont(new Font("新細明體", Font.PLAIN, 50));
-		btn_table_exit.setBounds(250, 600, 250, 150);
+		btn_table_exit.setBounds(750, 600, 250, 150);
 		fm_man_table.getContentPane().add(btn_table_exit);
 		btn_table_exit.addActionListener(this);
+		
+		btn_table_all_reset = new JButton("全部重設");
+		btn_table_all_reset.setFont(new Font("新細明體", Font.PLAIN, 50));
+		btn_table_all_reset.setBounds(250, 600, 250, 150);
+		fm_man_table.getContentPane().add(btn_table_all_reset);
+		btn_table_all_reset.addActionListener(this);
 	}
 	void add(int i) {
 		
@@ -1740,7 +1754,7 @@ public class POS implements ActionListener {
 		isOrder[i]=false;
 		tab_order_list.updateUI();
 	}
-	private void del(int i) {
+	void del(int i) {
 		
 		qty[i]--;
 		small_total[i]=qty[i]*price[i];
@@ -1989,13 +2003,7 @@ public class POS implements ActionListener {
 		Date d=new Date();
 		SimpleDateFormat sdf1=new SimpleDateFormat("yyyyMM"), sdf2=new SimpleDateFormat("yyyyMMdd");
 		String r_time1=sdf1.format(d), r_time2=sdf2.format(d);
-		if(order_num<10)
-		    filename="00"+order_num;
-		else if(order_num<100)
-			filename="0"+order_num;
-		else
-			filename=order_num+"";
-		f_log_order=new File("C:/Madhouse POS/紀錄/點餐紀錄/"+r_time1+"/"+r_time2+filename+"點餐紀錄.csv");
+		f_log_order=new File("C:/Madhouse POS/紀錄/點餐紀錄/"+r_time1+"/"+r_time2+"點餐紀錄.csv");
 		if(!f_log_order.exists())
 		{
 			try{
@@ -2091,8 +2099,8 @@ public class POS implements ActionListener {
 		    			oldrecord_table = br_system_table.readLine();
 		    			if (lines == i) {
 		    				table_record=oldrecord_table.split(",");
-		    				table_record_status[i]=Integer.parseInt(table_record[1]);
-		    				table_record_ordernum[i]=Integer.parseInt(table_record[2]);
+		    				table_status[i]=Integer.parseInt(table_record[1]);
+		    				table_ordernum[i]=Integer.parseInt(table_record[2]);
 		    			}
 		    			lines++;
 		    		}
@@ -2101,6 +2109,33 @@ public class POS implements ActionListener {
 	            }
 			}catch(Exception e){}	
 		}
+		f_log_table=new File("C:/Madhouse POS/紀錄/桌位紀錄/"+r_time1+"/"+r_time2+"桌位紀錄.csv");
+		if(!f_log_table.exists())
+		{
+			try{
+				f_log_table.getParentFile().mkdirs();
+				bw_log_table=new BufferedWriter(new FileWriter(f_log_table.getAbsolutePath()));
+				bw_log_table.write("變動時間,桌號,單號,狀態");
+				bw_log_table.newLine();
+				bw_log_table.flush();
+			}catch(Exception e){}
+		}else
+		{
+			try{
+				br_log_table=new BufferedReader(new FileReader(f_log_table.getAbsolutePath()));
+				oldRecord_log_table+=br_log_table.readLine()+"\r\n";
+				do{
+                    String str=br_log_table.readLine();
+                    if(str==null)
+                        break;
+                    oldRecord_log_table+=str+"\r\n";
+	            }while(true);
+				br_log_table.close();
+				bw_log_table=new BufferedWriter(new FileWriter(f_log_table.getAbsolutePath()));
+				bw_log_table.write(oldRecord_log_table);
+				bw_log_table.flush();
+			}catch(Exception e){}
+		}
 	}
 	void keepRecord_order_log()
 	{
@@ -2108,7 +2143,7 @@ public class POS implements ActionListener {
 			Date d=new Date();
 			SimpleDateFormat sdf1=new SimpleDateFormat("HH:mm:ss");
 			String r_time1=sdf1.format(d);
-			bw_log_order.append(r_time1+","+order_num+","+table_num+",");
+			bw_log_order.append(r_time1+","+order_num+","+now_tablenum+",");
 			for(int i=0; i<qty.length; i++)
 				bw_log_order.append(qty[i]+",");
 			bw_log_order.append(smalltotal+","+discount+","+off+","+all_off+","+total+","+pay+","+change+",");
@@ -2154,11 +2189,68 @@ public class POS implements ActionListener {
 	}
 	void renew_table()
 	{
+		try{
+			bw_system_table=new BufferedWriter(new FileWriter(f_system_table.getAbsolutePath()));
+			for(int i=0; i<16; i++)
+			{
+				bw_system_table.write(i+1+","+table_status[i]+","+table_ordernum[i]);
+				bw_system_table.newLine();
+			}
+			bw_system_table.flush();
+		}catch(Exception e1){}
+		try{
+            for(int i=0;i<16;i++)
+            {
+            	br_system_table=new BufferedReader(new FileReader(f_system_table.getAbsolutePath()));
+            	String [] table_record;
+            	int lines = 0;
+	    		while (oldrecord_table != null) {
+	    			oldrecord_table = br_system_table.readLine();
+	    			if (lines == i) {
+	    				table_record=oldrecord_table.split(",");
+	    				table_status[i]=Integer.parseInt(table_record[1]);
+	    				table_ordernum[i]=Integer.parseInt(table_record[2]);
+	    			}
+	    			lines++;
+	    		}
+	    		oldrecord_table="";
+	    		br_system_table.close();
+            }
+		}catch(Exception e){}
 		for(int i=0;i<16;i++)
 		{
-			tf_table_inside_status[i].setText(status[table_record_status[i]]);
-			tf_table_inside_ordernum[i].setText(table_record_ordernum[i]+"");
+			tf_table_inside_status[i].setText(status[table_status[i]]);
+			tf_table_inside_ordernum[i].setText(table_ordernum[i]+"");
+			if(table_status[i]==0)
+			{
+				btn_table_inside_new[i].setEnabled(true);
+				btn_table_inside_out[i].setEnabled(false);
+				btn_table_inside_end[i].setEnabled(false);
+			}
+			else if(table_status[i]==1)
+			{
+				btn_table_inside_new[i].setEnabled(false);
+				btn_table_inside_out[i].setEnabled(true);
+				btn_table_inside_end[i].setEnabled(true);
+			}
+			else
+			{
+				btn_table_inside_new[i].setEnabled(false);
+				btn_table_inside_out[i].setEnabled(false);
+				btn_table_inside_end[i].setEnabled(true);
+			}
 		}
+	}
+	void keepRecord_table_log(int i,int j)
+	{
+		try{
+			Date d=new Date();
+			SimpleDateFormat sdf1=new SimpleDateFormat("HH:mm:ss");
+			String r_time1=sdf1.format(d);
+			bw_log_table.append(r_time1+","+(i+1)+","+table_ordernum[i]+","+status2[j]);
+			bw_log_table.newLine();
+			bw_log_table.flush();
+		}catch(Exception e1){}
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -2177,16 +2269,33 @@ public class POS implements ActionListener {
 			fm_man_table.setVisible(true);
 			renew_table();
 		}
+		if(e.getSource()==btn_man_order_num_reset)
+		{
+			order_num=1;
+			tf_info_order_num.setText(order_num+"");
+			try{
+				bw_system=new BufferedWriter(new FileWriter(f_system.getAbsolutePath()));
+				bw_system.write(order_num+"");
+				bw_system.flush();
+			}catch(Exception e1){}
+		}
 		if(e.getSource()==btn_ch_chechout)
 		{
 			pay=Integer.parseInt(tf_ch_pay.getText());
-			if(total!=0 && pay>=total && change>=0)
+			if(total!=0 && pay>=total && change>=0 && now_tablenum!=0)
 			{
 				change=pay-(int)total;
 				tf_ch_change.setText(change+"");
 				isChecked=true;
 				tf_ch_change.setForeground(Color.BLACK);
 				keepRecord_order_log();
+				now_status=1;
+				if(now_tablenum<15)
+					table_status[now_tablenum-1]=1;
+				tf_info_status.setText(status[now_status]);
+				renew_table();
+				keepRecord_table_log(now_tablenum-1,2);
+				
 			}else
 			    tf_ch_change.setForeground(Color.RED);
 		}
@@ -2198,6 +2307,9 @@ public class POS implements ActionListener {
 				tf_ch_change.setForeground(Color.BLACK);
 				isChecked=false;
 				reset();
+				tf_info_status.setText("");
+				tf_info_table.setText("");
+				now_tablenum=0;
 				order_num++;
 				tf_info_order_num.setText(order_num+"");
 				try{
@@ -2206,11 +2318,64 @@ public class POS implements ActionListener {
 					bw_system.flush();
 				}catch(Exception e1){}
 				check_order_num();
-		
+				renew_table();
 			}
 			
 		}
 		if(e.getSource()==btn_table_exit)
 			fm_man_table.dispose();
+		if(e.getSource()==btn_table_all_reset)
+		{
+			for(int i=0;i<16;i++)
+			{
+				table_ordernum[i]=0;
+				if(table_status[i]!=0)
+					keepRecord_table_log(i,0);
+				table_status[i]=0;
+			}
+			renew_table();
+		}
+		for(int i=0;i<16;i++)
+		{
+			if(e.getSource()==btn_table_inside_new[i])
+			{
+				if(table_status[i]==0)
+				{
+					now_status=0;
+					tf_info_status.setText("新單");
+					now_tablenum=i+1;
+					tf_info_table.setText(now_tablenum+"");
+					table_ordernum[i]=order_num;
+					fm_man_table.dispose();
+					renew_table();
+					keepRecord_table_log(i,1);
+				}
+			}
+		}
+		for(int i=0;i<16;i++)
+		{
+			if(e.getSource()==btn_table_inside_out[i])
+			{
+				if(table_status[i]==1)
+				{
+					table_status[i]=2;
+					renew_table();
+					keepRecord_table_log(i,3);
+				}
+			}
+		}
+		for(int i=0;i<16;i++)
+		{
+			if(e.getSource()==btn_table_inside_end[i])
+			{
+				if(table_status[i]==1 || table_status[i]==2)
+				{
+					table_status[i]=0;
+					table_ordernum[i]=0;
+					renew_table();
+					keepRecord_table_log(i,0);
+				}
+			}
+		}
 	}
 }
