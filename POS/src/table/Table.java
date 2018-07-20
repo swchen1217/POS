@@ -23,9 +23,19 @@ import javax.swing.JTextField;
 
 public class Table {
 
-	private JFrame fm_man_table;
-	private JTextField textField;
+	private JFrame fm_man_menu_5_set;
+	private JTextField tf_menu2_set_name1;
 	private JTextField textField_1;
+	private JTextField textField_2;
+	private JTextField textField_3;
+	private JTextField textField_4;
+	private JTextField textField_5;
+	private JTextField textField_6;
+	private JTextField textField_7;
+	private JTextField textField_8;
+	private JTextField textField_9;
+	JLabel lb_manu5_set_name,lb_menu5_set_price;
+	JButton btn_menu5_set_ok,btn_menu5_set_cancel;
 
 	/**
 	 * Launch the application.
@@ -35,7 +45,7 @@ public class Table {
 			public void run() {
 				try {
 					Table window = new Table();
-					window.fm_man_table.setVisible(true);
+					window.fm_man_menu_5_set.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -54,179 +64,102 @@ public class Table {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		fm_man_table = new JFrame();
-		fm_man_table.getContentPane().setFont(new Font("新細明體", Font.PLAIN, 22));
-		fm_man_table.setTitle("POS\u7CFB\u7D71-桌位管理");
-		fm_man_table.setResizable(false);
-		fm_man_table.setBounds(100, 100, 1005, 790);
-		fm_man_table.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		fm_man_table.getContentPane().setLayout(null);
+		fm_man_menu_5_set = new JFrame();
+		fm_man_menu_5_set.setTitle("POS-\u5176\u4ED6\u985E\u83DC\u55AE\u8A2D\u5B9A");
+		fm_man_menu_5_set.setResizable(false);
+		fm_man_menu_5_set.setBounds(100, 100, 300, 260);
+		fm_man_menu_5_set.getContentPane().setLayout(null);
+		//fm_man_menu_5_set.setIconImage(Toolkit.getDefaultToolkit().getImage(POS.class.getResource("/pic/icon.png")));
+		fm_man_menu_5_set.getContentPane().setFont(new Font("新細明體", Font.PLAIN, 22));
+		//fm_man_menu_5_set.setVisible(false);
+		fm_man_menu_5_set.getContentPane().add(btn_menu5_set_cancel);
+		fm_man_menu_5_set.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		
-		JPanel panel = new JPanel();
-		panel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		panel.setBounds(0, 0, 250, 150);
-		fm_man_table.getContentPane().add(panel);
-		panel.setLayout(null);
+		lb_manu5_set_name = new JLabel("\u54C1\u540D");
+		lb_manu5_set_name.setFont(new Font("新細明體", Font.PLAIN, 20));
+		lb_manu5_set_name.setBounds(95, 10, 45, 20);
+		fm_man_menu_5_set.getContentPane().add(lb_manu5_set_name);
 		
-		JLabel label = new JLabel("00");
-		label.setBounds(10, 10, 40, 40);
-		label.setFont(new Font("新細明體", Font.PLAIN, 40));
-		panel.add(label);
+		lb_menu5_set_price = new JLabel("\u55AE\u50F9");
+		lb_menu5_set_price.setFont(new Font("新細明體", Font.PLAIN, 20));
+		lb_menu5_set_price.setBounds(238, 10, 45, 20);
+		fm_man_menu_5_set.getContentPane().add(lb_menu5_set_price);
 		
-		JLabel lblNewLabel = new JLabel("\u55AE\u865F : ");
-		lblNewLabel.setBounds(65, 40, 60, 20);
-		lblNewLabel.setFont(new Font("新細明體", Font.PLAIN, 20));
-		panel.add(lblNewLabel);
-		
-		JLabel lblNewLabel_2 = new JLabel("\u72C0\u614B : ");
-		lblNewLabel_2.setBounds(55, 65, 60, 20);
-		lblNewLabel_2.setFont(new Font("新細明體", Font.PLAIN, 20));
-		panel.add(lblNewLabel_2);
-		
-		JButton btnNewButton = new JButton("\u65B0\u55AE");
-		btnNewButton.setHorizontalAlignment(SwingConstants.LEFT);
-		btnNewButton.setFont(new Font("新細明體", Font.PLAIN, 19));
-		btnNewButton.setBounds(10, 100, 70, 40);
-		panel.add(btnNewButton);
-		
-		JButton button = new JButton("\u9910\u7562");
-		button.setHorizontalAlignment(SwingConstants.LEFT);
-		button.setFont(new Font("新細明體", Font.PLAIN, 19));
-		button.setBounds(80, 100, 70, 40);
-		panel.add(button);
-		
-		JButton button_1 = new JButton("\u5B8C\u6210");
-		button_1.setHorizontalAlignment(SwingConstants.LEFT);
-		button_1.setFont(new Font("新細明體", Font.PLAIN, 19));
-		button_1.setBounds(150, 100, 70, 40);
-		panel.add(button_1);
-		
-		textField = new JTextField();
-		textField.setEditable(false);
-		textField.setFont(new Font("新細明體", Font.PLAIN, 20));
-		textField.setText("999");
-		textField.setBounds(120, 40, 35, 25);
-		panel.add(textField);
-		textField.setColumns(10);
+		tf_menu2_set_name1 = new JTextField();
+		tf_menu2_set_name1.setEditable(false);
+		tf_menu2_set_name1.setFont(new Font("新細明體", Font.PLAIN, 20));
+		tf_menu2_set_name1.setText("\u6BCF\u65E5\u7279\u9910");
+		tf_menu2_set_name1.setBounds(10, 35, 215, 27);
+		fm_man_menu_5_set.getContentPane().add(tf_menu2_set_name1);
+		tf_menu2_set_name1.setColumns(10);
 		
 		textField_1 = new JTextField();
-		textField_1.setEditable(false);
-		textField_1.setText("\u6E05\u6F54\u4E2D");
+		textField_1.setHorizontalAlignment(SwingConstants.RIGHT);
 		textField_1.setFont(new Font("新細明體", Font.PLAIN, 20));
-		textField_1.setBounds(115, 65, 65, 30);
-		panel.add(textField_1);
+		textField_1.setBounds(235, 35, 50, 27);
+		fm_man_menu_5_set.getContentPane().add(textField_1);
 		textField_1.setColumns(10);
 		
-		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(0, 150, 250, 150);
-		fm_man_table.getContentPane().add(panel_1);
-		panel_1.setLayout(null);
-		panel_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		textField_2 = new JTextField();
+		textField_2.setFont(new Font("新細明體", Font.PLAIN, 20));
+		textField_2.setColumns(10);
+		textField_2.setBounds(10, 65, 215, 27);
+		fm_man_menu_5_set.getContentPane().add(textField_2);
 		
-		JPanel panel_2 = new JPanel();
-		panel_2.setBounds(0, 300, 250, 150);
-		fm_man_table.getContentPane().add(panel_2);
-		panel_2.setLayout(null);
-		panel_2.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		textField_3 = new JTextField();
+		textField_3.setHorizontalAlignment(SwingConstants.RIGHT);
+		textField_3.setFont(new Font("新細明體", Font.PLAIN, 20));
+		textField_3.setColumns(10);
+		textField_3.setBounds(235, 65, 50, 27);
+		fm_man_menu_5_set.getContentPane().add(textField_3);
 		
-		JPanel panel_3 = new JPanel();
-		panel_3.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		panel_3.setBounds(0, 450, 250, 150);
-		fm_man_table.getContentPane().add(panel_3);
-		panel_3.setLayout(null);
+		textField_4 = new JTextField();
+		textField_4.setFont(new Font("新細明體", Font.PLAIN, 20));
+		textField_4.setColumns(10);
+		textField_4.setBounds(10, 95, 215, 27);
+		fm_man_menu_5_set.getContentPane().add(textField_4);
 		
-		JPanel panel_4 = new JPanel();
-		panel_4.setBounds(0, 607, 250, 150);
-		fm_man_table.getContentPane().add(panel_4);
-		panel_4.setLayout(null);
-		panel_4.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		textField_5 = new JTextField();
+		textField_5.setFont(new Font("新細明體", Font.PLAIN, 20));
+		textField_5.setColumns(10);
+		textField_5.setBounds(10, 125, 215, 27);
+		fm_man_menu_5_set.getContentPane().add(textField_5);
 		
-		JLabel label_1 = new JLabel("\u5916\u5E36");
-		label_1.setFont(new Font("新細明體", Font.PLAIN, 40));
-		label_1.setBounds(10, 10, 85, 40);
-		panel_4.add(label_1);
+		textField_6 = new JTextField();
+		textField_6.setHorizontalAlignment(SwingConstants.RIGHT);
+		textField_6.setFont(new Font("新細明體", Font.PLAIN, 20));
+		textField_6.setColumns(10);
+		textField_6.setBounds(235, 95, 50, 27);
+		fm_man_menu_5_set.getContentPane().add(textField_6);
 		
-		JButton button_2 = new JButton("\u65B0\u55AE");
-		button_2.setHorizontalAlignment(SwingConstants.LEFT);
-		button_2.setFont(new Font("新細明體", Font.PLAIN, 19));
-		button_2.setBounds(80, 100, 70, 40);
-		panel_4.add(button_2);
+		textField_7 = new JTextField();
+		textField_7.setHorizontalAlignment(SwingConstants.RIGHT);
+		textField_7.setFont(new Font("新細明體", Font.PLAIN, 20));
+		textField_7.setColumns(10);
+		textField_7.setBounds(235, 125, 50, 27);
+		fm_man_menu_5_set.getContentPane().add(textField_7);
 		
-		JPanel panel_5 = new JPanel();
-		panel_5.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		panel_5.setBounds(250, 0, 250, 150);
-		fm_man_table.getContentPane().add(panel_5);
-		panel_5.setLayout(null);
+		textField_8 = new JTextField();
+		textField_8.setFont(new Font("新細明體", Font.PLAIN, 20));
+		textField_8.setColumns(10);
+		textField_8.setBounds(10, 155, 215, 27);
+		fm_man_menu_5_set.getContentPane().add(textField_8);
 		
-		JPanel panel_7 = new JPanel();
-		panel_7.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		panel_7.setBounds(250, 150, 250, 150);
-		fm_man_table.getContentPane().add(panel_7);
-		panel_7.setLayout(null);
+		textField_9 = new JTextField();
+		textField_9.setHorizontalAlignment(SwingConstants.RIGHT);
+		textField_9.setFont(new Font("新細明體", Font.PLAIN, 20));
+		textField_9.setColumns(10);
+		textField_9.setBounds(235, 155, 50, 27);
+		fm_man_menu_5_set.getContentPane().add(textField_9);
 		
-		JPanel panel_8 = new JPanel();
-		panel_8.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		panel_8.setBounds(250, 300, 250, 150);
-		fm_man_table.getContentPane().add(panel_8);
-		panel_8.setLayout(null);
+		btn_menu5_set_ok = new JButton("\u78BA\u5B9A");
+		btn_menu5_set_ok.setFont(new Font("新細明體", Font.PLAIN, 20));
+		btn_menu5_set_ok.setBounds(48, 190, 75, 30);
+		fm_man_menu_5_set.getContentPane().add(btn_menu5_set_ok);
 		
-		JPanel panel_9 = new JPanel();
-		panel_9.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		panel_9.setBounds(250, 450, 250, 150);
-		fm_man_table.getContentPane().add(panel_9);
-		panel_9.setLayout(null);
+		btn_menu5_set_cancel = new JButton("\u53D6\u6D88");
+		btn_menu5_set_cancel.setFont(new Font("新細明體", Font.PLAIN, 20));
+		btn_menu5_set_cancel.setBounds(171, 190, 75, 30);
 		
-		JPanel panel_10 = new JPanel();
-		panel_10.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		panel_10.setBounds(500, 0, 250, 150);
-		fm_man_table.getContentPane().add(panel_10);
-		panel_10.setLayout(null);
-		
-		JPanel panel_12 = new JPanel();
-		panel_12.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		panel_12.setBounds(500, 150, 250, 150);
-		fm_man_table.getContentPane().add(panel_12);
-		panel_12.setLayout(null);
-		
-		JPanel panel_13 = new JPanel();
-		panel_13.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		panel_13.setBounds(500, 300, 250, 150);
-		fm_man_table.getContentPane().add(panel_13);
-		panel_13.setLayout(null);
-		
-		JPanel panel_14 = new JPanel();
-		panel_14.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		panel_14.setBounds(500, 450, 250, 150);
-		fm_man_table.getContentPane().add(panel_14);
-		panel_14.setLayout(null);
-		
-		JPanel panel_15 = new JPanel();
-		panel_15.setBounds(750, 0, 250, 150);
-		fm_man_table.getContentPane().add(panel_15);
-		panel_15.setLayout(null);
-		panel_15.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		
-		JPanel panel_17 = new JPanel();
-		panel_17.setBounds(750, 150, 250, 150);
-		fm_man_table.getContentPane().add(panel_17);
-		panel_17.setLayout(null);
-		panel_17.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		
-		JPanel panel_18 = new JPanel();
-		panel_18.setBounds(750, 300, 250, 150);
-		fm_man_table.getContentPane().add(panel_18);
-		panel_18.setLayout(null);
-		panel_18.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		
-		JPanel panel_19 = new JPanel();
-		panel_19.setBounds(750, 450, 250, 150);
-		fm_man_table.getContentPane().add(panel_19);
-		panel_19.setLayout(null);
-		panel_19.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		
-		JButton btn_table_exit = new JButton("\u96E2\u958B");
-		btn_table_exit.setFont(new Font("新細明體", Font.PLAIN, 50));
-		btn_table_exit.setBounds(250, 600, 250, 150);
-		fm_man_table.getContentPane().add(btn_table_exit);
 	}
 }

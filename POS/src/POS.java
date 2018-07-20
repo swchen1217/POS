@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import java.awt.Color;
 import javax.swing.border.TitledBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.awt.Toolkit;
@@ -33,25 +34,23 @@ public class POS implements ActionListener {
 	JPanel pn_menu_1,pn_menu_2,pn_menu_3,pn_menu_4,pn_menu_5,pn_list_1,pn_list_2,pn_list_3,pn_list_4,pn_list_5;
 	JLabel lb_note;
 	JTextField tf_note;
-	File f_system,f_log_order,f_log_sale,f_system_table,f_log_table;
-	BufferedWriter bw_system,bw_log_order,bw_log_sale,bw_system_table,bw_log_table;
-	BufferedReader br_system,br_log_order,br_log_sale,br_system_table,br_log_table;
+	File f_system,f_log_order,f_log_sale,f_system_table,f_log_table,f_system_menu5;
+	BufferedWriter bw_system,bw_log_order,bw_log_sale,bw_system_table,bw_log_table,bw_system_menu5;
+	BufferedReader br_system,br_log_order,br_log_sale,br_system_table,br_log_table,br_system_menu5;
 	int pay, change, order_sum=0, smalltotal=0, off=0, all_off=0, item_sum2=0, order_list_sum=0, m=0 ,n=0 ,tmp=-1 ,order_num ,now_tablenum ,now_status;
 	int list[]={-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
-	int table_status[]=new int[16],table_ordernum[]=new int[16];
+	int table_status[]=new int[16],table_ordernum[]=new int[16],menu5_price[]=new int[5];
 	double total=0 ,discount=100;
-	String oldordernum="",oldRecord_log_order="",oldRecord_log_sale="",oldrecord_table="" ,oldRecord_log_table;
+	String oldordernum="",oldRecord_log_order="",oldRecord_log_sale="",oldrecord_table="" ,oldRecord_log_table="" ,oldRecord_menu5="";
 	String status[]={"空桌","已結帳","清潔中"};
 	String status2[]={"空桌","新單","已結帳","清潔中"};
+	String menu5_name[]=new String[5];
 	boolean isOrder[]=new boolean[53], isChecked=false, notfirst=false;
-	
-	/* main end*/
 	
 	/* info */
 	JPanel pn_info;
 	JLabel lb_info_nowtime,lb_info_user_num,lb_info_order_num,lb_info_table,lb_info_user_name,lb_info_status,lb_info_order_sum;
 	JTextField tf_info_user_num,tf_info_order_num,tf_info_table,tf_info_user_name,tf_info_status,tf_info_order_sum;
-	/* info end */
 	
 	/* meals */
 	int qty[]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -65,14 +64,12 @@ public class POS implements ActionListener {
             			"憂愁的藥水","憂愁的藥水(贈)","炙烈的藥水","炙烈的藥水(贈)","高貴的藥水","高貴的藥水(贈)","典雅的藥水","典雅的藥水(贈)","魔性的藥水","魔性的藥水(贈)",
             			"每日特餐","其他-","其他-","其他-","其他-"};
 	
-	/* meals end */
 	/* item */
 	
 	JPanel pn_item[]=new JPanel[53];
 	JLabel lb_item_name[]=new JLabel[53], lb_x[]=new JLabel[53], lb_e[]=new JLabel[53], lb_qty[]=new JLabel[53], lb_small_total[]=new JLabel[53];
 	JButton btn_del[]=new JButton[53];
 	
-	/*item end*/
 	/* menu */
 	
 	JLabel lb_menu_name[]=new JLabel[22],lb_menu_x[]=new JLabel[22];
@@ -81,20 +78,17 @@ public class POS implements ActionListener {
 	JButton btn_add[]=new JButton[22];
 	JPanel pn_menu_1_1,pn_menu_1_2,pn_menu_1_3,pn_menu_2_1,pn_menu_2_2,pn_menu_2_3,pn_menu_2_4,pn_menu_3_1,pn_menu_3_2,pn_menu_3_3,pn_menu_3_4,pn_menu_3_5,pn_menu_4_1,pn_menu_4_2,pn_menu_4_3,pn_menu_4_4,pn_menu_4_5,pn_menu_5_1,pn_menu_5_2,pn_menu_5_3,pn_menu_5_4,pn_menu_5_5;
 	
-	/* menu end */
 	/* checkout */
 	
 	JPanel pn_checkout;
 	JTextField tf_ch_small_total,tf_ch_all_off,tf_ch_discount,tf_ch_off,tf_ch_total,tf_ch_pay,tf_ch_change;
 	JLabel lb_ch_total,lb_ch_pay,lb_ch_change,lb_ch_small_total,lb_ch_discount,lb_ch_off,lb_ch_all_off;
 	
-	/* checkout end */
 	/* manege */
 	
 	JPanel pn_manage;
 	JButton btn_man_clear,btn_man_re_print,btn_man_printer_set,btn_man_menu_5_set,btn_ch_chechout,btn_ch_off_set,btn_ch_next,btn_man_table,btn_man_stock,btn_man_user_change,btn_man_look,btn_man_exit,btn_man_order_num_reset;
 	
-	/* manage end */
 	/* table */
 	
 	JFrame fm_man_table;
@@ -103,7 +97,19 @@ public class POS implements ActionListener {
 	JTextField tf_table_inside_ordernum[]=new JTextField[16] ,tf_table_inside_status[]=new JTextField[16];
 	JButton btn_table_inside_new[]=new JButton[16] ,btn_table_inside_out[]=new JButton[16] ,btn_table_inside_end[]=new JButton[16] ,btn_table_outside_new ,btn_table_exit ,btn_table_all_reset;
 	
-	/* table end */
+	/* discount */
+	
+	JFrame fm_discount;
+	JLabel lb_discount_discount,lb_discount_off;
+	JTextField tf_discount_discount,tf_discount_off;
+	JButton btn_discount_ok,btn_discount_cancel;
+	
+	/* menu5_set */
+	
+	JFrame fm_man_menu_5_set;
+	JLabel lb_manu5_set_name,lb_menu5_set_price;
+	JTextField tf_menu5_set_name[]=new JTextField[5],tf_menu5_set_price[]=new JTextField[5];
+	JButton btn_menu5_set_ok,btn_menu5_set_cancel;
 	
 	/**
 	 * Launch the application.
@@ -195,7 +201,6 @@ public class POS implements ActionListener {
 		for(int i=0;i<53;i++)
 			isOrder[i]=false;
 		
-		/* main end */
 		/* menu_1 */
 		
 		pn_menu_1 = new JPanel();
@@ -458,7 +463,6 @@ public class POS implements ActionListener {
 			}
 		});
 		
-		/* menu_1 end */
 		/* menu_2 */
 		
 		pn_menu_2 = new JPanel();
@@ -603,7 +607,6 @@ public class POS implements ActionListener {
 			}
 		});
 		
-		/* menu_2 end */
 		/* menu_3 */
 		
 		pn_menu_3 = new JPanel();
@@ -851,7 +854,6 @@ public class POS implements ActionListener {
 			}
 		});
 		
-		/* menu_3 end */
 		/* menu_4 */
 		
 		pn_menu_4 = new JPanel();
@@ -1094,7 +1096,6 @@ public class POS implements ActionListener {
 			}
 		});
 		
-		/* menu_4 end */
 		/* menu_5 */
 		
 		pn_menu_5 = new JPanel();
@@ -1272,7 +1273,6 @@ public class POS implements ActionListener {
 			}
 		});
 		
-		/* menu_5 end */
 		/* info */
 		
 		pn_info = new JPanel();
@@ -1363,7 +1363,6 @@ public class POS implements ActionListener {
 		pn_info.add(tf_info_order_sum);
 		tf_info_order_sum.setColumns(10);
 		
-		/* info end */
 		/* checkout */
 		
 		pn_checkout = new JPanel();
@@ -1477,6 +1476,7 @@ public class POS implements ActionListener {
 		btn_ch_off_set.setFont(new Font("新細明體", Font.PLAIN, 26));
 		btn_ch_off_set.setBounds(580, 25, 90, 90);
 		pn_checkout.add(btn_ch_off_set);
+		btn_ch_off_set.addActionListener(this);
 		
 		btn_ch_next = new JButton("\u4E0B\u4E00\u7B46");
 		btn_ch_next.setFont(new Font("新細明體", Font.PLAIN, 26));
@@ -1484,7 +1484,6 @@ public class POS implements ActionListener {
 		pn_checkout.add(btn_ch_next);
 		btn_ch_next.addActionListener(this);
 		
-		/* checkout end */
 		/* manage */
 		
 		pn_manage = new JPanel();
@@ -1548,7 +1547,6 @@ public class POS implements ActionListener {
 		pn_manage.add(btn_man_order_num_reset);
 		btn_man_order_num_reset.addActionListener(this);
 		
-		/* manage end */
 		/* menu */
 		for(int i=0;i<22;i++)
 			tf_menu_qty[i].setText("1");
@@ -1731,6 +1729,121 @@ public class POS implements ActionListener {
 		btn_table_all_reset.setBounds(250, 600, 250, 150);
 		fm_man_table.getContentPane().add(btn_table_all_reset);
 		btn_table_all_reset.addActionListener(this);
+		
+		/* discount */
+		
+		fm_discount = new JFrame();
+		fm_discount.setTitle("POS-\u512A\u60E0");
+		fm_discount.setResizable(false);
+		fm_discount.setBounds(670, 405, 160, 140);
+		fm_discount.getContentPane().setLayout(null);
+		fm_discount.setIconImage(Toolkit.getDefaultToolkit().getImage(POS.class.getResource("/pic/icon.png")));
+		fm_discount.getContentPane().setFont(new Font("新細明體", Font.PLAIN, 22));
+		fm_discount.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		fm_discount.setVisible(false);
+		
+		lb_discount_discount = new JLabel("\u6298\u6578 :              %");
+		lb_discount_discount.setFont(new Font("新細明體", Font.PLAIN, 20));
+		lb_discount_discount.setBounds(10, 10, 140, 20);
+		fm_discount.getContentPane().add(lb_discount_discount);
+		
+		lb_discount_off = new JLabel("\u6E1B\u514D : -           \u5143");
+		lb_discount_off.setFont(new Font("新細明體", Font.PLAIN, 20));
+		lb_discount_off.setBounds(10, 40, 140, 20);
+		fm_discount.getContentPane().add(lb_discount_off);
+		
+		tf_discount_discount = new JTextField();
+		tf_discount_discount.setFont(new Font("新細明體", Font.PLAIN, 20));
+		tf_discount_discount.setBounds(75, 10, 50, 25);
+		fm_discount.getContentPane().add(tf_discount_discount);
+		tf_discount_discount.setColumns(10);
+		tf_discount_discount.setHorizontalAlignment(SwingConstants.RIGHT);
+		tf_discount_discount.setText("100.0");
+		
+		tf_discount_off = new JTextField();
+		tf_discount_off.setFont(new Font("新細明體", Font.PLAIN, 20));
+		tf_discount_off.setBounds(75, 40, 50, 25);
+		fm_discount.getContentPane().add(tf_discount_off);
+		tf_discount_off.setColumns(10);
+		tf_discount_off.setHorizontalAlignment(SwingConstants.RIGHT);
+		
+		btn_discount_ok = new JButton("\u78BA\u5B9A");
+		btn_discount_ok.setFont(new Font("PMingLiU", Font.PLAIN, 15));
+		btn_discount_ok.setBounds(10, 70, 65, 25);
+		fm_discount.add(btn_discount_ok);
+		btn_discount_ok.addActionListener(this);
+		
+		btn_discount_cancel = new JButton("\u53D6\u6D88");
+		btn_discount_cancel.setBounds(75, 70, 65, 25);
+		fm_discount.add(btn_discount_cancel);
+		btn_discount_cancel.addActionListener(this);
+		
+		/* menu5_set */
+		
+		fm_man_menu_5_set = new JFrame();
+		fm_man_menu_5_set.setTitle("POS-\u5176\u4ED6\u985E\u83DC\u55AE\u8A2D\u5B9A");
+		fm_man_menu_5_set.setResizable(false);
+		fm_man_menu_5_set.setBounds(100, 100, 300, 260);
+		fm_man_menu_5_set.getContentPane().setLayout(null);
+		fm_man_menu_5_set.setIconImage(Toolkit.getDefaultToolkit().getImage(POS.class.getResource("/pic/icon.png")));
+		fm_man_menu_5_set.getContentPane().setFont(new Font("新細明體", Font.PLAIN, 22));
+		fm_man_menu_5_set.setVisible(false);
+		fm_man_menu_5_set.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		
+		lb_manu5_set_name = new JLabel("\u54C1\u540D");
+		lb_manu5_set_name.setFont(new Font("新細明體", Font.PLAIN, 20));
+		lb_manu5_set_name.setBounds(95, 10, 45, 20);
+		fm_man_menu_5_set.getContentPane().add(lb_manu5_set_name);
+		
+		lb_menu5_set_price = new JLabel("\u55AE\u50F9");
+		lb_menu5_set_price.setFont(new Font("新細明體", Font.PLAIN, 20));
+		lb_menu5_set_price.setBounds(238, 10, 45, 20);
+		fm_man_menu_5_set.getContentPane().add(lb_menu5_set_price);
+		
+		for(int i=0;i<5;i++)
+		{
+			tf_menu5_set_name[i] = new JTextField();
+			tf_menu5_set_name[i].setFont(new Font("新細明體", Font.PLAIN, 20));
+			fm_man_menu_5_set.getContentPane().add(tf_menu5_set_name[i]);
+			tf_menu5_set_name[i].setColumns(10);
+			if(i==0)
+			{
+				tf_menu5_set_name[i].setText("\u6BCF\u65E5\u7279\u9910");
+				tf_menu5_set_name[i].setEditable(false);
+			}
+		}
+		for(int i=0;i<5;i++)
+		{
+			tf_menu5_set_price[i] = new JTextField();
+			tf_menu5_set_price[i].setHorizontalAlignment(SwingConstants.RIGHT);
+			fm_man_menu_5_set.getContentPane().add(tf_menu5_set_price[i]);
+			tf_menu5_set_price[i].setColumns(10);
+			tf_menu5_set_price[i].setFont(new Font("新細明體", Font.PLAIN, 20));
+		}
+		
+		tf_menu5_set_name[0].setBounds(10, 35, 215, 27);
+		tf_menu5_set_name[1].setBounds(10, 65, 215, 27);
+		tf_menu5_set_name[2].setBounds(10, 95, 215, 27);
+		tf_menu5_set_name[3].setBounds(10, 125, 215, 27);
+		tf_menu5_set_name[4].setBounds(10, 155, 215, 27);
+		tf_menu5_set_price[0].setBounds(235, 35, 50, 27);
+		tf_menu5_set_price[1].setBounds(235, 65, 50, 27);
+		tf_menu5_set_price[2].setBounds(235, 95, 50, 27);
+		tf_menu5_set_price[3].setBounds(235, 125, 50, 27);
+		tf_menu5_set_price[4].setBounds(235, 155, 50, 27);
+		
+		btn_menu5_set_ok = new JButton("\u78BA\u5B9A");
+		btn_menu5_set_ok.setFont(new Font("新細明體", Font.PLAIN, 20));
+		btn_menu5_set_ok.setBounds(48, 190, 75, 30);
+		fm_man_menu_5_set.add(btn_menu5_set_ok);
+		btn_menu5_set_ok.addActionListener(this);
+		
+		btn_menu5_set_cancel = new JButton("\u53D6\u6D88");
+		btn_menu5_set_cancel.setFont(new Font("新細明體", Font.PLAIN, 20));
+		btn_menu5_set_cancel.setBounds(171, 190, 75, 30);
+		fm_man_menu_5_set.add(btn_menu5_set_cancel);
+		btn_menu5_set_cancel.addActionListener(this);
+		
 	}
 	void add(int i) {
 		
@@ -1841,12 +1954,17 @@ public class POS implements ActionListener {
 				pn_item[list[j]].setLocation(0, (item_sum2-33)*70);
 				pn_list_5.add(pn_item[list[j]]);
 				tab_order_list.setSelectedIndex(4);
-				check();
+				check_list_full();
 			}
 		}
 		tab_order_list.updateUI();
 	}
-	void check() {
+	void total()
+	{
+		total=smalltotal*(discount/100)-off;
+		tf_ch_total.setText(total+"");
+	}
+	void check_list_full() {
 		
 		if(item_sum2>=40)
 		{
@@ -1923,10 +2041,19 @@ public class POS implements ActionListener {
             };
             th_nowtime.start();
     }
-	void total()
+	void check_order_num()
 	{
-		total=smalltotal*(discount/100)-off;
-		tf_ch_total.setText(total+"");
+		if(order_num>999)
+		{
+			order_num=1;
+			tf_info_order_num.setText(order_num+"");
+			try{
+				bw_system=new BufferedWriter(new FileWriter(f_system.getAbsolutePath()));
+				bw_system.write(order_num+"");
+				bw_system.flush();
+			}catch(Exception e1){}
+			startRecord();
+		}
 	}
 	void reset()
 	{
@@ -1964,11 +2091,13 @@ public class POS implements ActionListener {
 		}
 		for(int k=0;k<19;k++)
 			cb[k].setSelected(false);
-		check();
+		check_list_full();
 		sort();
 	}
 	void startRecord()
 	{
+		
+		/* ordernum */
 		
 		f_system=new File("C:/Madhouse POS/system/system.txt");
 		if(!f_system.exists())
@@ -1999,6 +2128,8 @@ public class POS implements ActionListener {
 	    		tf_info_order_num.setText(order_num+"");
 			}catch(Exception e){}	
 		}
+		
+		/* order log */
 		
 		Date d=new Date();
 		SimpleDateFormat sdf1=new SimpleDateFormat("yyyyMM"), sdf2=new SimpleDateFormat("yyyyMMdd");
@@ -2040,6 +2171,9 @@ public class POS implements ActionListener {
 				bw_log_order.flush();
 			}catch(Exception e){}
 		}
+		
+		/* sale log */
+		
 		if(notfirst==false)
 		{
 			f_log_sale=new File("C:/Madhouse POS/紀錄/銷售紀錄/"+r_time1+"/"+r_time2+"銷售紀錄.csv");
@@ -2074,6 +2208,9 @@ public class POS implements ActionListener {
 			}
 			notfirst=true;
 		}
+		
+		/* table */
+		
 		f_system_table=new File("C:/Madhouse POS/system/system_table.csv");
 		if(!f_system_table.exists())
 		{
@@ -2109,6 +2246,9 @@ public class POS implements ActionListener {
 	            }
 			}catch(Exception e){}	
 		}
+		
+		/* table log */
+		
 		f_log_table=new File("C:/Madhouse POS/紀錄/桌位紀錄/"+r_time1+"/"+r_time2+"桌位紀錄.csv");
 		if(!f_log_table.exists())
 		{
@@ -2136,6 +2276,70 @@ public class POS implements ActionListener {
 				bw_log_table.flush();
 			}catch(Exception e){}
 		}
+		
+		/* menu5 */
+		
+		f_system_menu5=new File("C:/Madhouse POS/system/system_menu5.csv");
+		if(!f_system_menu5.exists())
+		{
+			try{
+				f_system_menu5.getParentFile().mkdirs();
+				bw_system_menu5=new BufferedWriter(new FileWriter(f_system_menu5.getAbsolutePath()));
+				bw_system_menu5.write("每日特餐,0");
+				bw_system_menu5.newLine();
+				bw_system_menu5.write(",0");
+				bw_system_menu5.newLine();
+				bw_system_menu5.write(",0");
+				bw_system_menu5.newLine();
+				bw_system_menu5.write(",0");
+				bw_system_menu5.newLine();
+				bw_system_menu5.write(",0");
+				bw_system_menu5.newLine();
+				bw_system_menu5.flush();
+				for(int i=0;i<5;i++)
+				{
+					if(i==0)
+						menu5_name[i]="每日特餐";
+					else
+						menu5_name[i]="";
+					menu5_price[i]=0;
+				}
+			}catch(Exception e){}
+		}else
+		{
+			try{
+	            for(int i=0;i<5;i++)
+	            {
+	            	br_system_menu5=new BufferedReader(new FileReader(f_system_menu5.getAbsolutePath()));
+	            	String [] menu5_record;
+	            	int lines = 0;
+		    		while (oldRecord_menu5 != null) {
+		    			oldRecord_menu5 = br_system_menu5.readLine();
+		    			if (lines == i) {
+		    				menu5_record=oldRecord_menu5.split(",");
+	    					menu5_name[i]=menu5_record[0];
+	    					menu5_price[i]=Integer.parseInt(menu5_record[1]);
+	    					if(!menu5_record[1].equals(""))
+	    						menu5_price[i]=Integer.parseInt(menu5_record[1]);
+	    					else
+	    						menu5_price[i]=0;
+		    			}
+		    			lines++;
+		    		}
+		    		oldRecord_menu5="";
+		    		br_system_menu5.close();
+		    		price[i+48]=menu5_price[i];
+		    		if(i!=0)
+		    		{
+		    			lb_item_name[i+48].setText("其他-"+menu5_name[i]);
+		    			lb_menu_name[i+17].setText("其他-"+menu5_name[i]);
+		    		}
+	            }
+	            tab_menu.updateUI();
+	    		tab_order_list.updateUI();
+			}catch(Exception e){}	
+		}
+		
 	}
 	void keepRecord_order_log()
 	{
@@ -2173,19 +2377,16 @@ public class POS implements ActionListener {
 			bw_log_sale.flush();
 		}catch(Exception e){}	
 	}
-	void check_order_num()
+	void keepRecord_table_log(int i,int j)
 	{
-		if(order_num>999)
-		{
-			order_num=1;
-			tf_info_order_num.setText(order_num+"");
-			try{
-				bw_system=new BufferedWriter(new FileWriter(f_system.getAbsolutePath()));
-				bw_system.write(order_num+"");
-				bw_system.flush();
-			}catch(Exception e1){}
-			startRecord();
-		}
+		try{
+			Date d=new Date();
+			SimpleDateFormat sdf1=new SimpleDateFormat("HH:mm:ss");
+			String r_time1=sdf1.format(d);
+			bw_log_table.append(r_time1+","+(i+1)+","+table_ordernum[i]+","+status2[j]);
+			bw_log_table.newLine();
+			bw_log_table.flush();
+		}catch(Exception e1){}
 	}
 	void renew_table()
 	{
@@ -2198,25 +2399,6 @@ public class POS implements ActionListener {
 			}
 			bw_system_table.flush();
 		}catch(Exception e1){}
-		try{
-            for(int i=0;i<16;i++)
-            {
-            	br_system_table=new BufferedReader(new FileReader(f_system_table.getAbsolutePath()));
-            	String [] table_record;
-            	int lines = 0;
-	    		while (oldrecord_table != null) {
-	    			oldrecord_table = br_system_table.readLine();
-	    			if (lines == i) {
-	    				table_record=oldrecord_table.split(",");
-	    				table_status[i]=Integer.parseInt(table_record[1]);
-	    				table_ordernum[i]=Integer.parseInt(table_record[2]);
-	    			}
-	    			lines++;
-	    		}
-	    		oldrecord_table="";
-	    		br_system_table.close();
-            }
-		}catch(Exception e){}
 		for(int i=0;i<16;i++)
 		{
 			tf_table_inside_status[i].setText(status[table_status[i]]);
@@ -2241,16 +2423,30 @@ public class POS implements ActionListener {
 			}
 		}
 	}
-	void keepRecord_table_log(int i,int j)
+	void renew_menu5()
 	{
 		try{
-			Date d=new Date();
-			SimpleDateFormat sdf1=new SimpleDateFormat("HH:mm:ss");
-			String r_time1=sdf1.format(d);
-			bw_log_table.append(r_time1+","+(i+1)+","+table_ordernum[i]+","+status2[j]);
-			bw_log_table.newLine();
-			bw_log_table.flush();
+			bw_system_menu5=new BufferedWriter(new FileWriter(f_system_menu5.getAbsolutePath()));
+			for(int i=0; i<5; i++)
+			{
+				bw_system_menu5.write(menu5_name[i]+","+menu5_price[i]);
+				bw_system_menu5.newLine();
+			}
+			bw_system_menu5.flush();
 		}catch(Exception e1){}
+		for(int i=0;i<5;i++)
+		{
+			tf_menu5_set_name[i].setText(menu5_name[i]);
+			tf_menu5_set_price[i].setText(menu5_price[i]+"");
+			price[i+48]=menu5_price[i];
+    		if(i!=0)
+    		{
+    			lb_item_name[i+48].setText("其他-"+menu5_name[i]);
+    			lb_menu_name[i+17].setText("其他-"+menu5_name[i]);
+    		}
+		}
+		tab_menu.updateUI();
+		tab_order_list.updateUI();
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -2261,9 +2457,17 @@ public class POS implements ActionListener {
 				del(i);	
 		}
 		if(e.getSource()==btn_man_exit)
-			fm_pos_main.dispose();
+		{
+			int opt=JOptionPane.showConfirmDialog(null,"確定離開??","警告",JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
+		 	if(opt==0)
+		 		System.exit(0);
+		}
 		if(e.getSource()==btn_man_clear)
-			reset();
+		{
+			 int opt=JOptionPane.showConfirmDialog(null,"確定全部清除??","警告",JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
+			 if(opt==0)
+				 reset();
+		}
 		if(e.getSource()==btn_man_table)
 		{
 			fm_man_table.setVisible(true);
@@ -2271,33 +2475,54 @@ public class POS implements ActionListener {
 		}
 		if(e.getSource()==btn_man_order_num_reset)
 		{
-			order_num=1;
-			tf_info_order_num.setText(order_num+"");
-			try{
-				bw_system=new BufferedWriter(new FileWriter(f_system.getAbsolutePath()));
-				bw_system.write(order_num+"");
-				bw_system.flush();
-			}catch(Exception e1){}
+			int opt=JOptionPane.showConfirmDialog(null,"確定重設單號??","警告",JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
+			 if(opt==0)
+			 {
+				 order_num=1;
+					tf_info_order_num.setText(order_num+"");
+					try{
+						bw_system=new BufferedWriter(new FileWriter(f_system.getAbsolutePath()));
+						bw_system.write(order_num+"");
+						bw_system.flush();
+					}catch(Exception e1){}
+			 }
 		}
 		if(e.getSource()==btn_ch_chechout)
 		{
-			pay=Integer.parseInt(tf_ch_pay.getText());
-			if(total!=0 && pay>=total && change>=0 && now_tablenum!=0)
+			if(now_tablenum==0)
 			{
-				change=pay-(int)total;
-				tf_ch_change.setText(change+"");
-				isChecked=true;
-				tf_ch_change.setForeground(Color.BLACK);
-				keepRecord_order_log();
-				now_status=1;
-				if(now_tablenum<15)
-					table_status[now_tablenum-1]=1;
-				tf_info_status.setText(status[now_status]);
+				JOptionPane.showMessageDialog(null,"沒有選擇桌位!!","錯誤", JOptionPane.ERROR_MESSAGE);
+				fm_man_table.setVisible(true);
 				renew_table();
-				keepRecord_table_log(now_tablenum-1,2);
-				
-			}else
-			    tf_ch_change.setForeground(Color.RED);
+			}
+			if(total==0)
+				JOptionPane.showMessageDialog(null,"沒有商品!!","錯誤", JOptionPane.ERROR_MESSAGE);
+			if(!tf_ch_pay.getText().equals(""))
+			{
+				pay=Integer.parseInt(tf_ch_pay.getText());
+				if(total!=0  &&  now_tablenum!=0 && pay>=total)
+				{
+					change=pay-(int)total;
+					tf_ch_change.setText(change+"");
+					isChecked=true;
+					tf_ch_change.setForeground(Color.BLACK);
+					keepRecord_order_log();
+					now_status=1;
+					if(now_tablenum<15)
+						table_status[now_tablenum-1]=1;
+					tf_info_status.setText(status[now_status]);
+					renew_table();
+					keepRecord_table_log(now_tablenum-1,2);
+					
+				}
+				else
+				{
+					tf_ch_change.setForeground(Color.RED);
+					JOptionPane.showMessageDialog(null,"金額不足!!","錯誤", JOptionPane.ERROR_MESSAGE);
+				}	
+			}
+			else
+				JOptionPane.showMessageDialog(null,"沒有輸入金額!!","錯誤", JOptionPane.ERROR_MESSAGE);
 		}
 		if(e.getSource()==btn_ch_next)
 		{
@@ -2322,18 +2547,24 @@ public class POS implements ActionListener {
 			}
 			
 		}
+		if(e.getSource()==btn_ch_off_set)
+			fm_discount.setVisible(true);
 		if(e.getSource()==btn_table_exit)
 			fm_man_table.dispose();
 		if(e.getSource()==btn_table_all_reset)
 		{
-			for(int i=0;i<16;i++)
-			{
-				table_ordernum[i]=0;
-				if(table_status[i]!=0)
-					keepRecord_table_log(i,0);
-				table_status[i]=0;
-			}
-			renew_table();
+			int opt=JOptionPane.showConfirmDialog(null,"確定全部清除??","警告",JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
+			 if(opt==0)
+			 {
+				 for(int i=0;i<16;i++)
+					{
+						table_ordernum[i]=0;
+						if(table_status[i]!=0)
+							keepRecord_table_log(i,0);
+						table_status[i]=0;
+					}
+					renew_table();
+			 }
 		}
 		for(int i=0;i<16;i++)
 		{
@@ -2377,5 +2608,44 @@ public class POS implements ActionListener {
 				}
 			}
 		}
+		if(e.getSource()==btn_discount_ok)
+		{
+			if(!tf_discount_discount.getText().equals(""))
+				discount=Double.parseDouble(tf_discount_discount.getText());
+			else
+				discount=100.0;
+			if(!tf_discount_off.getText().equals(""))
+				off=Integer.parseInt(tf_discount_off.getText());
+			else
+				off=0;
+			tf_ch_discount.setText(discount+"");
+			tf_ch_off.setText(off+"");
+			total();
+			all_off=smalltotal-(int)total;
+			tf_ch_all_off.setText(all_off+"");
+			fm_discount.dispose();
+		}
+		if(e.getSource()==btn_discount_cancel)
+			fm_discount.dispose();
+		if(e.getSource()==btn_man_menu_5_set)
+		{
+			fm_man_menu_5_set.setVisible(true);
+			renew_menu5();
+		}
+		if(e.getSource()==btn_menu5_set_ok)
+		{
+			for(int i=0;i<5;i++)
+			{
+				if(!tf_menu5_set_price[i].getText().equals(""))
+					menu5_price[i]=Integer.parseInt(tf_menu5_set_price[i].getText());
+				else
+					menu5_price[i]=0;
+				menu5_name[i]=tf_menu5_set_name[i].getText();
+			}
+			renew_menu5();
+			fm_man_menu_5_set.dispose();
+		}
+		if(e.getSource()==btn_menu5_set_cancel)
+			fm_man_menu_5_set.dispose();
 	}
 }
