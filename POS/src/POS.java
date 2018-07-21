@@ -139,7 +139,16 @@ public class POS implements ActionListener {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	void login()
+	{
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e) {}
+		
+		
+		
+	}
+	void initialize() {
 		
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -148,9 +157,9 @@ public class POS implements ActionListener {
 		/* main */
 		
 		fm_pos_main = new JFrame();
-		fm_pos_main.setIconImage(Toolkit.getDefaultToolkit().getImage(POS.class.getResource("/pic/icon.png")));
+		fm_pos_main.setIconImage(Toolkit.getDefaultToolkit().getImage(POS.class.getResource("/pic/Madhouse.png")));
 		fm_pos_main.getContentPane().setFont(new Font("新細明體", Font.PLAIN, 22));
-		fm_pos_main.setTitle("POS\u7CFB\u7D71");
+		fm_pos_main.setTitle("Madhouse POS");
 		fm_pos_main.setResizable(false);
 		fm_pos_main.setBounds(100, 100, 1300, 750);
 		fm_pos_main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -1607,9 +1616,9 @@ public class POS implements ActionListener {
 		/* fm_man_table */
 		
 		fm_man_table = new JFrame();
-		fm_man_table.setIconImage(Toolkit.getDefaultToolkit().getImage(POS.class.getResource("/pic/icon.png")));
+		fm_man_table.setIconImage(Toolkit.getDefaultToolkit().getImage(POS.class.getResource("/pic/Madhouse.png")));
 		fm_man_table.getContentPane().setFont(new Font("新細明體", Font.PLAIN, 22));
-		fm_man_table.setTitle("POS\u7CFB\u7D71-桌位管理");
+		fm_man_table.setTitle("Madhouse POS-桌位管理");
 		fm_man_table.setResizable(false);
 		fm_man_table.setBounds(247, 80, 1005, 790);
 		fm_man_table.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
@@ -1733,11 +1742,11 @@ public class POS implements ActionListener {
 		/* discount */
 		
 		fm_discount = new JFrame();
-		fm_discount.setTitle("POS-\u512A\u60E0");
+		fm_discount.setTitle("Madhouse POS-\u512A\u60E0");
 		fm_discount.setResizable(false);
 		fm_discount.setBounds(670, 405, 160, 140);
 		fm_discount.getContentPane().setLayout(null);
-		fm_discount.setIconImage(Toolkit.getDefaultToolkit().getImage(POS.class.getResource("/pic/icon.png")));
+		fm_discount.setIconImage(Toolkit.getDefaultToolkit().getImage(POS.class.getResource("/pic/Madhouse.png")));
 		fm_discount.getContentPane().setFont(new Font("新細明體", Font.PLAIN, 22));
 		fm_discount.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		fm_discount.setVisible(false);
@@ -1770,22 +1779,22 @@ public class POS implements ActionListener {
 		btn_discount_ok = new JButton("\u78BA\u5B9A");
 		btn_discount_ok.setFont(new Font("PMingLiU", Font.PLAIN, 15));
 		btn_discount_ok.setBounds(10, 70, 65, 25);
-		fm_discount.add(btn_discount_ok);
+		fm_discount.getContentPane().add(btn_discount_ok);
 		btn_discount_ok.addActionListener(this);
 		
 		btn_discount_cancel = new JButton("\u53D6\u6D88");
 		btn_discount_cancel.setBounds(75, 70, 65, 25);
-		fm_discount.add(btn_discount_cancel);
+		fm_discount.getContentPane().add(btn_discount_cancel);
 		btn_discount_cancel.addActionListener(this);
 		
 		/* menu5_set */
 		
 		fm_man_menu_5_set = new JFrame();
-		fm_man_menu_5_set.setTitle("POS-\u5176\u4ED6\u985E\u83DC\u55AE\u8A2D\u5B9A");
+		fm_man_menu_5_set.setTitle("Madhouse POS-\u5176\u4ED6\u985E\u83DC\u55AE\u8A2D\u5B9A");
 		fm_man_menu_5_set.setResizable(false);
-		fm_man_menu_5_set.setBounds(100, 100, 300, 260);
+		fm_man_menu_5_set.setBounds(550, 345, 300, 260);
 		fm_man_menu_5_set.getContentPane().setLayout(null);
-		fm_man_menu_5_set.setIconImage(Toolkit.getDefaultToolkit().getImage(POS.class.getResource("/pic/icon.png")));
+		fm_man_menu_5_set.setIconImage(Toolkit.getDefaultToolkit().getImage(POS.class.getResource("/pic/Madhouse.png")));
 		fm_man_menu_5_set.getContentPane().setFont(new Font("新細明體", Font.PLAIN, 22));
 		fm_man_menu_5_set.setVisible(false);
 		fm_man_menu_5_set.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
@@ -1835,13 +1844,13 @@ public class POS implements ActionListener {
 		btn_menu5_set_ok = new JButton("\u78BA\u5B9A");
 		btn_menu5_set_ok.setFont(new Font("新細明體", Font.PLAIN, 20));
 		btn_menu5_set_ok.setBounds(48, 190, 75, 30);
-		fm_man_menu_5_set.add(btn_menu5_set_ok);
+		fm_man_menu_5_set.getContentPane().add(btn_menu5_set_ok);
 		btn_menu5_set_ok.addActionListener(this);
 		
 		btn_menu5_set_cancel = new JButton("\u53D6\u6D88");
 		btn_menu5_set_cancel.setFont(new Font("新細明體", Font.PLAIN, 20));
 		btn_menu5_set_cancel.setBounds(171, 190, 75, 30);
-		fm_man_menu_5_set.add(btn_menu5_set_cancel);
+		fm_man_menu_5_set.getContentPane().add(btn_menu5_set_cancel);
 		btn_menu5_set_cancel.addActionListener(this);
 		
 	}
@@ -2141,9 +2150,17 @@ public class POS implements ActionListener {
 				f_log_order.getParentFile().mkdirs();
 				bw_log_order=new BufferedWriter(new FileWriter(f_log_order.getAbsolutePath()));
 				bw_log_order.write("點餐時間,點餐號碼,桌號,");
-				for(int i=0; i<item_name.length; i++)
+				for(int i=0; i<49; i++)
 					bw_log_order.write(item_name[i]+",");
+				for(int i=1; i<5; i++)
+					bw_log_order.write("其他"+i+",");
 				bw_log_order.write("小計,折數,減免,總優待,總金額,付,找,");
+				bw_log_order.write("每日特餐品名,每日特餐價錢,");
+				for(int i=1; i<5; i++)
+				{
+					bw_log_order.write("其他"+i+"品名,");
+					bw_log_order.write("其他"+i+"價錢,");
+				}
 				for(int j=0; j<40; j++)
 				{
 					if(j!=39)
@@ -2348,9 +2365,14 @@ public class POS implements ActionListener {
 			SimpleDateFormat sdf1=new SimpleDateFormat("HH:mm:ss");
 			String r_time1=sdf1.format(d);
 			bw_log_order.append(r_time1+","+order_num+","+now_tablenum+",");
-			for(int i=0; i<qty.length; i++)
+			for(int i=0; i<53; i++)
 				bw_log_order.append(qty[i]+",");
 			bw_log_order.append(smalltotal+","+discount+","+off+","+all_off+","+total+","+pay+","+change+",");
+			for(int i=0; i<5; i++)
+			{
+				bw_log_order.append(menu5_name[i]+",");
+				bw_log_order.append(menu5_price[i]+",");
+			}
 			for(int i=0; i<40; i++){
 				if(list[i]!=-1)
 					bw_log_order.append(list[i]+",");
