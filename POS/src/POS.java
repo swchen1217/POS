@@ -6,9 +6,6 @@ import javax.swing.UIManager;
 import javax.swing.JPanel;
 import java.awt.Color;
 import javax.swing.border.TitledBorder;
-
-import login.Login;
-
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import java.util.Date;
@@ -56,8 +53,10 @@ public class POS implements ActionListener {
 	String menu5_name[]=new String[5];
 	String user[]={"","","",""};
 	boolean isOrder[]=new boolean[53], isChecked=false, notfirst=false;
-	String default_stocklist[]={"漢堡麵包","牛漢堡肉","豬漢堡肉","雞漢堡肉","生菜","蕃茄","洋蔥","牛醬料","豬醬料","雞醬料","烤時蔬","沙拉","咖哩","飯","吐司","起司","成長的回憶乳酪醬","草原上的青雞乳酪醬","低調中的高貴乳酪醬","親子間的南瓜乳酪醬","牛奶海洋裡的鮭魚乳酪醬","蝶豆花茶包","自製草莓果漿","自製藍莓果漿","自製蔓越莓果漿","自製烏龍茶","咖啡","","",""};
+	String default_stocklist_name[]={"漢堡麵包","牛漢堡肉","豬漢堡肉","雞漢堡肉","生菜","蕃茄","洋蔥","牛醬料","豬醬料","雞醬料","烤時蔬","沙拉","咖哩","飯","吐司","起司","培根","成長的回憶乳酪醬","草原上的青雞乳酪醬","低調中的高貴乳酪醬","親子間的南瓜乳酪醬","牛奶海洋裡的鮭魚乳酪醬","蝶豆花茶包","自製草莓果漿","自製藍莓果漿","自製蔓越莓果漿","自製烏龍茶","咖啡","",""};
+	String default_stocklist_unit[]={"片","片","片","片","份","份","份","匙","匙","匙","份","份","份","碗","片","片","片","匙","匙","匙","匙","匙","包","ml","ml","ml","ml","ml","",""};
 	String stocklist_name[]=new String[30];
+	String stocklist_unit[]=new String[30];
 	int stocklist_qty[]=new int[30];
 	
 	
@@ -178,7 +177,7 @@ public class POS implements ActionListener {
 		fm_login.setVisible(true);
 		
 		lb_login_icon = new JLabel("");
-		lb_login_icon.setIcon(new ImageIcon(Login.class.getResource("/pic/Madhouse2.png")));
+		lb_login_icon.setIcon(new ImageIcon(POS.class.getResource("/pic/Madhouse2.png")));
 		lb_login_icon.setBounds(10, 10, 70, 70);
 		fm_login.getContentPane().add(lb_login_icon);
 		
@@ -215,6 +214,62 @@ public class POS implements ActionListener {
 		tf_login_pw = new JTextField();
 		tf_login_pw.setColumns(10);
 		tf_login_pw.setBounds(65, 115, 155, 25);
+		tf_login_pw.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				f_login=new File("C:/Madhouse POS/system/system_login.csv");
+				if(!f_login.exists())
+				{
+					try{
+						f_login.getParentFile().mkdirs();
+						bw_login=new BufferedWriter(new FileWriter(f_login.getAbsolutePath()));
+						bw_login.write("0,admin,admin,管理員");
+						bw_login.newLine();
+						bw_login.flush();
+					}catch(Exception e){}
+				}else
+				{
+					try{
+						br_login=new BufferedReader(new FileReader(f_login.getAbsolutePath()));
+		            	String [] login_record;
+		            	for(;;)
+		            	{
+			    			oldRecord_login = br_login.readLine();
+			    			if(oldRecord_login == null)
+			    				break;
+			    			login_record=oldRecord_login.split(",");
+			    			if(tf_login_account.getText().equals(login_record[1]) && tf_login_pw.getText().equals(login_record[2]))
+			    			{
+			    				user[0]=login_record[0];
+					    		user[1]=login_record[1];
+					    		user[2]=login_record[2];
+					    		user[3]=login_record[3];
+					    		tf_info_user_num.setText(login_record[0]);
+					    		tf_info_user_name.setText(login_record[3]);
+					    		fm_pos_main.setVisible(true);
+					    		fm_login.setVisible(false);
+					    		tf_login_account.setText("");
+				    			tf_login_pw.setText("");
+			    			}
+			    			
+		            	}
+			    		if(fm_pos_main.isVisible()==false)
+			    		{
+			    			o++;
+			    			if(o==3){
+			    				JOptionPane.showMessageDialog(null,"帳號或密碼錯誤且超過3次!!","錯誤", JOptionPane.ERROR_MESSAGE);
+			    				System.exit(0);
+			    			}
+			    			JOptionPane.showMessageDialog(null,"帳號或密碼錯誤!!","錯誤", JOptionPane.ERROR_MESSAGE);
+			    			tf_login_account.setText("");
+			    			tf_login_pw.setText("");
+			    		}
+			    		oldRecord_login="";
+			    		br_login.close();
+					}catch(Exception e){}	
+				}
+			}
+		});
 		fm_login.getContentPane().add(tf_login_pw);
 		
 		btn_login_login = new JButton("\u767B\u5165");
@@ -1996,7 +2051,7 @@ public class POS implements ActionListener {
 		fm_stock = new JFrame();
 		fm_stock.setTitle("Madhouse POS-庫存管理");
 		fm_stock.setResizable(false);
-		fm_stock.setBounds(100, 100, 500, 500);
+		fm_stock.setBounds(100, 100, 990, 575);
 		fm_stock.getContentPane().setLayout(null);
 		fm_stock.setIconImage(Toolkit.getDefaultToolkit().getImage(POS.class.getResource("/pic/Madhouse.png")));
 		fm_stock.getContentPane().setFont(new Font("新細明體", Font.PLAIN, 22));
@@ -2517,10 +2572,11 @@ public class POS implements ActionListener {
 				bw_system_stock=new BufferedWriter(new FileWriter(f_system_stock.getAbsolutePath()));
 				for(int i=0; i<30; i++)
 				{
-					bw_system_stock.write(default_stocklist[i]+",0");
+					bw_system_stock.write(default_stocklist_name[i]+","+default_stocklist_unit[i]+",0");
 					bw_system_stock.newLine();
-					stocklist_name[i]=default_stocklist[i];
+					stocklist_name[i]=default_stocklist_name[i];
     				stocklist_qty[i]=0;
+    				stocklist_unit[i]=default_stocklist_unit[i];
 				}
 				bw_system_stock.flush();
 			}catch(Exception e){}
@@ -2537,7 +2593,8 @@ public class POS implements ActionListener {
 		    			if (lines == i) {
 		    				stock_record=oldRecord_stock.split(",");
 		    				stocklist_name[i]=stock_record[0];
-		    				stocklist_qty[i]=Integer.parseInt(stock_record[1]);
+		    				stocklist_unit[i]=stock_record[1];
+		    				stocklist_qty[i]=Integer.parseInt(stock_record[2]);
 		    			}
 		    			lines++;
 		    		}
