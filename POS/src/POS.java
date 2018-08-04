@@ -18,8 +18,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
-
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.ImageIcon;
@@ -29,6 +27,10 @@ import javax.swing.JButton;
 
 public class POS implements ActionListener {
 	
+	private static final Color RED = null;
+
+	private static final Color BLACK = null;
+
 	boolean Engineeringmode=true;
 	
 	/* main */
@@ -2326,11 +2328,6 @@ public class POS implements ActionListener {
 			list[i]=-1;
 		for(int j=0;j<53;j++)
 		{
-			if(qty[j]!=0)
-			{
-				for(int z=0;z<qty[j];z++)
-					ingredients_add(j);
-			}
 			isOrder[j]=false;
 			qty[j]=0;
 			small_total[j]=0;
@@ -2885,6 +2882,17 @@ public class POS implements ActionListener {
 	    		}
 		}catch(Exception e){}
 	}
+	void check_stock()
+	{
+		for(int i=0;i<30;i++)
+		{
+			if(stocklist_qty[i]<=5)
+			{
+				lb_stock_item[i].setBackground(RED);
+				JOptionPane.showMessageDialog(null, stocklist_name[i]+"庫存量低於5!!", "警告", JOptionPane.WARNING_MESSAGE);
+			}
+		}
+	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
@@ -2903,7 +2911,17 @@ public class POS implements ActionListener {
 		{
 			 int opt=JOptionPane.showConfirmDialog(null,"確定全部清除??","警告",JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
 			 if(opt==0)
+			 {
+				 for(int i=0;i<53;i++)
+				 {
+					 if(qty[i]!=0)
+						{
+							for(int z=0;z<qty[i];z++)
+								ingredients_add(i);
+						}
+				 }
 				 reset();
+			 }
 		}
 		if(e.getSource()==btn_man_table)
 		{
@@ -3197,51 +3215,105 @@ public class POS implements ActionListener {
 		{
 			for(int i=0;i<30;i++)
 			{
-				if(!tf_stock_input[i].getText().equals(""))
+				if(!lb_stock_item[i].equals(""))
 				{
-					try{
-						if(stocklist_qty[i]+Integer.parseInt(tf_stock_input[i].getText())>=0)
-						{
-							stocklist_qty[i]+=Integer.parseInt(tf_stock_input[i].getText());
-						}
-						else if((stocklist_qty[i]+Integer.parseInt(tf_stock_input[i].getText()))<0)
-						{
-							JOptionPane.showMessageDialog(null, stocklist_name[i]+"庫存量低於零!!", "錯誤", JOptionPane.ERROR_MESSAGE);
-						}
-					}catch(Exception ex){
-						if(!tf_stock_input[i].getText().equals(""))
-						{
-						    JOptionPane.showMessageDialog(null, stocklist_name[i]+"輸入需為整數!!", "錯誤", JOptionPane.ERROR_MESSAGE);
+					if(!tf_stock_input[i].getText().equals(""))
+					{
+						try{
+							if(stocklist_qty[i]+Integer.parseInt(tf_stock_input[i].getText())>=0)
+							{
+								stocklist_qty[i]+=Integer.parseInt(tf_stock_input[i].getText());
+								if(stocklist_qty[i]<5)
+								{
+									lb_stock_item[i].setBackground(RED);
+									JOptionPane.showMessageDialog(null, stocklist_name[i]+"庫存量低於5!!", "警告", JOptionPane.WARNING_MESSAGE);
+								}
+								else
+								{
+									lb_stock_item[i].setBackground(BLACK);
+								}
+							}
+							else if(stocklist_qty[i]+Integer.parseInt(tf_stock_input[i].getText())<0)
+							{
+								JOptionPane.showMessageDialog(null, stocklist_name[i]+"庫存量低於零!!", "錯誤", JOptionPane.ERROR_MESSAGE);
+								lb_stock_item[i].setBackground(RED);
+							}
+						}catch(Exception ex){
+							if(!tf_stock_input[i].getText().equals(""))
+							{
+							    JOptionPane.showMessageDialog(null, stocklist_name[i]+"輸入需為整數!!", "錯誤", JOptionPane.ERROR_MESSAGE);
+							}
 						}
 					}
+					else
+					{
+						if(stocklist_qty[i]<5 && stocklist_qty[i]>=0)
+						{
+							lb_stock_item[i].setBackground(RED);
+							JOptionPane.showMessageDialog(null, stocklist_name[i]+"庫存量低於5!!", "警告", JOptionPane.WARNING_MESSAGE);
+						}
+						else if(stocklist_qty[i]<0)
+						{
+							JOptionPane.showMessageDialog(null, stocklist_name[i]+"庫存量低於零!!", "錯誤", JOptionPane.ERROR_MESSAGE);
+							lb_stock_item[i].setBackground(RED);
+						}
+						
+					}
+					renew_stock();
 				}
 			}
-			renew_stock();
 		}
 		if(e.getSource()==btn_stock_replace)
 		{
 			for(int i=0;i<30;i++)
 			{
-				if(!tf_stock_input[i].getText().equals(""))
+				if(!lb_stock_item[i].equals(""))
 				{
-					try{
-						if(Integer.parseInt(tf_stock_input[i].getText())>=0)
-						{
-							stocklist_qty[i]=Integer.parseInt(tf_stock_input[i].getText());
+					if(!tf_stock_input[i].getText().equals(""))
+					{
+						try{
+							if(Integer.parseInt(tf_stock_input[i].getText())>=0)
+							{
+								stocklist_qty[i]=Integer.parseInt(tf_stock_input[i].getText());
+								if(stocklist_qty[i]<5)
+								{
+									lb_stock_item[i].setBackground(RED);
+									JOptionPane.showMessageDialog(null, stocklist_name[i]+"庫存量低於5!!", "警告", JOptionPane.WARNING_MESSAGE);
+								}
+								else
+								{
+									lb_stock_item[i].setBackground(BLACK);
+								}
+							}
+							else if(Integer.parseInt(tf_stock_input[i].getText())<0)
+							{
+								JOptionPane.showMessageDialog(null, stocklist_name[i]+"庫存量低於零!!", "錯誤", JOptionPane.ERROR_MESSAGE);
+								lb_stock_item[i].setBackground(RED);
+							}
+						}catch(Exception ex){
+							if(!tf_stock_input[i].getText().equals(""))
+							{
+							    JOptionPane.showMessageDialog(null, stocklist_name[i]+"輸入需為整數!!", "錯誤", JOptionPane.ERROR_MESSAGE);
+							}
 						}
-						else if(Integer.parseInt(tf_stock_input[i].getText())<0)
+						
+					}
+					else
+					{
+						if(stocklist_qty[i]<5 && stocklist_qty[i]>=0)
+						{
+							lb_stock_item[i].setBackground(RED);
+							JOptionPane.showMessageDialog(null, stocklist_name[i]+"庫存量低於5!!", "警告", JOptionPane.WARNING_MESSAGE);
+						}
+						else if(stocklist_qty[i]<0)
 						{
 							JOptionPane.showMessageDialog(null, stocklist_name[i]+"庫存量低於零!!", "錯誤", JOptionPane.ERROR_MESSAGE);
-						}
-					}catch(Exception ex){
-						if(!tf_stock_input[i].getText().equals(""))
-						{
-						    JOptionPane.showMessageDialog(null, stocklist_name[i]+"輸入需為整數!!", "錯誤", JOptionPane.ERROR_MESSAGE);
+							lb_stock_item[i].setBackground(RED);
 						}
 					}
+					renew_stock();
 				}
 			}
-			renew_stock();
 		}
 	}
 }
