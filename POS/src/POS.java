@@ -1701,7 +1701,6 @@ public class POS implements ActionListener {
 			pn_item[i].add(lb_small_total[i]);
 			
 			btn_del[i]= new JButton("-");
-			btn_del[i].addActionListener(this);
 			btn_del[i].setFont(new Font("新細明體", Font.BOLD, 26));
 			btn_del[i].setBounds(405, 20, 60, 40);
 			pn_item[i].add(btn_del[i]);
@@ -2100,44 +2099,51 @@ public class POS implements ActionListener {
 		tab_order_list.updateUI();
 	}
 	void del(int i) {
-		ingredients_add(i);
-		qty[i]--;
-		small_total[i]=qty[i]*price[i];
-		lb_qty[i].setText(qty[i]+"");
-		lb_small_total[i].setText(small_total[i]+"");
-		smalltotal-=price[i];
-		tf_ch_small_total.setText(smalltotal+"");
-		order_sum--;
-		tf_info_order_sum.setText(order_sum+"");
-		total();
-		for(int w=0;w<40;w++)
-		{
-			if(list[w]==i && qty[i]==0){
-				list[w]=-1;
-				break;
+			System.out.println("DEL");
+			ingredients_add(i);
+			qty[i]--;
+			System.out.println("qty:"+qty[i]);
+			small_total[i]=qty[i]*price[i];
+			System.out.println("small_total:"+small_total[i]);
+			lb_qty[i].setText(qty[i]+"");
+			lb_small_total[i].setText(small_total[i]+"");
+			smalltotal-=price[i];
+			System.out.println("smalltotal:"+smalltotal);
+			tf_ch_small_total.setText(smalltotal+"");
+			order_sum--;
+			System.out.println("order_sum:"+order_sum);
+			tf_info_order_sum.setText(order_sum+"");
+			total();
+			m=0;
+			for(int w=0;w<40;w++)
+			{
+				if(list[w]==i && qty[i]==0){
+					list[w]=-1;
+					m=w;
+					System.out.println("AA");
+					break;
+				}
+				System.out.println("BB");
 			}
-		}
-		m=0;
-		for(int q=0;q<order_list_sum;q++)
-		{
-			if(list[q]!=-1)
-				m++;
-			else
-				break;
-		}
-		for(int e=m;e<order_list_sum;e++)
-		{
-			tmp=list[e+1];
-			list[e]=tmp;
-			
-		}
-		order_list_sum--;
-		sort();
-		tab_order_list.updateUI();
-		
+			System.out.println("CC");
+			/*for(int q=0;q<order_list_sum;q++)
+			{
+				if(list[q]!=-1)
+					m++;
+				else
+					break;
+			}*/
+			for(int e=m;e<order_list_sum;e++)
+			{
+				tmp=list[e+1];
+				list[e]=tmp;
+				
+			}
+			order_list_sum--;
+			sort();
+			tab_order_list.updateUI();
 	}
 	void sort()  {
-		
 		pn_list_1.removeAll();
 		pn_list_2.removeAll();
 		pn_list_3.removeAll();
@@ -2376,6 +2382,152 @@ public class POS implements ActionListener {
 			}catch(Exception e){}	
 		}
 		
+		/* meals */
+		
+		f_system_meals=new File("C:/Madhouse POS/system/system_meals.csv");
+		if(!f_system_meals.exists())
+		{
+			try{
+				f_system_meals.getParentFile().mkdirs();
+				bw_system_meals=new BufferedWriter(new FileWriter(f_system_meals.getAbsolutePath()));
+				for(int i=0; i<53; i++)
+				{
+					bw_system_meals.write(default_item_name[i]+","+default_price[i]);
+					bw_system_meals.newLine();
+					item_name[i]=default_item_name[i];
+					price[i]=default_price[i];
+				}
+				bw_system_meals.flush();
+			}catch(Exception e){}
+		}else
+		{
+			try{
+	            for(int i=0;i<53;i++)
+	            {
+	            	br_system_meals=new BufferedReader(new FileReader(f_system_meals.getAbsolutePath()));
+	            	String [] meals_record;
+	            	int lines = 0;
+		    		while (oldRecord_meals != null) {
+		    			oldRecord_meals = br_system_meals.readLine();
+		    			if (lines == i) {
+		    				meals_record=oldRecord_meals.split(",");
+		    				item_name[i]=meals_record[0];
+		    				price[i]=Integer.parseInt(meals_record[1]);
+		    			}
+		    			lines++;
+		    		}
+		    		oldRecord_meals="";
+		    		br_system_meals.close();
+		    		lb_item_name[i].setText(item_name[i]);
+    				if(i==0 || i==8 || i==16 || i==24 || i==25 || i==26 || i==27 || i==28 || i==30 || i==32 || i==34 || i==36 || i==40 || i==42 || i==44 || i==46 || i==48 || i==49 || i==50 || i==51 || i==52 || i==53)
+    					lb_menu_name[change(i)].setText(item_name[i]);
+    				pn_item[i].updateUI();
+    				tab_menu.updateUI();
+	            }
+			}catch(Exception e){}	
+		}
+		
+		/* menu5 */
+		
+		f_system_menu5=new File("C:/Madhouse POS/system/system_menu5.csv");
+		if(!f_system_menu5.exists())
+		{
+			try{
+				f_system_menu5.getParentFile().mkdirs();
+				bw_system_menu5=new BufferedWriter(new FileWriter(f_system_menu5.getAbsolutePath()));
+				bw_system_menu5.write("每日特餐,0");
+				bw_system_menu5.newLine();
+				bw_system_menu5.write(",0");
+				bw_system_menu5.newLine();
+				bw_system_menu5.write(",0");
+				bw_system_menu5.newLine();
+				bw_system_menu5.write(",0");
+				bw_system_menu5.newLine();
+				bw_system_menu5.write(",0");
+				bw_system_menu5.newLine();
+				bw_system_menu5.flush();
+				for(int i=0;i<5;i++)
+				{
+					if(i==0)
+						menu5_name[i]="每日特餐";
+					else
+						menu5_name[i]="";
+					menu5_price[i]=0;
+				}
+			}catch(Exception e){}
+		}else
+		{
+			try{
+	            for(int i=0;i<5;i++)
+	            {
+	            	br_system_menu5=new BufferedReader(new FileReader(f_system_menu5.getAbsolutePath()));
+	            	String [] menu5_record;
+	            	int lines = 0;
+		    		while (oldRecord_menu5 != null) {
+		    			oldRecord_menu5 = br_system_menu5.readLine();
+		    			if (lines == i) {
+		    				menu5_record=oldRecord_menu5.split(",");
+	    					menu5_name[i]=menu5_record[0];
+	    					menu5_price[i]=Integer.parseInt(menu5_record[1]);
+	    					if(!menu5_record[1].equals(""))
+	    						menu5_price[i]=Integer.parseInt(menu5_record[1]);
+	    					else
+	    						menu5_price[i]=0;
+		    			}
+		    			lines++;
+		    		}
+		    		oldRecord_menu5="";
+		    		br_system_menu5.close();
+		    		price[i+48]=menu5_price[i];
+		    		if(i!=0)
+		    		{
+		    			lb_item_name[i+48].setText("其他-"+menu5_name[i]);
+		    			lb_menu_name[i+17].setText("其他-"+menu5_name[i]);
+		    		}
+	            }
+	            tab_menu.updateUI();
+	    		tab_order_list.updateUI();
+			}catch(Exception e){}	
+		}
+		
+		/* table */
+		
+		f_system_table=new File("C:/Madhouse POS/system/system_table.csv");
+		if(!f_system_table.exists())
+		{
+			try{
+				f_system_table.getParentFile().mkdirs();
+				bw_system_table=new BufferedWriter(new FileWriter(f_system_table.getAbsolutePath()));
+				for(int i=0; i<16; i++)
+				{
+					bw_system_table.write(i+1+",0,0");
+					bw_system_table.newLine();
+				}
+				bw_system_table.flush();
+			}catch(Exception e){}
+		}else
+		{
+			try{
+	            for(int i=0;i<16;i++)
+	            {
+	            	br_system_table=new BufferedReader(new FileReader(f_system_table.getAbsolutePath()));
+	            	String [] table_record;
+	            	int lines = 0;
+		    		while (oldrecord_table != null) {
+		    			oldrecord_table = br_system_table.readLine();
+		    			if (lines == i) {
+		    				table_record=oldrecord_table.split(",");
+		    				table_status[i]=Integer.parseInt(table_record[1]);
+		    				table_ordernum[i]=Integer.parseInt(table_record[2]);
+		    			}
+		    			lines++;
+		    		}
+		    		oldrecord_table="";
+		    		br_system_table.close();
+	            }
+			}catch(Exception e){}	
+		}
+		
 		/* order log */
 		
 		f_log_order=new File("C:/Madhouse POS/紀錄/點餐紀錄/"+r_time1+"/"+r_time2+"點餐紀錄.csv");
@@ -2461,43 +2613,7 @@ public class POS implements ActionListener {
 			notfirst=true;
 		}
 		
-		/* table */
 		
-		f_system_table=new File("C:/Madhouse POS/system/system_table.csv");
-		if(!f_system_table.exists())
-		{
-			try{
-				f_system_table.getParentFile().mkdirs();
-				bw_system_table=new BufferedWriter(new FileWriter(f_system_table.getAbsolutePath()));
-				for(int i=0; i<16; i++)
-				{
-					bw_system_table.write(i+1+",0,0");
-					bw_system_table.newLine();
-				}
-				bw_system_table.flush();
-			}catch(Exception e){}
-		}else
-		{
-			try{
-	            for(int i=0;i<16;i++)
-	            {
-	            	br_system_table=new BufferedReader(new FileReader(f_system_table.getAbsolutePath()));
-	            	String [] table_record;
-	            	int lines = 0;
-		    		while (oldrecord_table != null) {
-		    			oldrecord_table = br_system_table.readLine();
-		    			if (lines == i) {
-		    				table_record=oldrecord_table.split(",");
-		    				table_status[i]=Integer.parseInt(table_record[1]);
-		    				table_ordernum[i]=Integer.parseInt(table_record[2]);
-		    			}
-		    			lines++;
-		    		}
-		    		oldrecord_table="";
-		    		br_system_table.close();
-	            }
-			}catch(Exception e){}	
-		}
 		
 		/* table log */
 		
@@ -2529,69 +2645,6 @@ public class POS implements ActionListener {
 			}catch(Exception e){}
 		}
 		
-		/* menu5 */
-		
-		f_system_menu5=new File("C:/Madhouse POS/system/system_menu5.csv");
-		if(!f_system_menu5.exists())
-		{
-			try{
-				f_system_menu5.getParentFile().mkdirs();
-				bw_system_menu5=new BufferedWriter(new FileWriter(f_system_menu5.getAbsolutePath()));
-				bw_system_menu5.write("每日特餐,0");
-				bw_system_menu5.newLine();
-				bw_system_menu5.write(",0");
-				bw_system_menu5.newLine();
-				bw_system_menu5.write(",0");
-				bw_system_menu5.newLine();
-				bw_system_menu5.write(",0");
-				bw_system_menu5.newLine();
-				bw_system_menu5.write(",0");
-				bw_system_menu5.newLine();
-				bw_system_menu5.flush();
-				for(int i=0;i<5;i++)
-				{
-					if(i==0)
-						menu5_name[i]="每日特餐";
-					else
-						menu5_name[i]="";
-					menu5_price[i]=0;
-				}
-			}catch(Exception e){}
-		}else
-		{
-			try{
-	            for(int i=0;i<5;i++)
-	            {
-	            	br_system_menu5=new BufferedReader(new FileReader(f_system_menu5.getAbsolutePath()));
-	            	String [] menu5_record;
-	            	int lines = 0;
-		    		while (oldRecord_menu5 != null) {
-		    			oldRecord_menu5 = br_system_menu5.readLine();
-		    			if (lines == i) {
-		    				menu5_record=oldRecord_menu5.split(",");
-	    					menu5_name[i]=menu5_record[0];
-	    					menu5_price[i]=Integer.parseInt(menu5_record[1]);
-	    					if(!menu5_record[1].equals(""))
-	    						menu5_price[i]=Integer.parseInt(menu5_record[1]);
-	    					else
-	    						menu5_price[i]=0;
-		    			}
-		    			lines++;
-		    		}
-		    		oldRecord_menu5="";
-		    		br_system_menu5.close();
-		    		price[i+48]=menu5_price[i];
-		    		if(i!=0)
-		    		{
-		    			lb_item_name[i+48].setText("其他-"+menu5_name[i]);
-		    			lb_menu_name[i+17].setText("其他-"+menu5_name[i]);
-		    		}
-	            }
-	            tab_menu.updateUI();
-	    		tab_order_list.updateUI();
-			}catch(Exception e){}	
-		}
-		
 		/* stock */
 		
 		f_system_stock=new File("C:/Madhouse POS/system/system_stock.csv");
@@ -2602,7 +2655,7 @@ public class POS implements ActionListener {
 				bw_system_stock=new BufferedWriter(new FileWriter(f_system_stock.getAbsolutePath()));
 				for(int i=0; i<30; i++)
 				{
-					bw_system_stock.write(default_stocklist_name[i]+","+default_stocklist_unit[i]+",0");
+					bw_system_stock.write(i+","+default_stocklist_name[i]+","+default_stocklist_unit[i]+",0");
 					bw_system_stock.newLine();
 					stocklist_name[i]=default_stocklist_name[i];
     				stocklist_qty[i]=0;
@@ -2622,9 +2675,9 @@ public class POS implements ActionListener {
 		    			oldRecord_stock = br_system_stock.readLine();
 		    			if (lines == i) {
 		    				stock_record=oldRecord_stock.split(",");
-		    				stocklist_name[i]=stock_record[0];
-		    				stocklist_unit[i]=stock_record[1];
-		    				stocklist_qty[i]=Integer.parseInt(stock_record[2]);
+		    				stocklist_name[i]=stock_record[1];
+		    				stocklist_unit[i]=stock_record[2];
+		    				stocklist_qty[i]=Integer.parseInt(stock_record[3]);
 		    			}
 		    			lines++;
 		    		}
@@ -2634,50 +2687,6 @@ public class POS implements ActionListener {
 			}catch(Exception e){}	
 		}
 		
-		/* meals */
-		
-		f_system_meals=new File("C:/Madhouse POS/system/system_meals.csv");
-		if(!f_system_meals.exists())
-		{
-			try{
-				f_system_meals.getParentFile().mkdirs();
-				bw_system_meals=new BufferedWriter(new FileWriter(f_system_meals.getAbsolutePath()));
-				for(int i=0; i<53; i++)
-				{
-					bw_system_meals.write(default_item_name[i]+","+default_price[i]);
-					bw_system_meals.newLine();
-					item_name[i]=default_item_name[i];
-					price[i]=default_price[i];
-				}
-				bw_system_meals.flush();
-			}catch(Exception e){}
-		}else
-		{
-			try{
-	            for(int i=0;i<53;i++)
-	            {
-	            	br_system_meals=new BufferedReader(new FileReader(f_system_meals.getAbsolutePath()));
-	            	String [] meals_record;
-	            	int lines = 0;
-		    		while (oldRecord_meals != null) {
-		    			oldRecord_meals = br_system_meals.readLine();
-		    			if (lines == i) {
-		    				meals_record=oldRecord_meals.split(",");
-		    				item_name[i]=meals_record[0];
-		    				price[i]=Integer.parseInt(meals_record[1]);
-		    			}
-		    			lines++;
-		    		}
-		    		oldRecord_meals="";
-		    		br_system_meals.close();
-		    		lb_item_name[i].setText(item_name[i]);
-    				if(i==0 || i==8 || i==16 || i==24 || i==25 || i==26 || i==27 || i==28 || i==30 || i==32 || i==34 || i==36 || i==40 || i==42 || i==44 || i==46 || i==48 || i==49 || i==50 || i==51 || i==52 || i==53)
-    					lb_menu_name[change(i)].setText(item_name[i]);
-    				pn_item[i].updateUI();
-    				tab_menu.updateUI();
-	            }
-			}catch(Exception e){}	
-		}
 		
 		/* ingredients */
 		
@@ -2819,7 +2828,7 @@ public class POS implements ActionListener {
 			bw_system_stock=new BufferedWriter(new FileWriter(f_system_stock.getAbsolutePath()));
 			for(int i=0; i<30; i++)
 			{
-				bw_system_stock.write(stocklist_name[i]+","+stocklist_unit[i]+","+stocklist_qty[i]);
+				bw_system_stock.write(i+","+stocklist_name[i]+","+stocklist_unit[i]+","+stocklist_qty[i]);
 				bw_system_stock.newLine();
 			}
 			bw_system_stock.flush();
@@ -2848,7 +2857,7 @@ public class POS implements ActionListener {
 	    		}
 	    		oldRecord_ingredients="";
 	    		br_system_ingredients.close();
-	    		for(int a=0;a<default_ingredients[i].length;a++)
+	    		for(int a=0;a<ingredients_record.length-1;a++)
 	    		{
 	    			stocklist_qty[Integer.parseInt(ingredients_record[a+1])]--;
 	    		}
@@ -2870,7 +2879,7 @@ public class POS implements ActionListener {
 	    		}
 	    		oldRecord_ingredients="";
 	    		br_system_ingredients.close();
-	    		for(int a=0;a<default_ingredients[i].length;a++)
+	    		for(int a=0;a<ingredients_record.length-1;a++)
 	    		{
 	    			stocklist_qty[Integer.parseInt(ingredients_record[a+1])]++;
 	    		}
@@ -2879,10 +2888,10 @@ public class POS implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
-		for(int i=0; i<qty.length; i++)
+		for(int i=0; i<53; i++)
 		{
 			if(e.getSource()==btn_del[i] && qty[i]>0)
-				del(i);	
+				del(i);
 		}
 		if(e.getSource()==btn_man_exit)
 		{
