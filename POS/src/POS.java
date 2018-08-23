@@ -26,11 +26,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JButton;
 
 public class POS implements ActionListener {
-	
 	private static final Color RED = null;
-
 	private static final Color BLACK = null;
-
 	boolean Engineeringmode=true;
 	
 	/* main */
@@ -2101,118 +2098,138 @@ public class POS implements ActionListener {
 		tab_order_list.updateUI();
 	}
 	void del(int i) {
-			System.out.println("DEL");
-			ingredients_add(i);
-			qty[i]--;
-			System.out.println("qty:"+qty[i]);
-			small_total[i]=qty[i]*price[i];
-			System.out.println("small_total:"+small_total[i]);
-			lb_qty[i].setText(qty[i]+"");
-			lb_small_total[i].setText(small_total[i]+"");
-			smalltotal-=price[i];
-			System.out.println("smalltotal:"+smalltotal);
-			tf_ch_small_total.setText(smalltotal+"");
-			order_sum--;
-			System.out.println("order_sum:"+order_sum);
-			tf_info_order_sum.setText(order_sum+"");
-			total();
-			n=0;
-			for(int x=0;x<40;x++)
-				System.out.print(list[x]+",");
-			System.out.println();
-			for(int n=0;n<40;n++)
-			{
-				if(list[n]==i && qty[i]==0){
-					list[n]=-1;
-					System.out.println("n:"+n);
-					break;
-				}
-				System.out.println("not=-1");
-			}
-			/*for(int q=0;q<order_list_sum;q++)
-			{
-				if(list[q]!=-1)
-					m++;
-				else
-					break;
-			}*/
-			for(int x=0;x<40;x++)
-				System.out.print(list[x]+",");
-			System.out.println();
-			System.out.println(list[n]);
-			System.out.println(list[n+1]);
-			System.out.println(order_list_sum);
-			order_list_sum--;
-			System.out.println(order_list_sum);
-			for(int e=n;e<order_list_sum;e++)
-			{
-				if(list[n+1]!=-1)
+			try{
+				System.out.println("DEL");
+				ingredients_add(i);
+				qty[i]--;
+				System.out.println("qty:"+qty[i]);
+				small_total[i]=qty[i]*price[i];
+				System.out.println("small_total:"+small_total[i]);
+				lb_qty[i].setText(qty[i]+"");
+				lb_small_total[i].setText(small_total[i]+"");
+				smalltotal-=price[i];
+				System.out.println("smalltotal:"+smalltotal);
+				tf_ch_small_total.setText(smalltotal+"");
+				order_sum--;
+				System.out.println("order_sum:"+order_sum);
+				tf_info_order_sum.setText(order_sum+"");
+				total();
+				if(qty[i]==0)
 				{
-					System.out.println("BB");
-					tmp=list[e+1];
-					list[e]=tmp;
+					int k=0;
+					for(int x=0;x<40;x++)
+						System.out.print(list[x]+",");
+					System.out.println();
+					for(int n=0;n<40;n++)
+					{
+						if(list[n]==i){
+							list[n]=-1;
+							k=n;
+							System.out.println("k:"+k);
+							break;
+						}
+						System.out.println("not=-1");
+					}
+					for(int x=0;x<40;x++)
+						System.out.print(list[x]+",");
+					System.out.println();
+					System.out.println(list[k]);
+					System.out.println(list[k+1]);
+					System.out.println(order_list_sum);
+					order_list_sum--;
+					System.out.println(order_list_sum);
+					if(order_list_sum!=0 && list[k+1]!=-1)
+					{
+						for(int e=k;e<order_list_sum+1;e++)
+						{
+							System.out.println("AA");
+							if(list[k+1]!=-1)
+							{
+								System.out.println("BB");
+								tmp=list[e+1];
+								list[e]=tmp;
+							}
+							else
+								break;
+						}
+						//list[order_list_sum]=-1;
+						for(int x=0;x<40;x++)
+							System.out.print(list[x]+",");
+						System.out.println();
+					}
+					sort();
 				}
-			}
-			list[order_list_sum]=-1;
-			for(int x=0;x<40;x++)
-				System.out.print(list[x]+",");
-			System.out.println();
-			sort();
-			tab_order_list.updateUI();
+			}catch(Exception e){}
 	}
 	void sort()  {
-		pn_list_1.removeAll();
-		pn_list_2.removeAll();
-		pn_list_3.removeAll();
-		pn_list_4.removeAll();
-		pn_list_5.removeAll();
-		tab_order_list.updateUI();
-		n=0;
-		for(int i=0;i<order_list_sum;i++)
+		try{
+//		tab_order_list.removeAll();
+//		pn_list_1.removeAll();
+//		pn_list_2.removeAll();
+//		pn_list_3.removeAll();
+//		pn_list_4.removeAll();
+//		pn_list_5.removeAll();
+//		tab_order_list.addTab("1", null, pn_list_1, null);
+//		tab_order_list.addTab("2", null, pn_list_2, null);
+//		tab_order_list.addTab("3", null, pn_list_3, null);
+//		tab_order_list.addTab("4", null, pn_list_4, null);
+//		tab_order_list.addTab("5", null, pn_list_5, null);
+		//n=0;
+		/*for(int i=0;i<order_list_sum;i++)
 		{
 			if(list[i]!=-1)
 				n++;
 			else
 				break;
-		}
-		item_sum2=0;
-		for(int j=0;j<n;j++)
+		}*/
+		for(int a=0;a<53;a++)
 		{
-			item_sum2++;
-			if(item_sum2<=8)
-			{
-				pn_item[list[j]].setLocation(0, (item_sum2-1)*70);
-				pn_list_1.add(pn_item[list[j]]);
-				tab_order_list.setSelectedIndex(0);
-			}else if(item_sum2<=16)
-			{
-				pn_item[list[j]].setLocation(0, (item_sum2-9)*70);
-				pn_list_2.add(pn_item[list[j]]);
-				tab_order_list.setSelectedIndex(1);
-			}else if(item_sum2<=24)
-			{
-				pn_item[list[j]].setLocation(0, (item_sum2-17)*70);
-				pn_list_3.add(pn_item[list[j]]);
-				tab_order_list.setSelectedIndex(2);
-			}else if(item_sum2<=32)
-			{
-				pn_item[list[j]].setLocation(0, (item_sum2-25)*70);
-				pn_list_4.add(pn_item[list[j]]);
-				tab_order_list.setSelectedIndex(3);
-			}else if(item_sum2<40)
-			{
-				pn_item[list[j]].setLocation(0, (item_sum2-33)*70);
-				pn_list_5.add(pn_item[list[j]]);
-				tab_order_list.setSelectedIndex(4);
-			}else if(item_sum2>=40)
-			{
-				pn_item[list[j]].setLocation(0, (item_sum2-33)*70);
-				pn_list_5.add(pn_item[list[j]]);
-				tab_order_list.setSelectedIndex(4);
-				check_list_full();
-			}
+			pn_item[a].setVisible(false);
 		}
 		tab_order_list.updateUI();
+		if(order_list_sum!=0)
+		{
+			item_sum2=0;
+			for(int j=0;j<order_list_sum;j++)
+			{
+				pn_item[list[j]].setVisible(true);
+				item_sum2++;
+				if(item_sum2<=8)
+				{
+					pn_item[list[j]].setLocation(0, (item_sum2-1)*70);
+					pn_list_1.add(pn_item[list[j]]);
+					tab_order_list.setSelectedIndex(0);
+				}else if(item_sum2<=16)
+				{
+					pn_item[list[j]].setLocation(0, (item_sum2-9)*70);
+					pn_list_2.add(pn_item[list[j]]);
+					tab_order_list.setSelectedIndex(1);
+				}else if(item_sum2<=24)
+				{
+					pn_item[list[j]].setLocation(0, (item_sum2-17)*70);
+					pn_list_3.add(pn_item[list[j]]);
+					tab_order_list.setSelectedIndex(2);
+				}else if(item_sum2<=32)
+				{
+					pn_item[list[j]].setLocation(0, (item_sum2-25)*70);
+					pn_list_4.add(pn_item[list[j]]);
+					tab_order_list.setSelectedIndex(3);
+				}else if(item_sum2<40)
+				{
+					pn_item[list[j]].setLocation(0, (item_sum2-33)*70);
+					pn_list_5.add(pn_item[list[j]]);
+					tab_order_list.setSelectedIndex(4);
+				}else if(item_sum2>=40)
+				{
+					pn_item[list[j]].setLocation(0, (item_sum2-33)*70);
+					pn_list_5.add(pn_item[list[j]]);
+					tab_order_list.setSelectedIndex(4);
+					check_list_full();
+				}
+			}
+			tab_order_list.updateUI();
+		}
+		}catch(Exception e){}
 	}
 	void total()
 	{
