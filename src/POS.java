@@ -4,6 +4,8 @@ import javax.swing.JTabbedPane;
 import java.awt.Font;
 import javax.swing.UIManager;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+
 import java.awt.Color;
 import javax.swing.border.TitledBorder;
 import javax.swing.JLabel;
@@ -127,7 +129,8 @@ public class POS implements ActionListener {
 	
 	JFrame fm_login;
 	JLabel lb_login_icon,lb_login_name1,lb_login_name2,lb_login_name3,lb_login_account,lb_login_pw;
-	JTextField tf_login_account,tf_login_pw;
+	JTextField tf_login_account;
+	JPasswordField tf_login_pw;
 	JButton btn_login_login,btn_login_exit;
 	
 	/* stock */
@@ -220,7 +223,8 @@ public class POS implements ActionListener {
 		tf_login_account.setColumns(10);
 		tf_login_account.addActionListener(this);
 		
-		tf_login_pw = new JTextField();
+		tf_login_pw = new JPasswordField();
+		tf_login_pw.setEchoChar('*');
 		tf_login_pw.setColumns(10);
 		tf_login_pw.setBounds(65, 115, 155, 25);
 		tf_login_pw.addActionListener(this);
@@ -2075,8 +2079,9 @@ public class POS implements ActionListener {
 	}
 	void add(int i) {
 		boolean ok=true;
-		for(int y=0;y<ingredients[i].length-1;y++)
+		for(int y=0;y<ingredients[i].length;y++)
 		{
+			System.out.println(ingredients[0].length);
 			System.out.println(ingredients[i][y]);
 			if(stocklist_qty[ingredients[i][y]]<5 && stocklist_qty[ingredients[i][y]]>0)
 				JOptionPane.showMessageDialog(null, stocklist_name[ingredients[i][y]]+"庫存量低於5!!", "警告", JOptionPane.WARNING_MESSAGE);
@@ -2746,10 +2751,10 @@ public class POS implements ActionListener {
 				bw_system_ingredients=new BufferedWriter(new FileWriter(f_system_ingredients.getAbsolutePath()));
 				for(int i=0; i<53; i++)
 				{
-					bw_system_ingredients.write(item_name[i]+",");
+					bw_system_ingredients.write(item_name[i]);
 					for(int j=0;j<default_ingredients[i].length;j++)
 					{
-						bw_system_ingredients.write(default_ingredients[i][j]+",");
+						bw_system_ingredients.write(","+default_ingredients[i][j]);
 					}
 					bw_system_ingredients.newLine();
 				}
@@ -3220,7 +3225,8 @@ public class POS implements ActionListener {
 		{
 			if(Engineeringmode==true)
 			{
-				if(tf_login_account.getText().equals("") && tf_login_pw.getText().equals(""))
+				String str = new String(tf_login_pw.getPassword());
+				if(tf_login_account.getText().equals("") && str.equals(""))
 				{
 					user[0]=-1+"";
 		    		user[3]="工程模式";
@@ -3258,7 +3264,8 @@ public class POS implements ActionListener {
 			    			if(oldRecord_login == null)
 			    				break;
 			    			login_record=oldRecord_login.split(",");
-			    			if(tf_login_account.getText().equals(login_record[1]) && tf_login_pw.getText().equals(login_record[2]))
+			    			String str = new String(tf_login_pw.getPassword());
+			    			if(tf_login_account.getText().equals(login_record[1]) && str.equals(login_record[2]))
 			    			{
 			    				user[0]=login_record[0];
 					    		user[1]=login_record[1];
@@ -3270,6 +3277,7 @@ public class POS implements ActionListener {
 					    		fm_login.setVisible(false);
 					    		tf_login_account.setText("");
 				    			tf_login_pw.setText("");
+				    			break;
 			    			}
 			    			
 		            	}
