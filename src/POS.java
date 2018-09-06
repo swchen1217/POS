@@ -5,7 +5,7 @@ import java.awt.Font;
 import javax.swing.UIManager;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
-
+import java.lang.String;
 import java.awt.Color;
 import javax.swing.border.TitledBorder;
 import javax.swing.JLabel;
@@ -37,14 +37,14 @@ public class POS implements ActionListener {
 	int price[]=new int[53];
 	String item_name[]=new String[53];
 	Thread th_nowtime;
-	File f_system,f_log_order,f_log_sale,f_system_table,f_log_table,f_system_menu5,f_login,f_system_stock,f_system_meals,f_system_ingredients;
-	BufferedWriter bw_system,bw_log_order,bw_log_sale,bw_system_table,bw_log_table,bw_system_menu5,bw_login,bw_system_stock,bw_system_meals,bw_system_ingredients;
-	BufferedReader br_system,br_log_order,br_log_sale,br_system_table,br_log_table,br_system_menu5,br_login,br_system_stock,br_system_meals,br_system_ingredients;
+	File f_system,f_log_order,f_log_sale,f_system_table,f_log_table,f_system_menu5,f_login,f_system_stock,f_system_meals,f_system_ingredients,f_system_option;
+	BufferedWriter bw_system,bw_log_order,bw_log_sale,bw_system_table,bw_log_table,bw_system_menu5,bw_login,bw_system_stock,bw_system_meals,bw_system_ingredients,bw_system_option;
+	BufferedReader br_system,br_log_order,br_log_sale,br_system_table,br_log_table,br_system_menu5,br_login,br_system_stock,br_system_meals,br_system_ingredients,br_system_option;
 	int pay, change, order_sum=0, smalltotal=0, off=0, all_off=0, item_sum2=0, order_list_sum=0, m=0 ,n=0 ,tmp=-1 ,order_num ,now_tablenum ,now_status ,o=0;
 	int list[]={-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
 	int table_status[]=new int[16],table_ordernum[]=new int[16],menu5_price[]=new int[5];
 	double total=0 ,discount=100;
-	String oldordernum="",oldRecord_log_order="",oldRecord_log_sale="",oldrecord_table="" ,oldRecord_log_table="" ,oldRecord_menu5="" ,oldRecord_login="",oldRecord_stock="",oldRecord_meals="",oldRecord_ingredients="";
+	String oldordernum="",oldRecord_log_order="",oldRecord_log_sale="",oldrecord_table="" ,oldRecord_log_table="" ,oldRecord_menu5="" ,oldRecord_login="",oldRecord_stock="",oldRecord_meals="",oldRecord_ingredients="",oldRecord_option="";
 	String status[]={"空桌","已結帳","清潔中"};
 	String status2[]={"空桌","新單","已結帳","清潔中"};
 	String menu5_name[]=new String[5];
@@ -65,6 +65,10 @@ public class POS implements ActionListener {
 	int default_price[]={140,190,160,160,210,210,180,230,120,155,140,140,175,175,160,195,120,155,140,140,175,175,160,195,60,140,120,120,50,80,50,80,50,80,50,80,50,80,50,0,50,0,50,0,50,0,50,0,0,0,0,0,0,0};
 	int default_ingredients[][]={{0,1,4,5,6,7,10,11},{0,1,4,5,6,7,10,11,1},{0,1,4,5,6,7,10,11,16},{0,1,4,5,6,7,10,11,15},{0,1,4,5,6,7,10,11,1,16},{0,1,4,5,6,7,10,11,1,15},{0,1,4,5,6,7,10,11,16,15},{0,1,4,5,6,7,10,11,1,16,15},{0,2,4,5,6,8,10,11},{0,2,4,5,6,8,10,11,2},{0,2,4,5,6,8,10,11,16},{0,2,4,5,6,8,10,11,15},{0,2,4,5,6,8,10,11,2,16},{0,2,4,5,6,8,10,11,2,15},{0,2,4,5,6,8,10,11,16,15},{0,2,4,5,6,8,10,11,2,16,15},{0,3,4,5,6,9,10,11},{0,3,4,5,6,9,10,11,3},{0,3,4,5,6,9,10,11,16},{0,3,4,5,6,9,10,11,15},{0,3,4,5,6,9,10,11,3,16},{0,3,4,5,6,9,10,11,3,15},{0,3,4,5,6,9,10,11,16,15},{0,3,4,5,6,9,10,11,3,16,15},{12,13,10,11},{12,13,1,10,11},{12,13,2,10,11},{12,13,3,10,11},{14,15,17},{14,15,17,10,11},{14,15,18},{14,15,18,10,11},{14,15,19},{14,15,19,10,11},{14,15,20},{14,15,20,10,11},{14,15,21},{14,15,21,10,11},{22},{22},{23,23,23,23,23,26},{23,23,23,23,23,26},{24,24,24,24,24,26},{24,24,24,24,24,26},{23,23,24,24,25,26},{23,23,24,24,25,26},{27},{27},{},{},{},{},{}};
 	int ingredients[][]=new int[53][30];
+	int ingredients_sum[]=new int[53];
+	String default_option1[]={"1_1_1","1_1_2","1_1_3","1_2_1","1_2_2","1_2_3","1_3_1","1_3_2","1_3_3","3_1","3_2","3_3","3_4","3_5","4_1","4_2","4_3","4_4","4_5"};
+	String default_option2[]={"漢堡肉","培根","起士","漢堡肉","培根","起士","漢堡肉","培根","起士","套餐","套餐","套餐","套餐","套餐","贈送","贈送","贈送","贈送","贈送"};
+	
 	/* main */
 	
 	JFrame fm_pos_main;
@@ -2079,23 +2083,27 @@ public class POS implements ActionListener {
 	}
 	void add(int i) {
 		boolean ok=true;
-		for(int y=0;y<ingredients[i].length;y++)
+		String str1="";
+		String str2="";
+		for(int y=0;y<ingredients_sum[i];y++)
 		{
-			System.out.println(ingredients[0].length);
-			System.out.println(ingredients[i][y]);
-			if(stocklist_qty[ingredients[i][y]]<5 && stocklist_qty[ingredients[i][y]]>0)
-				JOptionPane.showMessageDialog(null, stocklist_name[ingredients[i][y]]+"庫存量低於5!!", "警告", JOptionPane.WARNING_MESSAGE);
-			if(stocklist_qty[ingredients[i][y]]<=0)
+			if(stocklist_qty[ingredients[i][y]]-Integer.parseInt(tf_menu_qty[change(i)].getText())<5 && stocklist_qty[ingredients[i][y]]-Integer.parseInt(tf_menu_qty[change(i)].getText())>=0)
+				//JOptionPane.showMessageDialog(null, stocklist_name[ingredients[i][y]]+"庫存量低於5!!", "警告", JOptionPane.WARNING_MESSAGE);
+				str1=str1+stocklist_name[ingredients[i][y]]+"\n";
+			if(stocklist_qty[ingredients[i][y]]-Integer.parseInt(tf_menu_qty[change(i)].getText())<0)
 			{
-				JOptionPane.showMessageDialog(null, stocklist_name[ingredients[i][y]]+"庫存量不足!!", "錯誤", JOptionPane.ERROR_MESSAGE);
+				//JOptionPane.showMessageDialog(null, stocklist_name[ingredients[i][y]]+"庫存量不足!!", "錯誤", JOptionPane.ERROR_MESSAGE);
+				str2=str2+stocklist_name[ingredients[i][y]]+"\n";
 				ok=false;
 			}
 		}
 		if(ok==false)
 		{
-			JOptionPane.showMessageDialog(null, item_name[i]+"無法製作!!", "錯誤", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, item_name[i]+"無法製作!!\n原因:\n"+str2+"庫存量不足!!", "錯誤", JOptionPane.ERROR_MESSAGE);
 		}
 		else{
+			if(!str1.equals(""))
+				JOptionPane.showMessageDialog(null, str1+"庫存量低於5!!", "警告", JOptionPane.WARNING_MESSAGE);
 			for(int j=0;j<Integer.parseInt(tf_menu_qty[change(i)].getText());j++)
 				ingredients_del(i);
 			if(isOrder[i]==false && qty[i]==0)
@@ -2480,6 +2488,45 @@ public class POS implements ActionListener {
 			}catch(Exception e){}	
 		}
 		
+		/* menu_option */
+		
+		f_system_option=new File("C:/Madhouse POS/system/system_option.csv");
+		if(!f_system_option.exists())
+		{
+			try{
+				f_system_option.getParentFile().mkdirs();
+				bw_system_option=new BufferedWriter(new FileWriter(f_system_option.getAbsolutePath()));
+				for(int i=0; i<19; i++)
+				{
+					bw_system_option.write(default_option1[i]+","+default_option2[i]);
+					bw_system_option.newLine();
+					cb[i].setText(default_option2[i]);
+				}
+				bw_system_option.flush();
+			}catch(Exception e){}
+		}else
+		{
+			try{
+	            for(int i=0;i<19;i++)
+	            {
+	            	br_system_option=new BufferedReader(new FileReader(f_system_option.getAbsolutePath()));
+	            	String [] option_record;
+	            	int lines = 0;
+		    		while (oldRecord_option != null) {
+		    			oldRecord_option = br_system_option.readLine();
+		    			if (lines == i) {
+		    				option_record=oldRecord_option.split(",");
+		    				cb[i].setText(option_record[1]);
+		    			}
+		    			lines++;
+		    		}
+		    		oldRecord_option="";
+		    		br_system_option.close();
+    				tab_menu.updateUI();
+	            }
+			}catch(Exception e){}	
+		}
+		
 		/* menu5 */
 		
 		f_system_menu5=new File("C:/Madhouse POS/system/system_menu5.csv");
@@ -2772,10 +2819,12 @@ public class POS implements ActionListener {
 		    			oldRecord_ingredients = br_system_ingredients.readLine();
 		    			if (lines == i) {
 		    				ingredients_record=oldRecord_ingredients.split(",");
+		    				ingredients_sum[i]=ingredients_record.length-1;
 		    				for(int j=0;j<ingredients_record.length;j++)
 		    				{
 		    					ingredients[i][j]=Integer.parseInt(ingredients_record[j+1]);
 		    				}
+		    				
 		    			}
 		    			lines++;
 		    		}
@@ -2963,23 +3012,30 @@ public class POS implements ActionListener {
 	}
 	void check_stock()
 	{
+		String str1="",str2="";
 		for(int i=0;i<30;i++)
 		{
 			if(stocklist_qty[i]>5)
 			{
 				lb_stock_item[i].setForeground(Color.black);
 			}
-			if(stocklist_qty[i]<5 && stocklist_qty[i]>=0)
+			if(stocklist_qty[i]<5 && stocklist_qty[i]>0)
 			{
 				lb_stock_item[i].setForeground(Color.red);
-				JOptionPane.showMessageDialog(null, stocklist_name[i]+"庫存量低於5!!", "警告", JOptionPane.WARNING_MESSAGE);
+				str1=str1+stocklist_name[i]+"\n";
+				//JOptionPane.showMessageDialog(null, stocklist_name[i]+"庫存量低於5!!", "警告", JOptionPane.WARNING_MESSAGE);
 			}
-			if(stocklist_qty[i]<0)
+			if(stocklist_qty[i]<=0)
 			{
 				lb_stock_item[i].setForeground(Color.red);
-				JOptionPane.showMessageDialog(null, stocklist_name[i]+"庫存量低於0!!", "警告", JOptionPane.WARNING_MESSAGE);
+				str2=str2+stocklist_name[i]+"\n";
+				//JOptionPane.showMessageDialog(null, stocklist_name[i]+"庫存量不足!!", "警告", JOptionPane.WARNING_MESSAGE);
 			}
 		}
+		if(!str1.equals(""))
+			JOptionPane.showMessageDialog(null, str1+"庫存量低於5!!", "警告", JOptionPane.WARNING_MESSAGE);
+		if(!str2.equals(""))
+		 JOptionPane.showMessageDialog(null, str2+"庫存量不足!!", "錯誤", JOptionPane.ERROR_MESSAGE);
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -3321,28 +3377,31 @@ public class POS implements ActionListener {
 		}
 		if(e.getSource()==btn_stock_revise)
 		{
+			String str1="",str2="";
 			for(int i=0;i<30;i++)
 			{
 				if(!tf_stock_input[i].getText().equals(""))
 				{
 					try{
-						if(stocklist_qty[i]+Integer.parseInt(tf_stock_input[i].getText())>=0)
+						if(stocklist_qty[i]+Integer.parseInt(tf_stock_input[i].getText())>0)
 						{
 							stocklist_qty[i]+=Integer.parseInt(tf_stock_input[i].getText());
 							if(stocklist_qty[i]<5)
 							{
 								lb_stock_item[i].setForeground(Color.red);
-								JOptionPane.showMessageDialog(null, stocklist_name[i]+"庫存量低於5!!", "警告", JOptionPane.WARNING_MESSAGE);
+								str1=str1+stocklist_name[i]+"\n";
+								//JOptionPane.showMessageDialog(null, stocklist_name[i]+"庫存量低於5!!", "警告", JOptionPane.WARNING_MESSAGE);
 							}
 							else
 							{
 								lb_stock_item[i].setForeground(Color.black);
 							}
 						}
-						else if(stocklist_qty[i]+Integer.parseInt(tf_stock_input[i].getText())<0)
+						else if(stocklist_qty[i]+Integer.parseInt(tf_stock_input[i].getText())<=0)
 						{
-							JOptionPane.showMessageDialog(null, stocklist_name[i]+"庫存量低於零!!", "錯誤", JOptionPane.ERROR_MESSAGE);
+							//JOptionPane.showMessageDialog(null, stocklist_name[i]+"庫存量不足!!", "錯誤", JOptionPane.ERROR_MESSAGE);
 							lb_stock_item[i].setForeground(Color.red);
+							str2=str2+stocklist_name[i]+"\n";
 						}
 					}catch(Exception ex){
 						if(!tf_stock_input[i].getText().equals(""))
@@ -3353,45 +3412,54 @@ public class POS implements ActionListener {
 				}
 				else
 				{
-					if(stocklist_qty[i]<5 && stocklist_qty[i]>=0)
+					if(stocklist_qty[i]<5 && stocklist_qty[i]>0)
 					{
 						lb_stock_item[i].setForeground(Color.red);
-						JOptionPane.showMessageDialog(null, stocklist_name[i]+"庫存量低於5!!", "警告", JOptionPane.WARNING_MESSAGE);
+						str1=str1+stocklist_name[i]+"\n";
+						//JOptionPane.showMessageDialog(null, stocklist_name[i]+"庫存量低於5!!", "警告", JOptionPane.WARNING_MESSAGE);
 					}
-					else if(stocklist_qty[i]<0)
+					else if(stocklist_qty[i]<=0)
 					{
-						JOptionPane.showMessageDialog(null, stocklist_name[i]+"庫存量低於零!!", "錯誤", JOptionPane.ERROR_MESSAGE);
+						//JOptionPane.showMessageDialog(null, stocklist_name[i]+"庫存量不足!!", "錯誤", JOptionPane.ERROR_MESSAGE);
 						lb_stock_item[i].setForeground(Color.red);
+						str2=str2+stocklist_name[i]+"\n";
 					}
 					
 				}
 			}
+			if(!str1.equals(""))
+				JOptionPane.showMessageDialog(null, str1+"庫存量低於5!!", "警告", JOptionPane.WARNING_MESSAGE);
+			if(!str2.equals(""))
+			 JOptionPane.showMessageDialog(null, str2+"庫存量不足!!", "錯誤", JOptionPane.ERROR_MESSAGE);
 			renew_stock();
 		}
 		if(e.getSource()==btn_stock_replace)
 		{
+			String str1="",str2="";
 			for(int i=0;i<30;i++)
 			{
 				if(!tf_stock_input[i].getText().equals(""))
 				{
 					try{
-						if(Integer.parseInt(tf_stock_input[i].getText())>=0)
+						if(Integer.parseInt(tf_stock_input[i].getText())>0)
 						{
 							stocklist_qty[i]=Integer.parseInt(tf_stock_input[i].getText());
 							if(stocklist_qty[i]<5)
 							{
 								lb_stock_item[i].setForeground(Color.red);
-								JOptionPane.showMessageDialog(null, stocklist_name[i]+"庫存量低於5!!", "警告", JOptionPane.WARNING_MESSAGE);
+								str1=str1+stocklist_name[i]+"\n";
+								//JOptionPane.showMessageDialog(null, stocklist_name[i]+"庫存量低於5!!", "警告", JOptionPane.WARNING_MESSAGE);
 							}
 							else
 							{
 								lb_stock_item[i].setForeground(Color.black);
 							}
 						}
-						else if(Integer.parseInt(tf_stock_input[i].getText())<0)
+						else if(Integer.parseInt(tf_stock_input[i].getText())<=0)
 						{
-							JOptionPane.showMessageDialog(null, stocklist_name[i]+"庫存量低於零!!", "錯誤", JOptionPane.ERROR_MESSAGE);
+							//JOptionPane.showMessageDialog(null, stocklist_name[i]+"庫存量低不足!!", "錯誤", JOptionPane.ERROR_MESSAGE);
 							lb_stock_item[i].setForeground(Color.red);
+							str2=str2+stocklist_name[i]+"\n";
 						}
 					}catch(Exception ex){
 						if(!tf_stock_input[i].getText().equals(""))
@@ -3403,18 +3471,24 @@ public class POS implements ActionListener {
 				}
 				else
 				{
-					if(stocklist_qty[i]<5 && stocklist_qty[i]>=0)
+					if(stocklist_qty[i]<5 && stocklist_qty[i]>0)
 					{
 						lb_stock_item[i].setForeground(Color.red);
-						JOptionPane.showMessageDialog(null, stocklist_name[i]+"庫存量低於5!!", "警告", JOptionPane.WARNING_MESSAGE);
+						str1=str1+stocklist_name[i]+"\n";
+						//JOptionPane.showMessageDialog(null, stocklist_name[i]+"庫存量低於5!!", "警告", JOptionPane.WARNING_MESSAGE);
 					}
-					else if(stocklist_qty[i]<0)
+					else if(stocklist_qty[i]<=0)
 					{
-						JOptionPane.showMessageDialog(null, stocklist_name[i]+"庫存量低於零!!", "錯誤", JOptionPane.ERROR_MESSAGE);
+						//JOptionPane.showMessageDialog(null, stocklist_name[i]+"庫存量不足!!", "錯誤", JOptionPane.ERROR_MESSAGE);
 						lb_stock_item[i].setForeground(Color.red);
+						str2=str2+stocklist_name[i]+"\n";
 					}
 				}
 			}
+			if(!str1.equals(""))
+				JOptionPane.showMessageDialog(null, str1+"庫存量低於5!!", "警告", JOptionPane.WARNING_MESSAGE);
+			if(!str2.equals(""))
+			 JOptionPane.showMessageDialog(null, str2+"庫存量不足!!", "錯誤", JOptionPane.ERROR_MESSAGE);
 			renew_stock();
 		}
 	}
