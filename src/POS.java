@@ -28,7 +28,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JButton;
 
 public class POS implements ActionListener {
-	boolean Engineeringmode=true;
+	boolean Engineeringmode=false;
 	
 	/* main */
 	
@@ -64,7 +64,7 @@ public class POS implements ActionListener {
 			"每日特餐","其他-","其他-","其他-","其他-"};
 	int default_price[]={140,190,160,160,210,210,180,230,120,155,140,140,175,175,160,195,120,155,140,140,175,175,160,195,60,140,120,120,50,80,50,80,50,80,50,80,50,80,50,0,50,0,50,0,50,0,50,0,0,0,0,0,0,0};
 	int default_ingredients[][]={{0,1,4,5,6,7,10,11},{0,1,4,5,6,7,10,11,1},{0,1,4,5,6,7,10,11,16},{0,1,4,5,6,7,10,11,15},{0,1,4,5,6,7,10,11,1,16},{0,1,4,5,6,7,10,11,1,15},{0,1,4,5,6,7,10,11,16,15},{0,1,4,5,6,7,10,11,1,16,15},{0,2,4,5,6,8,10,11},{0,2,4,5,6,8,10,11,2},{0,2,4,5,6,8,10,11,16},{0,2,4,5,6,8,10,11,15},{0,2,4,5,6,8,10,11,2,16},{0,2,4,5,6,8,10,11,2,15},{0,2,4,5,6,8,10,11,16,15},{0,2,4,5,6,8,10,11,2,16,15},{0,3,4,5,6,9,10,11},{0,3,4,5,6,9,10,11,3},{0,3,4,5,6,9,10,11,16},{0,3,4,5,6,9,10,11,15},{0,3,4,5,6,9,10,11,3,16},{0,3,4,5,6,9,10,11,3,15},{0,3,4,5,6,9,10,11,16,15},{0,3,4,5,6,9,10,11,3,16,15},{12,13,10,11},{12,13,1,10,11},{12,13,2,10,11},{12,13,3,10,11},{14,15,17},{14,15,17,10,11},{14,15,18},{14,15,18,10,11},{14,15,19},{14,15,19,10,11},{14,15,20},{14,15,20,10,11},{14,15,21},{14,15,21,10,11},{22},{22},{23,23,23,23,23,26},{23,23,23,23,23,26},{24,24,24,24,24,26},{24,24,24,24,24,26},{23,23,24,24,25,26},{23,23,24,24,25,26},{27},{27},{},{},{},{},{}};
-	int ingredients[][]=new int[53][30];
+	int ingredients[][]=new int[53][50];
 	int ingredients_sum[]=new int[53];
 	String default_option1[]={"1_1_1","1_1_2","1_1_3","1_2_1","1_2_2","1_2_3","1_3_1","1_3_2","1_3_3","3_1","3_2","3_3","3_4","3_5","4_1","4_2","4_3","4_4","4_5"};
 	String default_option2[]={"漢堡肉","培根","起士","漢堡肉","培根","起士","漢堡肉","培根","起士","套餐","套餐","套餐","套餐","套餐","贈送","贈送","贈送","贈送","贈送"};
@@ -2129,53 +2129,34 @@ public class POS implements ActionListener {
 	}
 	void del(int i) {
 			try{
-				System.out.println("DEL");
 				ingredients_add(i);
 				qty[i]--;
-				System.out.println("qty:"+qty[i]);
 				small_total[i]=qty[i]*price[i];
-				System.out.println("small_total:"+small_total[i]);
 				lb_qty[i].setText(qty[i]+"");
 				lb_small_total[i].setText(small_total[i]+"");
 				smalltotal-=price[i];
-				System.out.println("smalltotal:"+smalltotal);
 				tf_ch_small_total.setText(smalltotal+"");
 				order_sum--;
-				System.out.println("order_sum:"+order_sum);
 				tf_info_order_sum.setText(order_sum+"");
 				total();
 				if(qty[i]==0)
 				{
 					int k=0;
-					for(int x=0;x<40;x++)
-						System.out.print(list[x]+",");
-					System.out.println();
 					for(int n=0;n<40;n++)
 					{
 						if(list[n]==i){
 							list[n]=-1;
 							k=n;
-							System.out.println("k:"+k);
 							break;
 						}
-						System.out.println("not=-1");
 					}
-					for(int x=0;x<40;x++)
-						System.out.print(list[x]+",");
-					System.out.println();
-					System.out.println(list[k]);
-					System.out.println(list[k+1]);
-					System.out.println(order_list_sum);
 					order_list_sum--;
-					System.out.println(order_list_sum);
 					if(order_list_sum!=0 && list[k+1]!=-1)
 					{
 						for(int e=k;e<order_list_sum+1;e++)
 						{
-							System.out.println("AA");
 							if(list[k+1]!=-1)
 							{
-								System.out.println("BB");
 								tmp=list[e+1];
 								list[e]=tmp;
 							}
@@ -2183,9 +2164,6 @@ public class POS implements ActionListener {
 								break;
 						}
 						//list[order_list_sum]=-1;
-						for(int x=0;x<40;x++)
-							System.out.print(list[x]+",");
-						System.out.println();
 					}
 					sort();
 				}
@@ -2398,6 +2376,8 @@ public class POS implements ActionListener {
 		}
 		for(int k=0;k<19;k++)
 			cb[k].setSelected(false);
+		for(int a=0;a<22;a++)
+			tf_menu_qty[a].setText("1");
 		check_list_full();
 		sort();
 	}
@@ -2407,6 +2387,20 @@ public class POS implements ActionListener {
 		Date d=new Date();
 		SimpleDateFormat sdf1=new SimpleDateFormat("yyyyMM"), sdf2=new SimpleDateFormat("yyyyMMdd");
 		String r_time1=sdf1.format(d), r_time2=sdf2.format(d);
+		
+		/* login */
+		
+		f_login=new File("C:/Madhouse POS/system/system_login.csv");
+		if(!f_login.exists())
+		{
+			try{
+				f_login.getParentFile().mkdirs();
+				bw_login=new BufferedWriter(new FileWriter(f_login.getAbsolutePath()));
+				bw_login.write("0,admin,admin,管理員");
+				bw_login.newLine();
+				bw_login.flush();
+			}catch(Exception e1){}
+		}
 		
 		/* ordernum */
 		
@@ -3299,59 +3293,46 @@ public class POS implements ActionListener {
 			}
 			else
 			{
-				f_login=new File("C:/Madhouse POS/system/system_login.csv");
-				if(!f_login.exists())
-				{
-					try{
-						f_login.getParentFile().mkdirs();
-						bw_login=new BufferedWriter(new FileWriter(f_login.getAbsolutePath()));
-						bw_login.write("0,admin,admin,管理員");
-						bw_login.newLine();
-						bw_login.flush();
-					}catch(Exception e1){}
-				}else
-				{
-					try{
-						br_login=new BufferedReader(new FileReader(f_login.getAbsolutePath()));
-		            	String [] login_record;
-		            	for(;;)
-		            	{
-			    			oldRecord_login = br_login.readLine();
-			    			if(oldRecord_login == null)
-			    				break;
-			    			login_record=oldRecord_login.split(",");
-			    			String str = new String(tf_login_pw.getPassword());
-			    			if(tf_login_account.getText().equals(login_record[1]) && str.equals(login_record[2]))
-			    			{
-			    				user[0]=login_record[0];
-					    		user[1]=login_record[1];
-					    		user[2]=login_record[2];
-					    		user[3]=login_record[3];
-					    		tf_info_user_num.setText(login_record[0]);
-					    		tf_info_user_name.setText(login_record[3]);
-					    		fm_pos_main.setVisible(true);
-					    		fm_login.setVisible(false);
-					    		tf_login_account.setText("");
-				    			tf_login_pw.setText("");
-				    			break;
-			    			}
-			    			
-		            	}
-			    		if(fm_pos_main.isVisible()==false)
-			    		{
-			    			o++;
-			    			if(o==3){
-			    				JOptionPane.showMessageDialog(null,"帳號或密碼錯誤且超過3次!!","錯誤", JOptionPane.ERROR_MESSAGE);
-			    				System.exit(0);
-			    			}
-			    			JOptionPane.showMessageDialog(null,"帳號或密碼錯誤!!\r\n      剩下"+(3-o)+"次","錯誤", JOptionPane.ERROR_MESSAGE);
-			    			tf_login_account.setText("");
+				try{
+					br_login=new BufferedReader(new FileReader(f_login.getAbsolutePath()));
+	            	String [] login_record;
+	            	for(;;)
+	            	{
+		    			oldRecord_login = br_login.readLine();
+		    			if(oldRecord_login == null)
+		    				break;
+		    			login_record=oldRecord_login.split(",");
+		    			String str = new String(tf_login_pw.getPassword());
+		    			if(tf_login_account.getText().equals(login_record[1]) && str.equals(login_record[2]))
+		    			{
+		    				user[0]=login_record[0];
+				    		user[1]=login_record[1];
+				    		user[2]=login_record[2];
+				    		user[3]=login_record[3];
+				    		tf_info_user_num.setText(login_record[0]);
+				    		tf_info_user_name.setText(login_record[3]);
+				    		fm_pos_main.setVisible(true);
+				    		fm_login.setVisible(false);
+				    		tf_login_account.setText("");
 			    			tf_login_pw.setText("");
-			    		}
-			    		oldRecord_login="";
-			    		br_login.close();
-					}catch(Exception e1){}	
-				}
+			    			break;
+		    			}
+		    			
+	            	}
+		    		if(fm_pos_main.isVisible()==false)
+		    		{
+		    			o++;
+		    			if(o==3){
+		    				JOptionPane.showMessageDialog(null,"帳號或密碼錯誤且超過3次!!","錯誤", JOptionPane.ERROR_MESSAGE);
+		    				System.exit(0);
+		    			}
+		    			JOptionPane.showMessageDialog(null,"帳號或密碼錯誤!!\r\n      剩下"+(3-o)+"次","錯誤", JOptionPane.ERROR_MESSAGE);
+		    			tf_login_account.setText("");
+		    			tf_login_pw.setText("");
+		    		}
+		    		oldRecord_login="";
+		    		br_login.close();
+				}catch(Exception e1){}	
 			}
 		}
 		if(e.getSource()==btn_man_stock)

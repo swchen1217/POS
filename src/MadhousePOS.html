@@ -1,0 +1,266 @@
+<html>
+    <head>
+        <title>MadhousePOS系統使用說明</title>
+    </head>
+    <body  bgcolor="#c5eaff">
+        <h2>MadhousePOS系統使用說明</h2>
+        <hr>
+        <h3>快速連結</h3><a href=#a1>第一次使用</a> <a href=#a2>系統設定</a> <a href=#a3>基本操作流程</a> <a href=#a4>管理區教學</a> <a href=#a5>其他</a>
+        <hr>
+        <a name=a1 ></a>
+        <h3>第一次使用</h3>
+        首先打開程式後，出現登入畫面
+        <br>
+        <img src=https://i.imgur.com/IR11ffm.png height=200>
+        <br>
+        第一次登入請使用預設管理員帳號密碼
+        <br>
+        預設帳號 : admin 密碼 : admin
+        <br>
+        若要更改或新增帳號請至<a href=#a2>系統設定</a>單元查看說明
+        <br>
+        第一次登入畫面
+        <br>
+        <img src=https://i.imgur.com/3jGRGBY.png height=450>
+        <br>
+        第一次登入完成後請先關閉程式
+        <br>
+        接下來要進行<a href=#a2>系統設定</a>
+        <br>
+        <hr>
+        <a name=a2 ></a>
+        <h3>系統設定</h3>
+        系統檔案位於電腦的C槽內的Madhouse POS資料夾中的system資料夾內
+        <br>
+        建議使用Excel開啟CSV檔設定
+        <br>
+        請開啟此資料夾進行系統設定
+        <h4>檔案介紹</h4>
+        1.system.csv : 紀錄單號用，<font color='#FF0000'><b>系統自動變更，請勿自行隨意改變</b></font>
+        <br>
+        2.system_login.csv : 使用者管理
+        <br>
+        3.system_table.csv : 桌位管理，<font color='#FF0000'><b>系統自動變更，請勿自行隨意改變</b></font>
+        <br>
+        4.system_meals.csv : 餐點設定
+        <br>
+        5.system_menu5.csv : 其他類菜單設定
+        <br>
+        6.system_option.csv : 餐點選項設定
+        <br>
+        7.system_stock.csv : 庫存管理
+        <br>
+        8.system_ingredients.csv : 扣除食材設定
+        <br>
+        <h4>檔案設定</h4>
+        <b>system_login.csv 使用者管理</b>
+        <br>
+        <img src=https://i.imgur.com/W5RVyRv.png height=180>
+        <br>
+        可自行向下新增
+        <br>
+        第1排為使用者編號，建議從1開始往上遞增，編號請勿重複，第1行為預設管理員
+        <br>
+        第2排為帳號 第3排為密碼 第4排為自設名稱
+        <br>
+        <b>system_meals.csv 餐點設定</b>
+        <br>
+        <img src=https://i.imgur.com/b7eNqPA.png height=150>
+        <br>
+        第1排為品名 第2排為所對應之價錢
+        <br>
+        <b>注意:最後每日特餐和其他類部份的品名和價錢請先不要在此設定!!</b>
+        <br>
+        <img src=https://i.imgur.com/jdrnkQm.png height=130>
+        <br>
+        品名部分盡量配合餐點選項 價錢也請自行計算加或不加配料/選項的價錢後填入
+        <br>
+        第1類(1-24) :
+        <br>
+        每8項為一組 即1-8 9-16 17-24
+        <br>
+        每組中意思如下
+        <br>
+        (1 9 17)第1:不加配料/選項
+        <br>
+        (2 10 18)第2:加第1項配料/選項
+        <br>
+        (3 11 19)第3:加第2項配料/選項
+        <br>
+        (4 12 20)第4:加第3項配料/選項
+        <br>
+        (5 13 21)第5:加第1,2項配料/選項
+        <br>
+        (6 14 22)第6:加第1,3項配料/選項
+        <br>
+        (7 15 23)第7:加第2,3項配料/選項
+        <br>
+        (8 16 24)第8:加第1,2,3項配料/選項
+        <br>
+        以此類推
+        <br>
+        第2類(29-48) :
+        <br>
+        每2項為一組 即29-30 31-32 33-34 以此類推
+        <br>
+        每組中意思如下
+        <br>
+        (29 31 33 ...)第1:不加配料/選項
+        <br>
+        (30 32 34 ...)第2:加配料/選項
+        <br>
+        <b>system_option.csv 選項設定</b>
+        <br>
+        <img src=https://i.imgur.com/6CVasCJ.png height=500>
+        <br>
+        第1排為編號不須理會 第2排為設定區
+        <br>
+        每行為各選項顯示文字
+        <br>
+        第1-9行:
+        <br>
+        每3個為一組 共3組 1-3 4-6 7-9
+        <br>
+        每組第1:第1個選項
+        <br>
+        每組第2:第2個選項
+        <br>
+        每組第3:第3個選項
+        <br>
+        以此類推
+        <br>
+        範例:(一組)
+        <br>
+        <img src=https://i.imgur.com/VxDn7qY.png height=50>
+        <br>
+        第10-19行:
+        <br>
+        每1行各代表1個選項 共10組
+        <br>
+        <b>system_menu5.csv 其他類菜單設定</b>
+        <br>
+        <img src=https://i.imgur.com/O0udkom.png height=150>
+        <br>
+        修改其他類菜單也有更簡單的方法 請見<a href=#a4>管理區教學</a>
+        <br>
+        第1排為名稱 第2排為價錢
+        <br>
+        每行為1餐點 最多5個(含每日特餐) 請直接填入 勿再向下新增行
+        <br>
+        第1行"每日特餐"字請勿刪除或修改 只可改變價錢
+        <br>
+        第2-5行品名及價錢皆可正常修改
+        <br>
+        <b>system_stock.csv 庫存管理</b>
+        <br>
+        <img src=https://i.imgur.com/lbU7rOQ.png height=180>
+        <br>
+        修改庫存也有更簡單的方法 請見<a href=#a4>管理區教學</a>
+        <br>
+        第1排為編號不可變動 第2排為食材名稱 第3排為單位 第2排為庫存數量
+        <br>
+        最多可設定30種食材
+        <br>
+        <b>注意:若設定低於30種時，請將未設定的項目的庫存設為5，以防止出現庫存警示</b>
+        <br>
+        液體類可設定幾ml為一單位
+        <br>
+        <img src=https://i.imgur.com/fF2C2ul.png height=150>
+        <br>
+        <b>system_ingredients.csv 扣除食材設定</b>
+        <br>
+        <img src=https://i.imgur.com/0Nn04Vo.png height=200>
+        <br>
+        第1排為餐點名稱 第2排開始往後為需要的食材代號
+        <br>
+        食材代號要從system_stock.csv中看
+        <br>
+        <img src=https://i.imgur.com/lbU7rOQ.png height=180>
+        <br>
+        第1排的數字即為食材代號
+        <br>
+        若同一食材要使用2份就只要打2次就可以了 以此類推
+        <br>
+        液體部分範例:
+        <br>
+        <img src=https://i.imgur.com/yzcnaXP.png height=50>
+        <br>
+        假如要點 炙烈的藥水 它的作法是50ml的草莓醬加上450ml的烏龍茶
+        <br>
+        <img src=https://i.imgur.com/fF2C2ul.png height=150>
+        <br>
+        上圖可以知道草莓醬的代號為23烏龍茶的代號為26
+        <br>
+        草莓醬一單位有10ml所以需要50ml就打5次23 就會消耗掉5*10ml也就是50ml
+        <br>
+        烏龍茶一單位有450ml所以只要打一次就可以
+        <hr>
+        <a name=a3 ></a>
+        <h3>基本操作流程</h3>
+        1.登入
+        <br>
+        <img src=https://i.imgur.com/IR11ffm.png height=200>
+        <br>
+        2.按 桌位管理 選擇內用桌號或外帶按 新單
+        <br>
+        <img src=https://i.imgur.com/SXtQlSE.png height=500>
+        <br>
+        3.選擇餐點/配料/選項/數量加到點餐列表中
+        <br>
+        <font color='#FF0000'><b>重要:若在點餐中(點餐列表上有餐點)要離開或關閉程式請務必先按 全部清除 再關閉才不會影響到庫存的數量</b></font>
+        <br>
+        <img src=https://i.imgur.com/lyPlltY.png height=500>
+        <br>
+        4.選擇優惠(有無都可)
+        <br>
+        <img src=https://i.imgur.com/P4o1GZf.png height=200>
+        <br>
+        5.輸入付的金額並按 結帳
+        <br>
+        <img src=https://i.imgur.com/7NqWRuF.png height=200>
+        <br>
+        6.按 下一筆 結束此次交易
+        <hr>
+        <a name=a4 ></a>
+        <h3>管理區教學</h3>
+        <h4>桌位管理</h4>
+        <br>
+        <img src=https://i.imgur.com/SXtQlSE.png height=450>
+        <br>
+        點餐時按新單
+        <br>
+        已結帳的桌位就會有餐畢跟完成的按鈕
+        <br>
+        按餐畢狀態就會變成清潔中(客人離開尚未清潔)
+        <br>
+        此時再按完成就可以變成空桌才能繼續點餐
+        <br>
+        已結帳的狀態也可以直接按完成切換成空桌來點餐
+        <br>
+        <img src=https://i.imgur.com/TUSj2bq.png height=450>
+        <h4>庫存管理</h4>
+        <br>
+        <img src=https://i.imgur.com/ZG0fK7w.png height=400>
+        <br>
+        按下 調整 是把原本的加或減掉輸入的(輸入負的再按 調整 就會減)
+        <br>
+        按下 取代 是把原本直接取代成輸入的
+        <br>
+        <b>注意:若庫存設定項目低於30種時，請將未設定的項目的庫存設為5，以防止出現庫存警示</b>
+        <br>
+        <img src=https://i.imgur.com/SBDW0Sh.png height=80>
+        <br>
+        <h4>其他類菜單設定</h4>
+        <br>
+        <img src=https://i.imgur.com/0gvXnD1.png height=200>
+        <hr>
+        <a name=a5 ></a>
+        <h3>其他</h3>
+        若有任何問題歡迎寄信至<a href="Mailto:swchen1217@gmail.com">我的電子信箱</a>
+        <br>
+        請勿擅自散佈,轉賣,嚴重修改此程式碼
+        <br>
+        作者:陳思惟
+        
+    </body>
+</html>
