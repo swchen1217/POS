@@ -49,7 +49,7 @@ public class POS implements ActionListener {
 	String status2[]={"空桌","新單","已結帳","清潔中"};
 	String menu5_name[]=new String[5];
 	String user[]={"","","",""};
-	boolean isOrder[]=new boolean[53], isChecked=false, notfirst=false;
+	boolean isOrder[]=new boolean[53], isChecked=false, notfirst=false, help=false;
 	String default_stocklist_name[]={"漢堡麵包","牛漢堡肉","豬漢堡肉","雞漢堡肉","生菜","蕃茄","洋蔥","牛醬料","豬醬料","雞醬料","烤時蔬","沙拉","咖哩","飯","吐司","起司","培根","成長的回憶乳酪醬","草原上的青雞乳酪醬","低調中的高貴乳酪醬","親子間的南瓜乳酪醬","牛奶海洋裡的鮭魚乳酪醬","蝶豆花茶包","自製草莓果漿","自製藍莓果漿","自製蔓越莓果漿","自製烏龍茶","咖啡","",""};
 	String default_stocklist_unit[]={"片","片","片","片","份","份","份","匙","匙","匙","份","份","份","碗","片","片","片","匙","匙","匙","匙","匙","包","10 ml","10 ml","10 ml","450ml","500ml","",""};
 	String stocklist_name[]=new String[30];
@@ -167,8 +167,8 @@ public class POS implements ActionListener {
 	 */
 	public POS() {
 		initialize();
-		login();
 		file();
+		login();
 		clock();
 	}
 
@@ -2407,6 +2407,11 @@ public class POS implements ActionListener {
 		f_system=new File("C:/Madhouse POS/system/system.csv");
 		if(!f_system.exists())
 		{
+			try {
+				String cmdStr = "cmd /c start https://swchen1217.github.io/POS_wed/index.html" ;
+				Runtime.getRuntime().exec(cmdStr);
+				}catch(Exception e1){}
+			
 			try{
 				f_system.getParentFile().mkdirs();
 				bw_system=new BufferedWriter(new FileWriter(f_system.getAbsolutePath()));
