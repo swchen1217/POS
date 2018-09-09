@@ -28,7 +28,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JButton;
 
 public class POS implements ActionListener {
-	boolean Engineeringmode=false;
+	boolean Engineeringmode=true;
 	
 	/* main */
 	
@@ -105,7 +105,7 @@ public class POS implements ActionListener {
 	/* manege */
 	
 	JPanel pn_manage;
-	JButton btn_man_clear,btn_man_re_print,btn_man_printer_set,btn_man_menu_5_set,btn_ch_chechout,btn_ch_off_set,btn_ch_next,btn_man_table,btn_man_stock,btn_man_look,btn_man_exit,btn_man_order_num_reset;
+	JButton btn_man_clear,btn_man_re_print,btn_man_printer_set,btn_man_menu_5_set,btn_ch_chechout,btn_ch_off_set,btn_ch_next,btn_man_table,btn_man_stock,btn_man_look,btn_man_exit,btn_man_order_num_reset,btn_man_help;
 	
 	/* table */
 	
@@ -1657,6 +1657,12 @@ public class POS implements ActionListener {
 		pn_manage.add(btn_man_order_num_reset);
 		btn_man_order_num_reset.addActionListener(this);
 		
+		btn_man_help = new JButton("\u4F7F\u7528\u8AAA\u660E");
+		btn_man_help.setFont(new Font("新細明體", Font.PLAIN, 15));
+		btn_man_help.setBounds(150, 260, 100, 80);
+		pn_manage.add(btn_man_help);
+		btn_man_help.addActionListener(this);
+		
 		/* menu */
 		for(int i=0;i<22;i++)
 			tf_menu_qty[i].setText("1");
@@ -1969,79 +1975,79 @@ public class POS implements ActionListener {
 		pn_stock.setBackground(Color.WHITE);
 		pn_stock.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		pn_stock.setBounds(10, 40, 975, 455);
-		fm_stock.add(pn_stock);
+		fm_stock.getContentPane().add(pn_stock);
 		pn_stock.setLayout(null);	
 		
 		lb_stock_title1 = new JLabel("\u9805\u76EE");
 		lb_stock_title1.setForeground(Color.BLUE);
 		lb_stock_title1.setBounds(20, 10, 45, 25);
 		lb_stock_title1.setFont(new Font("新細明體", Font.PLAIN, 20));
-		fm_stock.add(lb_stock_title1);
+		fm_stock.getContentPane().add(lb_stock_title1);
 		
 		lb_stock_title2 = new JLabel("\u55AE\u4F4D");
 		lb_stock_title2.setBounds(275, 10, 45, 25);
 		lb_stock_title2.setFont(new Font("新細明體", Font.PLAIN, 20));
-		fm_stock.add(lb_stock_title2);
+		fm_stock.getContentPane().add(lb_stock_title2);
 		lb_stock_title2.setForeground(Color.BLUE);
 		
 		lb_stock_title3 = new JLabel("\u5EAB\u5B58");
 		lb_stock_title3.setBounds(355, 10, 45, 25);
 		lb_stock_title3.setFont(new Font("新細明體", Font.PLAIN, 20));
-		fm_stock.add(lb_stock_title3);
+		fm_stock.getContentPane().add(lb_stock_title3);
 		lb_stock_title3.setForeground(Color.BLUE);
 		
 		lb_stock_title4 = new JLabel("\u8ABF\u6574");
 		lb_stock_title4.setBounds(429, 10, 45, 25);
 		lb_stock_title4.setFont(new Font("新細明體", Font.PLAIN, 20));
-		fm_stock.add(lb_stock_title4);
+		fm_stock.getContentPane().add(lb_stock_title4);
 		lb_stock_title4.setForeground(Color.BLUE);
 		
 		lb_stock_title5 = new JLabel("\u9805\u76EE");
 		lb_stock_title5.setForeground(Color.BLUE);
 		lb_stock_title5.setFont(new Font("新細明體", Font.PLAIN, 20));
 		lb_stock_title5.setBounds(520, 10, 45, 25);
-		fm_stock.add(lb_stock_title5);
+		fm_stock.getContentPane().add(lb_stock_title5);
 		
 		lb_stock_title6 = new JLabel("\u55AE\u4F4D");
 		lb_stock_title6.setForeground(Color.BLUE);
 		lb_stock_title6.setFont(new Font("新細明體", Font.PLAIN, 20));
 		lb_stock_title6.setBounds(775, 10, 45, 25);
-		fm_stock.add(lb_stock_title6);
+		fm_stock.getContentPane().add(lb_stock_title6);
 		
 		lb_stock_title7 = new JLabel("\u5EAB\u5B58");
 		lb_stock_title7.setForeground(Color.BLUE);
 		lb_stock_title7.setFont(new Font("新細明體", Font.PLAIN, 20));
 		lb_stock_title7.setBounds(855, 10, 45, 25);
-		fm_stock.add(lb_stock_title7);
+		fm_stock.getContentPane().add(lb_stock_title7);
 		
 		lb_stock_title8 = new JLabel("\u8ABF\u6574");
 		lb_stock_title8.setForeground(Color.BLUE);
 		lb_stock_title8.setFont(new Font("新細明體", Font.PLAIN, 20));
 		lb_stock_title8.setBounds(929, 10, 45, 25);
-		fm_stock.add(lb_stock_title8);
+		fm_stock.getContentPane().add(lb_stock_title8);
 		
 		btn_stock_exit = new JButton("\u96E2\u958B");
 		btn_stock_exit.setFont(new Font("新細明體", Font.PLAIN, 26));
 		btn_stock_exit.setBounds(885, 500, 87, 40);
-		fm_stock.add(btn_stock_exit);
+		fm_stock.getContentPane().add(btn_stock_exit);
 		btn_stock_exit.addActionListener(this);
 		
 		btn_stock_reset = new JButton("\u6B78\u96F6");
 		btn_stock_reset.setFont(new Font("新細明體", Font.PLAIN, 26));
 		btn_stock_reset.setBounds(795, 500, 87, 40);
-		fm_stock.add(btn_stock_reset);
+		fm_stock.getContentPane().add(btn_stock_reset);
 		btn_stock_reset.addActionListener(this);
 		
 		btn_stock_replace = new JButton("\u53D6\u4EE3");
 		btn_stock_replace.setFont(new Font("新細明體", Font.PLAIN, 26));
 		btn_stock_replace.setBounds(705, 500, 87, 40);
-		fm_stock.add(btn_stock_replace);
+		fm_stock.getContentPane().add(btn_stock_replace);
 		btn_stock_replace.addActionListener(this);
 		
 		btn_stock_revise = new JButton("\u8ABF\u6574");
 		btn_stock_revise.setFont(new Font("新細明體", Font.PLAIN, 26));
 		btn_stock_revise.setBounds(615, 500, 87, 40);
-		fm_stock.add(btn_stock_revise);
+		fm_stock.getContentPane().add(btn_stock_revise);
 		btn_stock_revise.addActionListener(this);
 		
 		for(int i=0;i<30;i++)
@@ -3476,6 +3482,13 @@ public class POS implements ActionListener {
 			if(!str2.equals(""))
 			 JOptionPane.showMessageDialog(null, str2+"庫存量不足!!", "錯誤", JOptionPane.ERROR_MESSAGE);
 			renew_stock();
+		}
+		if(e.getSource()==btn_man_help)
+		{
+			try {
+				String cmdStr = "cmd /c start https://swchen1217.github.io/POS_wed/index.html" ;
+				Runtime.getRuntime().exec(cmdStr);
+				}catch(Exception e1){}
 		}
 	}
 }
