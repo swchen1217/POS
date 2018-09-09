@@ -37,9 +37,9 @@ public class POS implements ActionListener {
 	int price[]=new int[53];
 	String item_name[]=new String[53];
 	Thread th_nowtime;
-	File f_system,f_log_order,f_log_sale,f_system_table,f_log_table,f_system_menu5,f_login,f_system_stock,f_system_meals,f_system_ingredients,f_system_option;
-	BufferedWriter bw_system,bw_log_order,bw_log_sale,bw_system_table,bw_log_table,bw_system_menu5,bw_login,bw_system_stock,bw_system_meals,bw_system_ingredients,bw_system_option;
-	BufferedReader br_system,br_log_order,br_log_sale,br_system_table,br_log_table,br_system_menu5,br_login,br_system_stock,br_system_meals,br_system_ingredients,br_system_option;
+	File f_system,f_log_order,f_log_sale,f_system_table,f_log_table,f_system_menu5,f_login,f_system_stock,f_system_meals,f_system_ingredients,f_system_option,f_receipt1,f_receipt2;
+	BufferedWriter bw_system,bw_log_order,bw_log_sale,bw_system_table,bw_log_table,bw_system_menu5,bw_login,bw_system_stock,bw_system_meals,bw_system_ingredients,bw_system_option,bw_receipt1,bw_receipt2;
+	BufferedReader br_system,br_log_order,br_log_sale,br_system_table,br_log_table,br_system_menu5,br_login,br_system_stock,br_system_meals,br_system_ingredients,br_system_option,br_receipt1,br_receipt2;
 	int pay, change, order_sum=0, smalltotal=0, off=0, all_off=0, item_sum2=0, order_list_sum=0, m=0 ,n=0 ,tmp=-1 ,order_num ,now_tablenum ,now_status ,o=0;
 	int list[]={-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
 	int table_status[]=new int[16],table_ordernum[]=new int[16],menu5_price[]=new int[5];
@@ -2838,6 +2838,25 @@ public class POS implements ActionListener {
 				}catch(Exception e){}
 			}
 		}
+		
+		/* receipt */
+		
+		f_receipt1=new File("C:/Madhouse POS/system/system_receipt1.txt");
+		if(!f_receipt1.exists())
+		{
+			try{
+				f_receipt1.getParentFile().mkdirs();
+			}catch(Exception e1){}
+		}
+		
+		f_receipt2=new File("C:/Madhouse POS/system/system_receipt2.txt");
+		if(!f_receipt2.exists())
+		{
+			try{
+				f_receipt2.getParentFile().mkdirs();
+			}catch(Exception e1){}
+		}
+		
 	}
 	void keepRecord_order_log()
 	{
@@ -3042,6 +3061,119 @@ public class POS implements ActionListener {
 		if(!str2.equals(""))
 		 JOptionPane.showMessageDialog(null, str2+"庫存量不足!!", "錯誤", JOptionPane.ERROR_MESSAGE);
 	}
+	void makereceipt()
+	{
+		String onum="",tnum="";
+		if(order_num<10)
+			onum="00"+order_num;
+		else if(order_num<100)
+			onum="0"+order_num;
+		else
+			onum=""+order_num;
+		if(now_tablenum<=16)
+		{
+			if(now_tablenum<10)
+				tnum="0"+now_tablenum;
+			else
+				tnum=""+now_tablenum;
+		}
+		else
+			tnum="外帶";
+		Date d=new Date();
+		SimpleDateFormat sdf1=new SimpleDateFormat("yyyy/MM/dd"),sdf2=new SimpleDateFormat("HH:mm:ss");
+		String r_time1=sdf1.format(d),r_time2=sdf2.format(d);
+		try{
+			bw_receipt1=new BufferedWriter(new FileWriter(f_receipt1.getAbsolutePath()));
+			bw_receipt1.write("  【Madhouse 異想料理實驗室 】\r\n");
+			bw_receipt1.write("           (點餐明細)\r\n");
+			bw_receipt1.write("   單號:"+onum+"           桌號:"+tnum+"\r\n");
+			bw_receipt1.write("   時間:"+r_time1+" "+r_time2+"\r\n");
+			bw_receipt1.write("   點餐人員:"+user[3]+"\r\n");
+			bw_receipt1.write("   備註:"+tf_note.getText()+"\r\n");
+			bw_receipt1.write("--------------------------------\r\n");
+			bw_receipt1.write("品名                  數量  金額\r\n");
+			bw_receipt1.write("--------------------------------\r\n");
+			for(int i=0;i<order_list_sum;i++)
+			{
+				int n=0;
+				n=11-item_name[list[i]].length();
+				bw_receipt1.write(item_name[list[i]]);
+				for(int j=0;j<n;j++)
+					bw_receipt1.write("  ");
+				if(item_name[list[i]].indexOf('(')!=-1)
+					bw_receipt1.write("  ");
+				String qnum="";
+				if(qty[list[i]]<10)
+					qnum="   "+qty[list[i]];
+				else
+					qnum="  "+qty[list[i]];
+				bw_receipt1.write(qnum);
+				String mnum="";
+				if(small_total[list[i]]>=10000)
+					mnum=" "+small_total[list[i]];
+				else if(small_total[list[i]]>=1000)
+					mnum="  "+small_total[list[i]];
+				else if(small_total[list[i]]>=100)
+					mnum="   "+small_total[list[i]];
+				else if(small_total[list[i]]>=10)
+					mnum="    "+small_total[list[i]];
+				else if(small_total[list[i]]>=0)
+					mnum="     "+small_total[list[i]];
+				bw_receipt1.write(mnum+"\r\n");
+			}
+			bw_receipt1.write("--------------------------------\r\n");
+			bw_receipt1.write("小計:"+smalltotal+"\r\n");
+			bw_receipt1.write("折數:"+discount);
+			int n=0;
+			n=11-(discount+"").length();
+			for(int j=0;j<n;j++)
+				bw_receipt1.write(" ");
+			bw_receipt1.write("減免:"+off+"\r\n");
+			bw_receipt1.write("總優待:"+all_off+"\r\n");
+			bw_receipt1.write("總金額:"+total+"\r\n");
+			bw_receipt1.write("支付:"+pay);
+			int m=0;
+			m=11-(pay+"").length();
+			for(int j=0;j<m;j++)
+				bw_receipt1.write(" ");
+			bw_receipt1.write("找零:"+change+"\r\n");
+			bw_receipt1.write("          歡迎下次光臨!!\r\n");
+			bw_receipt1.flush();
+			bw_receipt1.close();
+		}catch(Exception e){}
+		try{
+			bw_receipt2=new BufferedWriter(new FileWriter(f_receipt2.getAbsolutePath()));
+			bw_receipt2.write("  【Madhouse 異想料理實驗室 】\r\n");
+			bw_receipt2.write("           (製作單)\r\n");
+			bw_receipt2.write("   單號:"+onum+"           桌號:"+tnum+"\r\n");
+			bw_receipt2.write("   時間:"+r_time1+" "+r_time2+"\r\n");
+			bw_receipt2.write("   點餐人員:"+user[3]+"\r\n");
+			bw_receipt2.write("   備註:"+tf_note.getText()+"\r\n");
+			bw_receipt2.write("   總數量:"+order_sum+"\r\n");
+			bw_receipt2.write("--------------------------------\r\n");
+			bw_receipt2.write("品名                  數量 \r\n");
+			bw_receipt2.write("--------------------------------\r\n");
+			for(int i=0;i<order_list_sum;i++)
+			{
+				int n=0;
+				n=11-item_name[list[i]].length();
+				bw_receipt2.write(item_name[list[i]]);
+				for(int j=0;j<n;j++)
+					bw_receipt2.write("  ");
+				if(item_name[list[i]].indexOf('(')!=-1)
+					bw_receipt2.write("  ");
+				String qnum="";
+				if(qty[list[i]]<10)
+					qnum="   "+qty[list[i]];
+				else
+					qnum="  "+qty[list[i]];
+				bw_receipt2.write(qnum+"\r\n");
+			}
+			bw_receipt2.write("--------------------------------\r\n");
+			bw_receipt2.flush();
+			bw_receipt2.close();
+		}catch(Exception e){}
+	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
@@ -3134,11 +3266,12 @@ public class POS implements ActionListener {
 					tf_ch_change.setForeground(Color.BLACK);
 					keepRecord_order_log();
 					now_status=1;
-					if(now_tablenum<15)
+					if(now_tablenum<17)
 						table_status[now_tablenum-1]=1;
 					tf_info_status.setText(status[now_status]);
 					renew_table();
 					keepRecord_table_log(now_tablenum-1,2);
+					makereceipt();
 					
 				}
 				else if(pay<total)
