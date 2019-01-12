@@ -28,7 +28,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JButton;
 
 public class POS implements ActionListener {
-	boolean Engineeringmode=true;
+	boolean Engineeringmode=false;
 	
 	/* main */
 	
@@ -2369,6 +2369,8 @@ public class POS implements ActionListener {
 		tf_ch_all_off.setText(all_off+"");
 		tf_ch_total.setText(total+"");
 		tf_ch_discount.setText(discount+"");
+		tf_discount_discount.setText(discount+"");
+		tf_discount_off.setText(off+"");
 		tf_note.setText("");
 		tab_order_list.setSelectedIndex(0);
 		tab_menu.setSelectedIndex(0);
@@ -2414,7 +2416,7 @@ public class POS implements ActionListener {
 		if(!f_system.exists())
 		{
 			try {
-				String cmdStr = "cmd /c start https://swchen1217.github.io/POS_wed/index.html" ;
+				String cmdStr = "cmd /c start https://swchen1217.github.io/POS_web/index.html" ;
 				Runtime.getRuntime().exec(cmdStr);
 				}catch(Exception e1){}
 			
@@ -3619,7 +3621,7 @@ public class POS implements ActionListener {
 		if(e.getSource()==btn_man_help)
 		{
 			try {
-				String cmdStr = "cmd /c start https://swchen1217.github.io/POS_wed/index.html" ;
+				String cmdStr = "cmd /c start https://swchen1217.github.io/POS_web/index.html" ;
 				Runtime.getRuntime().exec(cmdStr);
 				}catch(Exception e1){}
 		}
